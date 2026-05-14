@@ -1,3 +1,0 @@
-<?php
-    //traveller + agency signup
-?>
