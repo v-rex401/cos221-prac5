@@ -7,11 +7,43 @@
     require_once __DIR__ . '/../includes/auth.php';
     require_once __DIR__ . '/../includes/validation.php';
 
+    $error    = "";
+    $email    = "";
+    $userType = "";
+
     //check if already logged in
+    redirectIfLoggedIn();
 
     //process form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email    = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $userType = trim($_POST['user_type'] ?? '');
 
         //Validate input
-        
-        //redirect to appropriate dashboard
+        $errors = validateLoginForm($email, $password, $userType);
+
+        if(!empty($errors)){
+            $error = $errors[0];
+        }else{
+            //authenticate user
+            $result = authenticateUser($email, $password, $userType);
+
+            if($result['success']){
+                $user = $result['user'];
+                //set session variables
+                createSession($user['User_ID'], $user['Type'], $user['Email']);
+
+                //redirect to different dashboard
+                if($user['Type'] === 'Traveller'){
+                    header("Location: traveller_dashboard.php");
+                }else{
+                    header("Location: agency_dashboard.php");
+                }
+                exit();
+            } else {
+                $error = $result['error'];
+            }
+        }
+    }
 ?>

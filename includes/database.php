@@ -1,6 +1,6 @@
 <?php
     $db_host = "localhost";
-    $db_name = "PA5_Tripistry"; //TODO: check actual connection and name
+    $db_name = "u24611400_Tripistry";
     $db_user = "u24611400";
 
     $db_password_file = __DIR__ . "/../db_password";

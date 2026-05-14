@@ -12,17 +12,17 @@
 
     //check if user logged in
     function checkUserLoggedIn(){
-        
+        return isset($_SESSION['userID']) && isset($_SESSION['userType']);
     }
 
     //get current userID
     function getCurrentUserID(){
-
+        return $_SESSION['userID'] ?? null;
     }
 
     //get current user type
     function getCurrentUserType(){
-
+        return $_SESSION['userType'] ?? null;
     }
 
     //redirect if already logged in
