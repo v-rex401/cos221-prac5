@@ -26,17 +26,20 @@
     <body>
         <header>
             <div class="logo">Tripistry</div>
+            
+            <!-- In nav bar-->
             <nav>
-                <a href="login.php">Login</a>
-                <a href="signup.php">Sign Up</a>
+                <a href="pages/login.php">Login</a>
+                <a href="pages/signup.php">Sign Up</a>
             </nav>
         </header>
 
         <main>
             <section class="hero">
                 <div class="cta-buttons">
-                    <a href="login.php">Login</a>
-                    <a href="signup.php">Create Account</a>
+                    <!-- On page big buttons-->
+                    <a href="pages/login.php">Login</a>
+                    <a href="pages/signup.php">Create Account</a>
                 </div>
             </section>
         </main>
