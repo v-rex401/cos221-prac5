@@ -109,11 +109,49 @@
 
     //get agency details by ID
     function getAgencyByUserID($userID){
+        global $conn;
 
+        $statement = $conn->prepare("SELECT User_ID, Name, Email, Type FROM users WHERE User_ID = ? AND Type = 'Agency'");
+
+        if(!$statement){
+            return ['success' => false, 'error' =>'Database error: '. $conn->error];
+        }
+        $statement->bind_param("s", $userID);
+        $statement->execute();
+
+        $result = $statement->get_result();
+
+        if($result->num_rows === 0){
+            return ['success' => false, 'error' => 'User not found or not an agency'];
+        }
+        $user = $result->fetch_assoc();
+
+        $statement->close();
+
+        return ['success' => true, 'user' => $user];
     }
 
     //get agency details by ID
     function getTravellerByUserID($userID){
-        
+        global $conn;
+
+        $statement = $conn->prepare("SELECT User_ID, Name, Email, Type FROM users WHERE User_ID = ? AND Type = 'Traveller'");
+
+        if(!$statement){
+            return ['success' => false, 'error' =>'Database error: '. $conn->error];
+        }
+        $statement->bind_param("s", $userID);
+        $statement->execute();
+
+        $result = $statement->get_result();
+
+        if($result->num_rows === 0){
+            return ['success' => false, 'error' => 'User not found or not a Traveller'];
+        }
+        $user = $result->fetch_assoc();
+
+        $statement->close();
+
+        return ['success' => true, 'user' => $user];
     }
 ?>
