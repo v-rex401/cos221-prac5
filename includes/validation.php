@@ -4,22 +4,52 @@
 
     //validate email
     function isValidEmail($email){
-
+        //regex check for format
+        $emailRegex = '/^(([^<>()\[\]\.,;:\s@"]+(\.[^<>()\[\]\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
+        if (preg_match($emailRegex, $email)) {
+            $errors[] =  "Valid email";
+            return true;
+        } else {
+            $errors[] = "Invalid email";
+            return false;
+        }
     }
 
     function isValidCell($cell){
+        $errors = [];
+        //regex check
+        $regex = '/^(?:\+27[\s-]?|0)(?:6|7|8)[0-9](?:[\s-]?[0-9]{3}[\s-]?[0-9]{4}|[0-9]{7})$/';
 
+        if (preg_match($regex, $cell)) {
+            $errors[] =  "Valid number";
+            return true;
+        } else {
+            $errors[] = "Invalid number";
+            return false;
+        }
     }
 
     //validate password strength
     function isValidPassword($password){
-
+        
+        if(strlen($password) <= 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)
+        || !preg_match('/\d/', $password) || !preg_match('/[\W_]/', $password)){
+            $errors [] = "Invalid password";
+            return false;
+        }
+        return true;
     }
 
     //in signup you enter your password 2 times and they are checked against each other
     //check if password match
+    //note this is not checking if password is the same as one in the database.
     function isPasswordMatch($password, $otherPassword){
-
+        $errors = [];
+        if($password != $otherPassword){
+            $errors = "Invalid password";
+            return false;
+        }
+        return true;
     }
 
     //validate login form inputs
