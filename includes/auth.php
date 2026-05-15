@@ -61,7 +61,7 @@
     }
 
     //check if email already exists
-    function emailExists(){
+    function emailExists($email){
         //returns true if email exists in database
         global $conn;
 
@@ -84,6 +84,26 @@
 
     //get user details by ID
     function getUserByID($userID){
+        global $conn;
+
+        $statement = $conn->prepare("SELECT User_ID FROM users WHERE User_ID = ?");
+
+        if(!$statement){
+            return ['success' => false, 'error' =>'Database error: '. $conn->error];
+        }
+        $statement->bind_param("s", $userID);
+        $statement->execute();
+
+        $result = $statement->get_result();
+
+        if($result->num_rows === 0){
+            return ['success' => false, 'error' => 'Invalid user'];
+        }
+        $user = $result->fetch_assoc();
+
+        $statement->close();
+
+        return ['success' => true, 'user' => $user];
 
     }
 
