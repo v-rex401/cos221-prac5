@@ -4,6 +4,18 @@
 
     session_start();
 
+    /*  Helper: resolve a path relative to the project root and redirect.
+        Works whether called from /cos221-prac5/index.php, /cos221-prac5/pages/login.php
+        or /cos221-prac5/pages/traveller/foo.php — strips the known sub-folders off
+        the current script's directory.  */
+    function redirectTo($pathFromProjectRoot){
+        $base = dirname($_SERVER['SCRIPT_NAME'] ?? '');
+        $base = preg_replace('#/(pages(/[^/]+)?|handlers|includes)$#', '', $base);
+        if ($base === '/' || $base === '.' || $base === '\\') $base = '';
+        header("Location: {$base}/{$pathFromProjectRoot}");
+        exit();
+    }
+
     function createSession($userID, $userType, $email){
         $_SESSION['userID'] = $userID;
         $_SESSION['userType'] = $userType;
@@ -34,35 +46,31 @@
     function redirectIfLoggedIn(){
         if (isLoggedIn()) {
             if (getCurrentUserType() === 'Traveller') {
-                header("Location: traveller_dashboard.php");
+                redirectTo('pages/traveller/traveller_dashboard.php');
             } else {
-                header("Location: agency_dashboard.php");
+                redirectTo('pages/agency/agency_dashboard.php');
             }
-            exit();
         }
     }
 
     //redirect if not logged in
     function redirectIfNotLoggedIn(){
         if (!isLoggedIn()) {
-            header("Location: login.php");
-            exit();
+            redirectTo('pages/login.php');
         }
     }
 
     //redirect if not traveller
     function redirectIfNotTraveller(){
         if (!isLoggedIn() || getCurrentUserType() !== 'Traveller') {
-            header("Location: login.php");
-            exit();
+            redirectTo('pages/login.php');
         }
     }
 
     //redirect if not agent
     function redirectIfNotAgency(){
         if (!isLoggedIn() || getCurrentUserType() !== 'Agency') {
-            header("Location: login.php");
-            exit();
+            redirectTo('pages/login.php');
         }
     }
 

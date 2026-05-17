@@ -2,7 +2,7 @@
     
     //traveller + agency login
 
-    require_once __DIR__ . '/handlers/login_handler.php';
+    require_once __DIR__ . '/../handlers/login_handler.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +12,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
 
-        <link rel="stylesheet" href="css/auth.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/auth.css">
 
     </head>
     <body>

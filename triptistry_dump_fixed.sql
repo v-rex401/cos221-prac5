@@ -612,7 +612,7 @@ CREATE TABLE `users` (
   `Password_Hash` varchar(255) NOT NULL,
   `Email` varchar(255) NOT NULL,
   `Cell` varchar(20) NOT NULL,
-  `Type` enum('Agency','Traveler') NOT NULL,
+  `Type` enum('Agency','Traveller') NOT NULL,
   PRIMARY KEY (`User_ID`),
   UNIQUE KEY `Email` (`Email`),
   CONSTRAINT `CHK_Cell_Length` CHECK (octet_length(`Cell`) >= 10),
@@ -628,8 +628,8 @@ SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'Alice Mabena','$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','alice.mabena@gmail.com','+27831234567','Traveler'),
-(2,'Ravi Naidoo','$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','ravi.naidoo@outlook.com','+27829876543','Traveler'),
+(1,'Alice Mabena','$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','alice.mabena@gmail.com','+27831234567','Traveller'),
+(2,'Ravi Naidoo','$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','ravi.naidoo@outlook.com','+27829876543','Traveller'),
 (3,'Safari & Sun Agency','$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','bookings@safarisun.co.za','+27213456789','Agency');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

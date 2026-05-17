@@ -1,0 +1,177 @@
+/*  Tripistry — login + signup
+    Anke de Frey u24611400
+
+    Depends on style.css for tokens (--color-*, --surface-*, etc.).
+    Load style.css BEFORE this file.
+*/
+
+/* Centred auth panel */
+.login-container,
+.signup-container {
+    width: min(92vw, 520px);
+    margin: 4vh auto;
+    padding: 28px 28px 24px;
+    background: var(--surface-card);
+    border: 2px solid var(--border-accent);
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.login-container h1,
+.signup-container h1 {
+    margin: 0 0 18px;
+    color: #fff;
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+}
+
+.login-container form,
+.signup-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-container form > div,
+.signup-container form > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label,
+.signup-container label {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="email"],
+.signup-container input[type="text"],
+.signup-container input[type="password"],
+.signup-container input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 3px solid var(--border-accent-soft);
+    background: var(--surface-input);
+    color: #fff;
+    font-family: var(--font-stack);
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.login-container input::placeholder,
+.signup-container input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.login-container input:focus,
+.signup-container input:focus {
+    border-color: var(--color-orange);
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.radio-group > label:first-child {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+}
+
+.radio-group input[type="radio"] {
+    accent-color: var(--color-orange);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.submit_button {
+    width: 80%;
+    max-width: 320px;
+    min-width: 140px;
+    align-self: center;
+    margin-top: 8px;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--color-orange);
+    background: transparent;
+    color: #fff;
+    font-family: var(--font-stack);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.submit_button:hover,
+.submit_button:focus {
+    background: var(--color-orange);
+    color: var(--color-navy-deep);
+}
+
+.link-group {
+    text-align: center;
+    margin-top: 4px;
+}
+
+.link-group p {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.link-group a {
+    color: var(--color-orange);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.link-group a:hover {
+    text-decoration: underline;
+}
+
+.login-container .error,
+.signup-container .error {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 80, 80, 0.15);
+    border: 2px solid rgba(255, 122, 122, 0.7);
+    color: #ffd7d7;
+    font-size: 14px;
+}
+
+.signup-container .success {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: rgba(120, 220, 150, 0.12);
+    border: 2px solid rgba(120, 220, 150, 0.7);
+    color: #d9f8e1;
+    font-size: 14px;
+}
+
+.signup-container .success a {
+    color: var(--color-orange);
+    font-weight: 600;
+    margin-left: 6px;
+}

@@ -1,6 +1,6 @@
 <?php
     // Detect whether we are running locally (XAMPP) or on Wheatley.
-    // On Wheatley HTTP_HOST will be wheatley.cs.up.ac.za (or similar);
+    // On Wheatley HTTP_HOST will be wheatley.cs.up.ac.za;
     // locally it will be localhost / 127.0.0.1.
     $http_host = $_SERVER['HTTP_HOST'] ?? '';
     $is_local  = (

@@ -1,7 +1,7 @@
 <?php
     //traveller + agency signup
 
-    require_once __DIR__ . '/handlers/signup_handler.php';
+    require_once __DIR__ . '/../handlers/signup_handler.php';
 
 ?>
 <!DOCTYPE html>
@@ -11,9 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Tripistry</title>
 
-    <link rel="stylesheet" href="css/auth.css">
-
-    <script src=""></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css">
 </head>
 <body>
     <div class="signup-container">

@@ -7,11 +7,10 @@
     // If user is logged in, redirect to their dashboard
     if (checkUserLoggedIn()) {
         if (getCurrentUserType() === 'Traveller') {
-            header("Location: traveller_dashboard.php");
+            redirectTo('pages/traveller/traveller_dashboard.php');
         } else {
-            header("Location: agency_dashboard.php");
+            redirectTo('pages/agency/agency_dashboard.php');
         }
-        exit();
     }
 ?>
 
