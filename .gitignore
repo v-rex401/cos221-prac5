@@ -1,0 +1,8 @@
+# Secrets — never commit
+db_password
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
