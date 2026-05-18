@@ -1,205 +1,867 @@
-/*  Tripistry — site-wide base
-    Anke de Frey u24611400
-
-    Palette tokens are centralised so every page picks up the same
-    colours, spacing and typography.
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
-
-:root {
-    /* Brand palette */
-    --color-navy-deep:    #1f2e55;
-    --color-navy-mid:     #243360;
-    --color-navy-soft:    #38487b;
-    --color-blue-light:   #92ace6;
-    --color-orange:       #f88f55;
-    --color-orange-strong:#fa8a4e;
-
-    /* Surfaces */
-    --surface-card:       rgba(31, 46, 85, 0.92);
-    --surface-overlay:    rgba(11, 19, 39, 0.55);
-    --surface-input:      rgba(146, 178, 225, 0.563);
-    --border-accent:      rgba(248, 143, 85, 0.55);
-    --border-accent-soft: rgba(248, 143, 85, 0.70);
-
-    /* Shape */
-    --radius-sm: 10px;
-    --radius-md: 12px;
-    --radius-lg: 14px;
-
-    /* Layout */
-    --site-nav-height: 60px;
-
-    /* Typography */
-    --font-stack: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Reset + base */
-html, body {
-    height: 100%;
-    margin: 0;
+body{
+    background:#f4f6f9;
+    color:#333;
 }
 
-body {
-    font-family: var(--font-stack);
-    background: var(--color-navy-soft) url("../img/background.png") center / cover no-repeat fixed;
-    color: #fff;
+.container{
+    display:flex;
+    min-height:100vh;
 }
 
-[hidden] {
-    display: none !important;
+/* SIDEBAR */
+.sidebar{
+    width:220px;
+    min-width:220px;
+    background:#ffffff;
+    padding:20px 15px;
+    border-right:1px solid #ddd;
 }
 
-/* Generic page wrapper — used by content pages */
-.wrap {
-    width: 90%;
-    max-width: 1000px;
-    margin: 3vh auto 6vh;
+.logo{
+    font-size:20px;
+    font-weight:bold;
+    color:#1e73ff;
+    margin-bottom:24px;
 }
 
-/* Page heading row (title + back button) */
-.page-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2%;
-    margin-bottom: 2vh;
+.sidebar ul{
+    list-style:none;
 }
 
-.page-head h1 {
-    margin: 0;
-    font-size: 26px;
+.sidebar ul li{
+    padding:11px 12px;
+    margin-bottom:6px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:14px;
 }
 
-/* Reusable card / panel surface */
-.card {
-    background: var(--surface-card);
-    border: 2px solid var(--border-accent);
-    border-radius: var(--radius-lg);
-    padding: 18px;
-    box-sizing: border-box;
+.sidebar ul li:hover{
+    background:#1e73ff;
+    color:white;
 }
 
-/* Primary button — transparent w/ orange border, inverts on hover */
-.button-primary {
-    display: inline-block;
-    padding: 12px 18px;
-    border-radius: var(--radius-md);
-    border: 2px solid var(--color-orange);
-    background: transparent;
-    color: #fff;
-    font-family: var(--font-stack);
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    transition: background-color 0.15s ease, color 0.15s ease;
+/* MAIN CONTENT */
+.main-content{
+    flex:1;
+    padding:20px;
+    min-width:0; /* prevents flex blowout */
 }
 
-.button-primary:hover,
-.button-primary:focus {
-    background: var(--color-orange);
-    color: var(--color-navy-deep);
+/* TOP BAR */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
 }
 
-/* Back-to-previous-page button */
-.back-button {
-    display: inline-block;
-    padding: 9px 14px;
-    border-radius: var(--radius-sm);
-    border: 2px solid var(--color-orange);
-    background: var(--surface-card);
-    color: #fff;
-    text-decoration: none;
-    font-weight: 700;
+.search-bar{
+    width:60%;
 }
 
-.back-button:hover {
-    background: var(--color-orange);
-    color: var(--color-navy-deep);
+.search-bar input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:16px;
 }
 
-/* Status / error / success messages */
-.status-message {
-    margin: 1.5vh 0 2vh;
-    padding: 14px 18px;
-    border-radius: var(--radius-lg);
-    background: var(--surface-card);
-    border: 2px solid var(--border-accent);
-    color: #fff;
-    box-sizing: border-box;
+.profile{
+    font-weight:bold;
 }
 
-.error-message {
-    border-color: rgba(255, 122, 122, 0.7);
-    color: #ffd7d7;
+/* CONTENT — three-column grid: filters | packages | details */
+.content{
+    display:grid;
+    grid-template-columns: 220px 1fr 300px;
+    align-items:start;
+    gap:20px;
 }
 
-.success-message {
-    border-color: rgba(120, 220, 150, 0.7);
-    color: #d9f8e1;
+/* FILTERS*/
+.filters{
+    background:white;
+    padding:16px;
+    border-radius:15px;
+    height:fit-content;
 }
 
-/* Full-page loader overlay */
-.page-loader {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--surface-overlay);
-    backdrop-filter: blur(2px);
-    z-index: 999;
+.filters h3{
+    font-size:14px;
+    margin-bottom:14px;
+    color:#333;
 }
 
-.loader-image {
-    width: 120px;
-    height: 120px;
+.filter-group{
+    margin-bottom:18px;
 }
 
-.filters {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    gap: 1%;
-    background: var(--surface-card);
-    border: 2px solid var(--border-accent);
-    border-radius: var(--radius-lg);
-    padding: 1.5%;
-    margin-bottom: 2vh;
+.filter-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    font-size:13px;
 }
 
-.search, .control {
-    width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
-    border: 3px solid var(--border-accent-soft); 
-    background: var(--surface-input);
-    color: #fff; 
-    box-sizing: border-box; 
-    outline: none;
+.filter-group select,
+.filter-group input:not([type="radio"]){
+    width:100%;
+    padding:9px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:13px;
 }
 
-.grid {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2%;
+.radio-group{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:8px;
 }
 
-@media (max-width: 900px) {
-    
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
+.radio-group label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.radio-group input[type="radio"]{
+    width:auto;
+    margin:0;
+    accent-color:#1e73ff;
+    cursor:pointer;
+}
+
+/* PACKAGES — middle column */
+.packages{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    min-width:0;
+}
+
+.packages-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.packages-header h2{
+    font-size:16px;
+}
+
+.packages-header select{
+    padding:8px 12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:13px;
+}
+
+/* PACKAGE CARD — horizontal on desktop, fills the middle column nicely */
+.package-card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+    transition:0.2s ease;
+    cursor:pointer;
+}
+
+.package-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.10);
+}
+
+.package-card img{
+    width:160px;
+    min-width:160px;
+    height:130px;
+    object-fit:cover;
+}
+
+.package-info{
+    padding:14px;
+    flex:1;
+}
+
+.package-info h2{
+    font-size:15px;
+    margin-bottom:5px;
+}
+
+.package-info p{
+    font-size:12px;
+    margin-bottom:3px;
+    color:#666;
+}
+
+.rating{
+    font-size:12px;
+    color:gold;
+    margin:5px 0;
+}
+
+.price{
+    font-size:18px;
+    color:#1e73ff;
+    font-weight:bold;
+    margin:6px 0;
+}
+
+.buttons{
+    margin-top:8px;
+    display:flex;
+    gap:8px;
+}
+
+.buttons button{
+    padding:7px 14px;
+    font-size:12px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+}
+
+.view-btn{
+    background:#1e73ff;
+    color:white;
+}
+
+.book-btn{
+    background:#28a745;
+    color:white;
+}
+
+/* DETAILS — right column, sticky panel */
+.details-section{
+    background:#ffffff;
+    border-radius:12px;
+    font-size:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.07);
+    border:1px solid #e8edf4;
+    position:sticky;
+    top:20px;
+    height:fit-content;
+    overflow:hidden;
+}
+
+/* HERO IMAGE inside details */
+.details-hero{
+    position:relative;
+    height:160px;
+    overflow:hidden;
+}
+
+.details-hero img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.details-hero-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+}
+
+.details-hero-badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+    font-size:11px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.3);
+    backdrop-filter:blur(4px);
+}
+
+.details-hero-title{
+    position:absolute;
+    bottom:12px;
+    left:14px;
+    right:14px;
+}
+
+.details-hero-title h2{
+    color:#ffffff;
+    font-size:16px;
+    font-weight:700;
+    margin:0 0 2px;
+}
+
+.details-hero-agency{
+    color:rgba(255,255,255,0.8);
+    font-size:11px;
+}
+
+/* DETAILS BODY — all inner content */
+.details-body{
+    padding:14px;
+}
+
+/* INCLUSION PILLS */
+.details-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:14px;
+}
+
+.details-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:11px;
+    color:#555;
+    background:#f4f7ff;
+    border:1px solid #dde5f8;
+    padding:3px 9px;
+    border-radius:20px;
+}
+
+/* PRICE + RATING ROW */
+.details-price-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+}
+
+.details-price{
+    font-size:22px;
+    font-weight:700;
+    color:#1e73ff;
+}
+
+.details-price span{
+    font-size:12px;
+    color:#888;
+    font-weight:400;
+}
+
+.details-rating{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+}
+
+.details-stars{
+    color:#e9a800;
+    letter-spacing:1px;
+    font-size:13px;
+}
+
+.details-rating-count{
+    color:#888;
+    font-size:11px;
+}
+
+/* SECTION LABEL */
+.details-label{
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.07em;
+    color:#999;
+    margin-bottom:8px;
+}
+
+/* GALLERY */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:5px;
+    margin-bottom:14px;
+}
+
+.gallery img{
+    width:100%;
+    height:64px;
+    border-radius:7px;
+    object-fit:cover;
+    transition:0.25s ease;
+    display:block;
+}
+
+.gallery img:hover{
+    transform:scale(1.04);
+    filter:brightness(1.07);
+}
+
+/* DESCRIPTION */
+.details-desc{
+    font-size:12px;
+    color:#666;
+    line-height:1.65;
+    margin-bottom:14px;
+}
+
+/* ITINERARY DAYS */
+.itinerary{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    margin-bottom:14px;
+}
+
+.itinerary-day{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:7px 10px;
+    border-radius:8px;
+    background:#f6f9ff;
+    border:1px solid #e4ecff;
+    font-size:12px;
+    color:#333;
+}
+
+.itinerary-day-num{
+    font-size:10px;
+    font-weight:700;
+    color:#1e73ff;
+    background:#dde8ff;
+    border-radius:4px;
+    padding:2px 7px;
+    min-width:38px;
+    text-align:center;
+    flex-shrink:0;
+}
+
+/* REVIEWS*/
+.reviews{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.review{
+    background:#fafbff;
+    border:1px solid #eaeef8;
+    border-radius:9px;
+    padding:10px 12px;
+}
+
+.review-header{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:6px;
+}
+
+.review-avatar{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:#dde8ff;
+    color:#1e73ff;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.review-name{
+    font-size:12px;
+    font-weight:600;
+    color:#333;
+}
+
+.review-stars{
+    color:#e9a800;
+    font-size:11px;
+    margin-left:auto;
+}
+
+.review p{
+    font-size:11px;
+    color:#666;
+    line-height:1.5;
+    margin:0;
+}
+
+/* CTA BUTTONS */
+.details-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.details-buttons button{
+    flex:1;
+    padding:10px;
+    font-size:12px;
+    font-weight:600;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    transition:opacity 0.2s;
+}
+
+.details-buttons button:hover{
+    opacity:0.88;
+}
+
+.view-btn{
+    background:#1e73ff;
+    color:#fff;
+}
+
+.book-btn{
+    background:#22a650;
+    color:#fff;
+}
+
+/* ===== INLINE STYLES CONVERTED TO CLASSES ===== */
+
+/* Sidebar link */
+.sidebar-link{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* Packages header */
+.packages-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+/* Sort form */
+.sort-form{
+    display:flex;
+    gap:10px;
+}
+
+.sort-select{
+    padding:8px 12px;
+    border:1px solid #ddd;
+    border-radius:4px;
+}
+
+/* Empty state */
+.no-packages{
+    text-align:center;
+    padding:40px 20px;
+    color:#999;
+}
+
+.clear-filters-link{
+    color:#1a73e8;
+    text-decoration:none;
+}
+
+/* Package card styles */
+.package-card{
+    border:1px solid #ddd;
+    border-radius:8px;
+    overflow:hidden;
+    margin-bottom:15px;
+    cursor:pointer;
+    transition:box-shadow 0.3s;
+}
+
+.package-card:hover{
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.package-card-grid{
+    display:grid;
+    grid-template-columns:150px 1fr;
+    gap:15px;
+    padding:15px;
+}
+
+.package-image{
+    width:100%;
+    height:120px;
+    object-fit:cover;
+    border-radius:6px;
+}
+
+.no-image{
+    height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f0f0f0;
+    color:#999;
+    border-radius:6px;
+}
+
+.package-title{
+    margin:0 0 5px 0;
+    color:#1a1a1a;
+}
+
+.package-agency{
+    margin:0 0 10px 0;
+    color:#666;
+    font-size:0.9em;
+}
+
+.package-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.package-rating-col{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.star-rating{
+    color:#ffa500;
+}
+
+.review-count-badge{
+    color:#999;
+    font-size:0.85em;
+}
+
+.package-price-col{
+    text-align:right;
+}
+
+.package-price-amount{
+    font-size:1.1em;
+    font-weight:bold;
+    color:#1a73e8;
+}
+
+.details-pills{
+    margin-top:8px;
+}
+
+/* Details section */
+.details-section{
+    background:white;
+    border:1px solid #ddd;
+    border-radius:8px;
+    height:fit-content;
+    overflow-y:auto;
+    max-height:90vh;
+}
+
+.details-hero{
+    position:relative;
+    height:200px;
+}
+
+.details-hero-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.details-hero-no-image{
+    width:100%;
+    height:100%;
+    background:#f0f0f0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#999;
+}
+
+.details-hero-duration-badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(26,115,232,0.9);
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:0.85em;
+}
+
+.details-hero-overlay{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    background:linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding:20px;
+    color:white;
+}
+
+.details-hero-title{
+    margin:0;
+    font-size:1.3em;
+}
+
+.details-hero-agency{
+    margin:5px 0 0 0;
+    opacity:0.9;
+}
+
+.details-body{
+    padding:20px;
+}
+
+.details-price-rating{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:15px 0;
+    padding:15px 0;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+}
+
+.details-price-amount{
+    font-size:1.4em;
+    font-weight:bold;
+    color:#1a73e8;
+}
+
+.details-price-per{
+    color:#999;
+    font-size:0.9em;
+}
+
+.details-rating-col{
+    text-align:right;
+}
+
+.details-rating-stars{
+    color:#ffa500;
+    font-size:1.1em;
+}
+
+.details-rating-amount{
+    font-weight:bold;
+}
+
+.details-rating-count{
+    margin:0;
+    color:#999;
+    font-size:0.85em;
+}
+
+.details-about{
+    margin:20px 0;
+}
+
+.details-about-title{
+    margin:0 0 10px 0;
+    color:#1a1a1a;
+}
+
+.details-about-text{
+    margin:0;
+    color:#666;
+    line-height:1.5;
+    font-size:0.9em;
+}
+
+
+/* Medium screens: hide details panel, stack filters above packages */
+@media(max-width:1100px){
+    .content{
+        grid-template-columns: 1fr;  /* single column */
+        grid-template-rows: auto;
+    }
+
+    .details-section{
+        position:static; /* unstick on mobile */
+    }
+
+    .filters{
+        width:100%;
     }
 }
 
-@media (max-width: 600px) {
-    .grid {
-        grid-template-columns: 1fr;
+/* Small screens: cards go vertical so image fills width */
+@media(max-width:768px){
+    .sidebar{
+        width:60px;
+        min-width:60px;
+        padding:15px 8px;
+    }
+
+    .sidebar .logo{
+        font-size:14px;
+        text-align:center;
+    }
+
+    .sidebar ul li{
+        font-size:10px;
+        padding:8px 4px;
+        text-align:center;
+    }
+
+    .package-card{
+        flex-direction:column;
+    }
+
+    .package-card img{
+        width:100%;
+        min-width:unset;
+        height:200px;   /* tall enough to look good */
+    }
+
+    .package-info{
+        padding:14px;
+    }
+
+    .package-info h2{
+        font-size:16px;
+    }
+
+    .package-info p{
+        font-size:13px;
+    }
+
+    .price{
+        font-size:20px;
+    }
+
+    .buttons button{
+        padding:10px 16px;
+        font-size:13px;
+    }
+
+    .content{
+        gap:14px;
     }
 }
 
-.card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: var(--radius-md);
+@media(max-width:480px){
+    .main-content{
+        padding:12px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        gap:10px;
+        align-items:stretch;
+    }
+
+    .search-bar{
+        width:100%;
+    }
 }

@@ -114,7 +114,7 @@
         return $errors;
     }
 
-    //XSS prevention: sanatise
+    //XSS prevention: sanitise
     function sanitise($data){
         //ENT_QUOTES: convert '' and "" into HTML entities
         return htmlspecialchars((string) $data, ENT_QUOTES, 'UTF-8');

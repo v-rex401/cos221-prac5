@@ -31,7 +31,7 @@
 
         <form id="signupForm" method="POST" action="">
             <div>
-                <label for="name">Name</label><br>
+                <label for="name">Name and Surname</label><br>
                 <input type="text" id="name" name="name" required value="<?php echo sanitise($name); ?>">
             </div>
 
