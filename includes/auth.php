@@ -18,7 +18,8 @@
             return ['success' => false, 'error' =>'Database error: '. $conn->error];
         }
 
-        $statement->bind_param("sssss", $name, $email, $cell, $password, $userType);
+        // Order MUST match INSERT columns: Name, Password_Hash, Email, Cell, Type
+        $statement->bind_param("sssss", $name, $passwordHash, $email, $cell, $userType);
         if (!$statement->execute()) {
             $err = $statement->error;
             $statement->close();

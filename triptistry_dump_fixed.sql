@@ -62,8 +62,8 @@ CREATE TABLE `booking_travelers` (
   `Joined_Date` date NOT NULL,
   PRIMARY KEY (`Booking_ID`,`User_ID`),
   KEY `User_ID` (`User_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`User_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE
+  CONSTRAINT `booking_travelers_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
+  CONSTRAINT `booking_travelers_fk2` FOREIGN KEY (`User_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,7 +100,7 @@ CREATE TABLE `bookings` (
   `Booking_Type` enum('Solo','Group') NOT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `Package_ID` (`Package_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `bookings_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
   CONSTRAINT `CHK_End_After_Start` CHECK (`End_Date` > `Start_Date`),
   CONSTRAINT `CHK_Booking_Before_Start` CHECK (`Booking_Date` <= `Start_Date`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -208,7 +208,7 @@ CREATE TABLE `group_bookings` (
   `Agency_ID` int(11) NOT NULL,
   PRIMARY KEY (`Booking_ID`),
   KEY `FK_GroupBooking_Agency` (`Agency_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
+  CONSTRAINT `group_bookings_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
   CONSTRAINT `FK_GroupBooking_Agency` FOREIGN KEY (`Agency_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -239,8 +239,8 @@ CREATE TABLE `package_accommodations` (
   `Accommodation_ID` int(11) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Accommodation_ID`),
   KEY `Accommodation_ID` (`Accommodation_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`Accommodation_ID`) REFERENCES `accommodations` (`Accommodation_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_accommodations_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `package_accommodations_fk2` FOREIGN KEY (`Accommodation_ID`) REFERENCES `accommodations` (`Accommodation_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -272,8 +272,8 @@ CREATE TABLE `package_attractions` (
   `Attraction_ID` int(11) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Attraction_ID`),
   KEY `Attraction_ID` (`Attraction_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`Attraction_ID`) REFERENCES `tourist_attractions` (`Attraction_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_attractions_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `package_attractions_fk2` FOREIGN KEY (`Attraction_ID`) REFERENCES `tourist_attractions` (`Attraction_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -307,8 +307,8 @@ CREATE TABLE `package_destinations` (
   `Destination_ID` int(11) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Destination_ID`),
   KEY `Destination_ID` (`Destination_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`Destination_ID`) REFERENCES `destinations` (`Destination_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_destinations_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `package_destinations_fk2` FOREIGN KEY (`Destination_ID`) REFERENCES `destinations` (`Destination_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -340,8 +340,8 @@ CREATE TABLE `package_flights` (
   `Flight_ID` int(11) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Flight_ID`),
   KEY `Flight_ID` (`Flight_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`Flight_ID`) REFERENCES `flights` (`Flight_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_flights_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `package_flights_fk2` FOREIGN KEY (`Flight_ID`) REFERENCES `flights` (`Flight_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -372,7 +372,7 @@ CREATE TABLE `package_images` (
   `Package_ID` int(11) NOT NULL,
   `Image_URL` varchar(500) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Image_URL`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_images_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -408,8 +408,8 @@ CREATE TABLE `package_restaurants` (
   `Restaurant_ID` int(11) NOT NULL,
   PRIMARY KEY (`Package_ID`,`Restaurant_ID`),
   KEY `Restaurant_ID` (`Restaurant_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`Restaurant_ID`) REFERENCES `restaurants` (`Restaurant_ID`) ON DELETE CASCADE
+  CONSTRAINT `package_restaurants_fk1` FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE CASCADE,
+  CONSTRAINT `package_restaurants_fk2` FOREIGN KEY (`Restaurant_ID`) REFERENCES `restaurants` (`Restaurant_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -445,7 +445,7 @@ CREATE TABLE `packages` (
   `Duration` int(11) NOT NULL CHECK (`Duration` > 0),
   PRIMARY KEY (`Package_ID`),
   KEY `Agency_ID` (`Agency_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Agency_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE,
+  CONSTRAINT `packages_fk1` FOREIGN KEY (`Agency_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE,
   CONSTRAINT `CHK_Name_Length` CHECK (octet_length(`Name`) >= 3)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -515,7 +515,7 @@ CREATE TABLE `reviews` (
   PRIMARY KEY (`Review_ID`,`Booking_ID`),
   UNIQUE KEY `Booking_ID` (`Booking_ID`),
   KEY `FK_Review_User` (`User_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
+  CONSTRAINT `reviews_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE,
   CONSTRAINT `FK_Review_User` FOREIGN KEY (`User_ID`) REFERENCES `users` (`User_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -546,7 +546,7 @@ DROP TABLE IF EXISTS `solo_bookings`;
 CREATE TABLE `solo_bookings` (
   `Booking_ID` int(11) NOT NULL,
   PRIMARY KEY (`Booking_ID`),
-  CONSTRAINT `1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE
+  CONSTRAINT `solo_bookings_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
