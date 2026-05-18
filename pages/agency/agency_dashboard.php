@@ -8,10 +8,12 @@
     require_once __DIR__ . '/../../includes/auth.php';
 
     //check access
-    // redirectIfNotAgency();
+
+    //! Removed function to work on front-end of UI 
+    //redirectIfNotAgency();
 
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -19,14 +21,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
         <link rel="stylesheet" href="../../css/style.css">
+        //TODO: Change css file to use percentages insteea of pixels
+        <link rel="stylesheet" href="../../css/dashboard.css"> 
     </head>
     <body>
         <p>you are now in agency_dashboard</p>
-        <div id="sidepanel"> 
+        <div class="sidepanel"> 
             <h1>Welcome, John Doe</h1> 
          </div> 
-         <div id="mainBoard"> 
-
+         <div class="mainBoard"> 
+            <div class="card"> <button id="createPackageBtn">Create Package</button></div>
+            <div class="card"> <button id="editPackageBtn">Edit</button> </div> 
+            <div class="card"> <button id="deletePackageBtn"> Delete </button> </div> 
          </div> 
         <a href="../traveller/logout.php">Logout</a>
 
