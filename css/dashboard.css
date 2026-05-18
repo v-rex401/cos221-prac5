@@ -1,5 +1,5 @@
-.card {
-  overflow: auto;
+.dashboardCard {
+  overflow: scroll;
   overflow-x: hidden;
   margin: 15px 40px 40px 10px;
   border-radius: 10px;
