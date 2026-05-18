@@ -8,7 +8,9 @@
     require_once __DIR__ . '/../../includes/auth.php';
 
     //check access
-    redirectIfNotAgency();
+
+    //! Removed function to work on front-end of UI 
+    //redirectIfNotAgency();
 
 ?>
 
@@ -19,9 +21,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
         <link rel="stylesheet" href="../../css/style.css">
+        <!-- TODO: Change css file to use percentages insteea of pixels -->
+         <link rel="stylesheet" href="../../css/dashboard.css">
     </head>
     <body>
         <p>you are now in agency_dashboard</p>
-        <a href="logout.php">Logout</a>
+        <div class="sidepanel"> 
+            <h1>Welcome, John Doe</h1> 
+         </div> 
+         <div id="mainBoard"> 
+            <!-- <div class="card"> <button id="createPackageBtn">Create Package</button></div> -->
+            
+         </div> 
+        <a href="../traveller/logout.php">Logout</a>
+
+        <script src = "../../js/agencyDashboard.js"></script> 
     </body>
 </html>
