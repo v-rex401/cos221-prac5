@@ -1,4 +1,4 @@
-//Get Data for packages
+//* Populate Destinations
 function getCountries() {
   const req = new XMLHttpRequest();
   req.open(
@@ -17,13 +17,23 @@ function getCountries() {
         });
       }
       //Send to PHP
-      fetch("populateDatabase.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(countries),
+      sendToPhp("populateDatabase.php", {
+        type: "destinations",
+        data: countries,
       });
     }
   };
   req.send();
 }
+
+//* Helper to send data to PHP
+function sendToPhp(endpoint, payload) {
+  fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+//* RUN IT
 getCountries();
