@@ -5,7 +5,7 @@
     require_once __DIR__ . '/../../includes/database.php';
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
-    require_once __DIR__ . '/../../includes/dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
 
     //session.php
     redirectIfNotTraveller();
