@@ -187,7 +187,7 @@
 
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="logout.php" class="logout-link">Logout</a>
+                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 
