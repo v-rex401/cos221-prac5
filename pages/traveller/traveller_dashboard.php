@@ -521,7 +521,7 @@
 
                         <!-- Buttons -->
                         <div class="details-buttons">
-                            <button class="btn btn-secondary">View Details</button>
+                            <a href="package-details.php?id=<?php echo $selectedPackage['Package_ID']; ?>" class="btn btn-secondary">View Details</a>
                             <button class="btn btn-primary">Book Now</button>
                         </div>
                     </div>
