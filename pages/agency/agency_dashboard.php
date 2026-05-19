@@ -32,8 +32,9 @@
             <a href="../traveller/logout.php">Logout</a>
          </div> 
          <div id="mainBoard"> 
-           <button id="createPackage">Create Package</button> 
-            
+        
+           <button onclick="window.location.href='create_package.php'">Create Package</button> 
+        
          </div> 
         
 </div> 

@@ -4,7 +4,6 @@
     require_once __DIR__ . '/../../includes/session.php';
     require_once __DIR__ . '/../../includes/database.php';
     require_once __DIR__ . '/../../includes/auth.php';
-    require_once __DIR__ . 'agency_dashboard.php'; 
 ?>
 
 <!DOCTYPE html> 
@@ -20,6 +19,7 @@
     <body> 
         <div class="outsideDiv"> 
             <div class="formContainer"> 
+                <a href="agency_dashboard.php">Go Back</a>
                 <div> 
                 <label for="packageName">Package Name</label> 
                 <input type="text" id="packageName" name="packageName"> 
