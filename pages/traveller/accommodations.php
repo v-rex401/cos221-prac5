@@ -45,6 +45,7 @@
     // Get filter parameters
     $searchQuery = '';
     $selectedType = '';
+    $selectedCountry = '';
     $minPrice = 0;
     $maxPrice = 999999;
     $sortBy = 'price_asc';
@@ -54,6 +55,9 @@
     }
     if (isset($_GET['type'])) {
         $selectedType = sanitise($_GET['type']);
+    }
+    if (isset($_GET['country'])) {
+        $selectedCountry = sanitise($_GET['country']);
     }
     if (isset($_GET['minPrice'])) {
         $minPrice = (float)$_GET['minPrice'];

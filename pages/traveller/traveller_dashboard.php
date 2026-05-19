@@ -132,9 +132,14 @@
         $packages = $filteredPackages;
     }
 
-    // Get first package to display in details panel
+    // Handle package view parameter
     $selectedPackage = null;
-    if (!empty($packages)) {
+
+    if (isset($_GET['view'])) {
+        $viewPackageId = (int)$_GET['view'];
+        $selectedPackage = getPackageDetails($conn, $viewPackageId);
+    } elseif (!empty($packages)) {
+        // Default to first package if no specific view selected
         $selectedPackage = getPackageDetails($conn, $packages[0]['Package_ID']);
     }
 
@@ -150,6 +155,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tripistry Travel Booking</title>
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/tinyview.css">
+    <style>
+        .package-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .package-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .package-duration-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #1e73ff;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .details-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #1e73ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 10;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -369,7 +414,14 @@
                 <?php else: ?>
                     <?php foreach ($packages as $package): ?>
                         <div class="package-card"
-                                    onclick="location.href='?<?php echo http_build_query(array_merge($_GET, ['selected_id' => $package['Package_ID']])); ?>'">
+                            onclick="togglePackageSelection(<?php echo $package['Package_ID']; ?>, event)"
+                            data-package-id="<?php echo $package['Package_ID']; ?>">
+
+                            <!-- Duration Badge -->
+                            <div class="package-duration-badge">
+                                <?php echo $package['Duration']; ?> days
+                            </div>
+
                             <!-- Image -->
                             <div class="package-card-image">
                                 <?php if (isset($package['Image_URL']) && $package['Image_URL']): ?>
@@ -426,6 +478,7 @@
             <!-- COLUMN 3: PACKAGE DETAILS -->
             <div class="details-section">
 
+                <!-- Single Package Details View -->
                 <?php if ($selectedPackage): ?>
                     <!-- Hero Section -->
                     <div class="details-hero">
@@ -527,3 +580,5 @@
 
 </body>
 </html>
+
+<script src="../../js/package_traveller_dashboard.js"></script>
