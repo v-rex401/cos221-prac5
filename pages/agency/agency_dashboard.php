@@ -6,6 +6,8 @@
     require_once __DIR__ . '/../../includes/session.php';
     require_once __DIR__ . '/../../includes/database.php';
     require_once __DIR__ . '/../../includes/auth.php';
+    require_once __DIR__ . '/../../includes/validation.php';
+    require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
 
     //check access
 

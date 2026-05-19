@@ -4,6 +4,7 @@
     require_once __DIR__ . '/../../includes/session.php';
     require_once __DIR__ . '/../../includes/database.php';
     require_once __DIR__ . '/../../includes/auth.php';
+    require_once __DIR__ . '/../../includes/agency_dashboard_queries.php'; 
 ?>
 
 <!DOCTYPE html> 
@@ -27,7 +28,7 @@
 
                 <div> 
                 <label for="destination">Destination</label> 
-                <input type="select" id="destination" name="destination">
+                <select id="destination" name="destination"> </select> 
                 </div> 
 
                 <div> 
@@ -42,7 +43,7 @@
 
                 <div> 
                     <label for="accomodation">Accomodation</label> 
-                    <input type="select" id="accomodation" name="accomodation"> 
+                    <select id="accomodation" name="accomodation"> </select>
                 </div> 
 
                 <div> 

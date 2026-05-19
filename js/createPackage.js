@@ -13,13 +13,13 @@ createButton.onclick = function () {
   const agencyId = document.getElementById("agencyId").value;
 
   const data = {
-    packageName: "packageName",
-    destination: "destination",
-    maxGuests: "maxGuests",
-    departureDate: "departureDate",
-    arrivalDate: "arrivalDate",
-    price: "price",
-    description: "description",
+    packageName: packageName,
+    destination: destination,
+    maxGuests: maxGuests,
+    departureDate: departureDate,
+    arrivalDate: arrivalDate,
+    price: price,
+    description: description,
     duration: duration,
     agency_id: agencyId,
   };
