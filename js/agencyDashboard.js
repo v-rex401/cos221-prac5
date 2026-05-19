@@ -4,6 +4,7 @@
 //* The idea, each package will display in a card and then edit and delete button added to it
 
 window.onload = function () {
+  getInfoData();
   const parent = document.getElementById("mainBoard");
   parent.appendChild(createPackageCard());
 };

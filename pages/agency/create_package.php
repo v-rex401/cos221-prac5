@@ -1,6 +1,10 @@
 <?php
     //create and edit packages
     //edit? still not sure if we should implement edit
+    require_once __DIR__ . '/../../includes/session.php';
+    require_once __DIR__ . '/../../includes/database.php';
+    require_once __DIR__ . '/../../includes/auth.php';
+    require_once __DIR__ . 'agency_dashboard.php'; 
 ?>
 
 <!DOCTYPE html> 
