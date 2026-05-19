@@ -88,10 +88,25 @@ die();
     $data = json_decode($response, true); 
     $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)'); 
      foreach ($data['Items'] as $item){
-        $name = isset($item['AccoDetail']['en']['Name']) ? $item['AccoDetail']['en']['Name'] : null;
-        $type = isset($item['AccoType']['Id']) ? $item['AccoType']['Id'] : null;
+        if (isset($item['AccoDetail']['en']['Name'])) {
+            $name = $item['AccoDetail']['en']['Name'];
+        } else {
+            $name = null;
+        }
+
+        if (isset($item['AccoType']['Id'])) {
+            $type = $item['AccoType']['Id'];
+        } else {
+            $type = null;
+        }
+
         $price = 1000;
-        $image = isset($item['ImageGallery'][0]['ImageUrl']) ? $item['ImageGallery'][0]['ImageUrl'] : null;
+
+        if (isset($item['ImageGallery'][0]['ImageUrl'])) {
+            $image = $item['ImageGallery'][0]['ImageUrl'];
+        } else {
+            $image = null;
+        }
 
         $stmt->bind_param('ssis', 
         $name, $type, $price, $image); 

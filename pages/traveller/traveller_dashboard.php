@@ -162,14 +162,14 @@
 
         <ul>
             <li><a href="traveller_dashboard.php">Home</a></li>
-            <li><a href="#destinations" class="sidebar-link">Destinations</a></li>
-            <li><a href="#flights">Flights</a></li>
-            <li><a href="#accommodations">Accommodations</a></li>
-            <li><a href="#attractions">Attractions</a></li>
-            <li><a href="#restaurants">Restaurants</a></li>
-            <li><a href="#packages">Packages</a></li>
-            <li><a href="#bookings">Bookings</a></li>
-            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="destinations.php">Destinations</a></li>
+            <li><a href="flights.php">Flights</a></li>
+            <li><a href="accommodations.php">Accommodations</a></li>
+            <li><a href="attractions.php">Attractions</a></li>
+            <li><a href="restaurants.php">Restaurants</a></li>
+            <li><a href="packages.php">Packages</a></li>
+            <li><a href="bookings.php">Bookings</a></li>
+            <li><a href="reviews.php">Reviews</a></li>
         </ul>
     </div>
 

@@ -295,8 +295,17 @@
 
     function generateStarRating($rating){
         $fullStars = floor($rating);
-        $halfStar = ($rating - $fullStars) >= 0.5 ? true : false;
-        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+        if (($rating - $fullStars) >= 0.5) {
+            $halfStar = true;
+        } else {
+            $halfStar = false;
+        }
+
+        if ($halfStar) {
+            $emptyStars = 5 - $fullStars - 1;
+        } else {
+            $emptyStars = 5 - $fullStars;
+        }
 
         $html = '';
 

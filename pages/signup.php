@@ -59,12 +59,12 @@
                 <label>Account Type:</label><br>
                 <label>
                     <input type="radio" name="user_type" value="Traveller" required
-                    <?php echo ($userType === 'Traveller' || empty($userType)) ? 'checked' : ''; ?>>
+                    <?php if ($userType === 'Traveller' || empty($userType)) { echo 'checked'; } ?>>
                     Traveller
                 </label>
                 <label>
                     <input type="radio" name="user_type" value="Agency" required
-                    <?php echo ($userType === 'Agency') ? 'checked' : ''; ?>
+                    <?php if ($userType === 'Agency') { echo 'checked'; } ?>
                     >
                     Travel Agency
                 </label>
