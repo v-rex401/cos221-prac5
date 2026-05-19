@@ -30,13 +30,39 @@
     }
 
     //validate password strength
-    function isValidPassword($password){
-        
-        if(strlen($password) <= 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)
-        || !preg_match('/\d/', $password) || !preg_match('/[\W_]/', $password)){
-            $errors [] = "Invalid password";
-            return false;
+    function isValidPassword($password) {
+        $errors = [];
+
+        // Check minimum length
+        if (strlen($password) < 8) {
+            $errors[] = "Password must be at least 8 characters long.";
         }
+
+        // Check for uppercase letter
+        if (!preg_match('/[A-Z]/', $password)) {
+            $errors[] = "Password must contain at least one uppercase letter.";
+        }
+
+        // Check for lowercase letter
+        if (!preg_match('/[a-z]/', $password)) {
+            $errors[] = "Password must contain at least one lowercase letter.";
+        }
+
+        // Check for number
+        if (!preg_match('/\d/', $password)) {
+            $errors[] = "Password must contain at least one number.";
+        }
+
+        // Check for special character
+        if (!preg_match('/[\W_]/', $password)) {
+            $errors[] = "Password must contain at least one special character.";
+        }
+
+        // If there are errors
+        if (!empty($errors)) {
+            return $errors;
+        }
+
         return true;
     }
 
@@ -97,7 +123,7 @@
         if(empty($password)){
             $errors[] = "Password is required";
         }elseif(!isValidPassword($password)) {
-            $errors[] = "Password must be at least 8 characters";
+            $errors[] = "Password invalid";
         }
 
         if(empty($passwordConfirm)){
