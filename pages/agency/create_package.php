@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
         <link rel="stylesheet" href="../../css/style.css">
-        <link rel="stylesheet" href="../../css/dashboard.css"> 
+        <link rel="stylesheet" href="../../css/createPackage.css"> 
     </head>
 
     <body> 
@@ -36,8 +36,8 @@
                 </div>
 
                 <div> 
-                <label for="minGuests">Min Number of Travellers</label> 
-                <input type="number" id="minGuests" name="minGuests"  step="1" min="1">
+                <label for="days">Number of Days</label> 
+                <input type="number" id="days" name="days"  step="1" min="1">
                 </div> 
 
                 <div> 
@@ -46,11 +46,34 @@
                 </div> 
 
                 <div> 
-                    <label for="transport">Transport</label> 
-                    <input type="select" id="transport" name="transport"> 
+                    <label for="departureDate">Departure Date</label> 
+                    <input type="date" id="depDate" name="departureDate">
                 </div> 
+
+                <div> 
+                    <label for="arrivalDate">Arrival Date</label>  
+                    <input type="date" id="arrDate" name = "arrivalDate"> 
+                </div> 
+
+                <div> 
+                    <label for="description">Description</label> 
+                    <input type="text" id="description" name="description"> 
+                </div> 
+
+                <div> 
+                    <label for="price"> Price </label> 
+                    <input type="text" id="price" name="price"> 
+                </div> 
+
+                <div> 
+                    <label for="agencyId"> Agency ID </label> 
+                    <input type="number" id="agencyId" name="agencyId" step="1" min="1"> 
+                </div> 
+
+                <div> <button id="createButton">Create </button> </div> 
             </div> 
         </div>
+        <script src = "../../js/createPackage.js"> </script> 
     </body> 
 
 

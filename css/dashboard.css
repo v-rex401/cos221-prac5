@@ -1,44 +1,100 @@
-.dashboardCard {
-  overflow: scroll;
-  overflow-x: hidden;
-  margin: 15px 40px 40px 10px;
-  border-radius: 10px;
-  width: 300px;
-  height: 300px;
-  background-color: #acbac4;
-  display: inline-block;
-  padding: 0 0 5px 10px;
-  border: 4px solid lightcyan;
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.sidepanel {
-  border: 4px solid black;
-  width: 100px;
-  height: 500px;
-  overflow: visible;
+body {
+  font-family: "DM Sans", sans-serif;
+  background: #f5f4f0;
+  color: #1a1a1a;
+  min-height: 100vh;
 }
+
+/* Hide the debug paragraph */
+body > p {
+  display: none;
+}
+
+/* ── Layout ── */
 
 .myContainer {
   display: flex;
+  min-height: 100vh;
 }
 
-.myContainer > div {
-  width: 33%;
-}
+/* ── Sidebar ── */
 
-.formContainer {
-  width: 40%;
-  background-color: #acbac4;
-  border: 1px solid black;
-  border-radius: 10%;
-  padding-bottom: 2%;
-}
-
-.outsideDiv {
+.sidepanel {
+  width: 220px;
+  min-width: 220px;
+  background: #ffffff;
+  border-right: 0.5px solid #dddbd3;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+}
+
+.sidepanel h1 {
+  font-family: "DM Serif Display", serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+}
+
+.sidepanel a {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 1%;
-  height: 50%;
+  gap: 8px;
+  font-size: 13px;
+  color: #888780;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  margin-top: auto;
+}
+
+.sidepanel a:hover {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+/* ── Main board ── */
+
+#mainBoard {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#mainBoard button {
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  background: #4f46e5;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+#mainBoard button:hover {
+  background: #4338ca;
+}
+
+#mainBoard button:active {
+  transform: scale(0.98);
 }

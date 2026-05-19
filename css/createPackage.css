@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: #f5f4f0;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
+
+.outsideDiv {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.formContainer {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 0.5px solid #dddbd3;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 620px;
+}
+
+.formContainer > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #888780;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.15s;
+}
+
+.formContainer > a:hover {
+  color: #1a1a1a;
+}
+
+.formContainer > a::before {
+  content: "←";
+  font-size: 14px;
+}
+
+.form-title {
+  font-family: "DM Serif Display", serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.3px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: #888780;
+  margin: 0 0 2rem;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b4b2a9;
+  margin: 1.75rem 0 0.75rem;
+  padding-bottom: 6px;
+  border-bottom: 0.5px solid #dddbd3;
+}
+
+.formContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.formContainer label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f5e5a;
+}
+
+.formContainer input,
+.formContainer select,
+.formContainer textarea {
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 0.5px solid #c5c3bb;
+  border-radius: 8px;
+  padding: 9px 12px;
+  outline: none;
+  width: 100%;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.formContainer input:focus,
+.formContainer select:focus,
+.formContainer textarea:focus {
+  border-color: #888780;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+.formContainer input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.formContainer input[type="number"]::-webkit-inner-spin-button,
+.formContainer input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.4;
+}
+
+#createButton {
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  background: #4f46e5;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+  width: auto;
+  align-self: flex-end;
+}
+
+#createButton:hover {
+  background: #4338ca;
+}
+
+#createButton:active {
+  transform: scale(0.98);
+}

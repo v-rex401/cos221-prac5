@@ -20,7 +20,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
-        <link rel="stylesheet" href="../../css/style.css">
         <!-- TODO: Change css file to use percentages insteea of pixels -->
          <link rel="stylesheet" href="../../css/dashboard.css">
     </head>
@@ -28,7 +27,7 @@
         <p>you are now in agency_dashboard</p>
         <div class="myContainer"> 
         <div class="sidepanel"> 
-            <h1>Welcome, John Doe</h1> 
+            <h1>Welcome</h1> 
             <a href="../traveller/logout.php">Logout</a>
          </div> 
          <div id="mainBoard"> 
