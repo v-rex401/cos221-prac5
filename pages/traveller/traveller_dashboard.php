@@ -17,7 +17,11 @@
     $userResult = getTravellerByUserID($userID);
     
     //validation.php
-    $userName = $userResult['success'] ? sanitise($userResult['user']['Name']) : 'Traveller';
+    if($userResult['success']){
+        $userName = sanitise($userResult['user']['Name']);
+    }else{
+        $userName = 'Traveller';
+    }
 
     //includes/dashboard_queries.php
     $topRatedPackage= getTopRatedPackages($conn, 4);
@@ -167,9 +171,6 @@
             <li><a href="#bookings">Bookings</a></li>
             <li><a href="#reviews">Reviews</a></li>
         </ul>
-
-        <!--Add styling to this button-->
-        <a href="logout.php">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -186,6 +187,7 @@
 
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
+                <a href="logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 
@@ -206,7 +208,14 @@
                         <select name="destination">
                             <option value="">All Destinations</option>
                             <?php foreach ($allDestinations as $dest): ?>
-                                <option value="<?php echo $dest['Destination_ID']; ?>" <?php echo $destination == $dest['Destination_ID'] ? 'selected' : ''; ?>>
+                                <?php
+                                    if($destination == $dest['Destination_ID']){
+                                        $isSelected = 'selected';
+                                    }else{
+                                        $isSelected = '';
+                                    }
+                                ?>
+                                <option value="<?php echo $dest['Destination_ID']; ?>" <?php echo $isSelected; ?>>
                                     <?php echo htmlspecialchars($dest['Name']); ?> (<?php echo htmlspecialchars($dest['Country']); ?>)
                                 </option>
                             <?php endforeach; ?>
@@ -217,8 +226,20 @@
                     <div class="filter-group">
                         <label>Price Range</label>
                         <div>
-                            <input type="number" name="minPrice" placeholder="Min" value="<?php echo $minPrice == 0 ? '' : $minPrice; ?>">
-                            <input type="number" name="maxPrice" placeholder="Max" value="<?php echo $maxPrice == 999999 ? '' : $maxPrice; ?>" >
+                            <?php
+                                if($minPrice == 0){
+                                    $minPriceDisplay = '';
+                                }else{
+                                    $minPriceDisplay = $minPrice;
+                                }
+                                if($maxPrice == 999999){
+                                    $maxPriceDisplay = '';
+                                }else{
+                                    $maxPriceDisplay = $maxPrice;
+                                }
+                            ?>
+                            <input type="number" name="minPrice" placeholder="Min" value="<?php echo $minPriceDisplay; ?>">
+                            <input type="number" name="maxPrice" placeholder="Max" value="<?php echo $maxPriceDisplay; ?>" >
                         </div>
                     </div>
 
@@ -226,8 +247,20 @@
                     <div class="filter-group">
                         <label>Duration (Days)</label>
                         <div>
-                            <input type="number" name="minDuration" placeholder="Min" value="<?php echo $minDuration == 1 ? '' : $minDuration; ?>">
-                            <input type="number" name="maxDuration" placeholder="Max" value="<?php echo $maxDuration == 365 ? '' : $maxDuration; ?>">
+                            <?php
+                                if($minDuration == 1){
+                                    $minDurationDisplay = '';
+                                }else{
+                                    $minDurationDisplay = $minDuration;
+                                }
+                                if($maxDuration == 365){
+                                    $maxDurationDisplay = '';
+                                }else{
+                                    $maxDurationDisplay = $maxDuration;
+                                }
+                            ?>
+                            <input type="number" name="minDuration" placeholder="Min" value="<?php echo $minDurationDisplay; ?>">
+                            <input type="number" name="maxDuration" placeholder="Max" value="<?php echo $maxDurationDisplay; ?>">
                         </div>
                     </div>
 
@@ -235,14 +268,33 @@
                     <div class="filter-group">
                         <label>Rating</label>
                         <select name="minRating">
-                            <option value="0" <?php echo $minRating == 0 ? 'selected' : ''; ?>>All Ratings</option>
-                            <option value="3" <?php echo $minRating == 3 ? 'selected' : ''; ?>>3+ Stars</option>
-                            <option value="4" <?php echo $minRating == 4 ? 'selected' : ''; ?>>4+ Stars</option>
-                            <option value="5" <?php echo $minRating == 5 ? 'selected' : ''; ?>>5 Stars</option>
+                            <?php
+                                if($minRating == 0){
+                                    echo '<option value="0" selected>All Ratings</option>';
+                                }else{
+                                    echo '<option value="0">All Ratings</option>';
+                                }
+                                if($minRating == 3){
+                                    echo '<option value="3" selected>3+ Stars</option>';
+                                }else{
+                                    echo '<option value="3">3+ Stars</option>';
+                                }
+                                if($minRating == 4){
+                                    echo '<option value="4" selected>4+ Stars</option>';
+                                }else{
+                                    echo '<option value="4">4+ Stars</option>';
+                                }
+                                if($minRating == 5){
+                                    echo '<option value="5" selected>5 Stars</option>';
+                                }else{
+                                    echo '<option value="5">5 Stars</option>';
+                                }
+                            ?>
                         </select>
                     </div>
 
                     <button type="submit">Apply Filters</button>
+                    <br><br>
                     <a href="traveller_dashboard.php">Reset</a>
                 </form>
             </div>
@@ -254,32 +306,56 @@
 
                     <form method="GET">
                         <!-- Preserve other filters -->
-                        <input type="hidden" name="destination" value="
-                            <?php echo htmlspecialchars($destination); ?>">
-                        <input type="hidden" name="minPrice" value="
-                            <?php echo $minPrice == 0 ? '' : $minPrice; ?>">
-                        <input type="hidden" name="maxPrice" value="
-                            <?php echo $maxPrice == 999999 ? '' : $maxPrice; ?>">
-                        <input type="hidden" name="minDuration" value="
-                            <?php echo $minDuration == 1 ? '' : $minDuration; ?>">
-                        <input type="hidden" name="maxDuration" value="
-                            <?php echo $maxDuration == 365 ? '' : $maxDuration; ?>">
-                        <input type="hidden" name="minRating" value="
-                            <?php echo $minRating; ?>">
-                        <input type="hidden" name="search" value="
-                            <?php echo htmlspecialchars($searchQuery); ?>">
+                        <?php
+                            if($destination){
+                                echo '<input type="hidden" name="destination" value="' . htmlspecialchars($destination) . '">';
+                            }
+                            if($minPrice != 0){
+                                echo '<input type="hidden" name="minPrice" value="' . $minPrice . '">';
+                            }
+                            if($maxPrice != 999999){
+                                echo '<input type="hidden" name="maxPrice" value="' . $maxPrice . '">';
+                            }
+                            if($minDuration != 1){
+                                echo '<input type="hidden" name="minDuration" value="' . $minDuration . '">';
+                            }
+                            if($maxDuration != 365){
+                                echo '<input type="hidden" name="maxDuration" value="' . $maxDuration . '">';
+                            }
+                            if($minRating != 0){
+                                echo '<input type="hidden" name="minRating" value="' . $minRating . '">';
+                            }
+                            echo '<input type="hidden" name="search" value="' . htmlspecialchars($searchQuery) . '">';
+                        ?>
 
                         <select name="sortBy" onchange="this.form.submit();">
-                            <option value="popular"
-                                <?php echo $sortBy == 'popular' ? 'selected' : ''; ?>>Sort: Most Popular</option>
-                            <option value="price_low"
-                                <?php echo $sortBy == 'price_low' ? 'selected' : ''; ?>>Sort: Price (Low to High)</option>
-                            <option value="price_high"
-                                <?php echo $sortBy == 'price_high' ? 'selected' : ''; ?>>Sort: Price (High to Low)</option>
-                            <option value="rating"
-                                <?php echo $sortBy == 'rating' ? 'selected' : ''; ?>>Sort: Rating</option>
-                            <option value="duration"
-                                <?php echo $sortBy == 'duration' ? 'selected' : ''; ?>>Sort: Duration</option>
+                            <?php
+                                if($sortBy == 'popular'){
+                                    echo '<option value="popular" selected>Sort: Most Popular</option>';
+                                }else{
+                                    echo '<option value="popular">Sort: Most Popular</option>';
+                                }
+                                if($sortBy == 'price_low'){
+                                    echo '<option value="price_low" selected>Sort: Price (Low to High)</option>';
+                                }else{
+                                    echo '<option value="price_low">Sort: Price (Low to High)</option>';
+                                }
+                                if($sortBy == 'price_high'){
+                                    echo '<option value="price_high" selected>Sort: Price (High to Low)</option>';
+                                }else{
+                                    echo '<option value="price_high">Sort: Price (High to Low)</option>';
+                                }
+                                if($sortBy == 'rating'){
+                                    echo '<option value="rating" selected>Sort: Rating</option>';
+                                }else{
+                                    echo '<option value="rating">Sort: Rating</option>';
+                                }
+                                if($sortBy == 'duration'){
+                                    echo '<option value="duration" selected>Sort: Duration</option>';
+                                }else{
+                                    echo '<option value="duration">Sort: Duration</option>';
+                                }
+                            ?>
                         </select>
                     </form>
                 </div>
@@ -292,11 +368,13 @@
                     </div>
                 <?php else: ?>
                     <?php foreach ($packages as $package): ?>
-                        <div class="package-card" onclick="location.href='?<?php echo http_build_query(array_merge($_GET, ['selected_id' => $package['Package_ID']])); ?>'">
+                        <div class="package-card"
+                                    onclick="location.href='?<?php echo http_build_query(array_merge($_GET, ['selected_id' => $package['Package_ID']])); ?>'">
                             <!-- Image -->
                             <div class="package-card-image">
-                                <?php if ($package['image_url']): ?>
-                                    <img src="<?php echo htmlspecialchars($package['image_url']); ?>" alt="<?php echo htmlspecialchars($package['package_name']); ?>">
+                                <?php if (isset($package['Image_URL']) && $package['Image_URL']): ?>
+                                    <img src="<?php echo htmlspecialchars($package['Image_URL']); ?>"
+                                        alt="<?php echo htmlspecialchars($package['package_name']); ?>">
                                 <?php else: ?>
                                     <div class="no-image">No Image</div>
                                 <?php endif; ?>
@@ -327,16 +405,16 @@
                                 <!-- Inclusion indicators -->
                                 <div class="details-pills">
                                     <?php if (packageHasFlights($conn, $package['Package_ID'])): ?>
-                                        <span class="details-pill">✈ Flights</span>
+                                        <span class="details-pill">Flights</span>
                                     <?php endif; ?>
                                     <?php if (packageHasAccommodations($conn, $package['Package_ID'])): ?>
-                                        <span class="details-pill">🏨 Hotel</span>
+                                        <span class="details-pill">Hotel</span>
                                     <?php endif; ?>
                                     <?php if (packageHasRestaurants($conn, $package['Package_ID'])): ?>
-                                        <span class="details-pill">🍽 Meals</span>
+                                        <span class="details-pill">Meals</span>
                                     <?php endif; ?>
                                     <?php if (packageHasAttractions($conn, $package['Package_ID'])): ?>
-                                        <span class="details-pill">🗺 Tours</span>
+                                        <span class="details-pill">Tours</span>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -371,16 +449,16 @@
                         <!-- Inclusions -->
                         <div class="details-pills">
                             <?php if (!empty($selectedPackage['flights'])): ?>
-                                <span class="details-pill">✈ Flights</span>
+                                <span class="details-pill">Flights</span>
                             <?php endif; ?>
                             <?php if (!empty($selectedPackage['accommodations'])): ?>
-                                <span class="details-pill">🏨 Hotel</span>
+                                <span class="details-pill">Hotel</span>
                             <?php endif; ?>
                             <?php if (!empty($selectedPackage['restaurants'])): ?>
-                                <span class="details-pill">🍽 Meals</span>
+                                <span class="details-pill">Meals</span>
                             <?php endif; ?>
                             <?php if (!empty($selectedPackage['attractions'])): ?>
-                                <span class="details-pill">🗺 Tours</span>
+                                <span class="details-pill">Tours</span>
                             <?php endif; ?>
                         </div>
 
@@ -389,12 +467,14 @@
                             <div>
                                 <div class="details-price">
                                     R<?php echo number_format($selectedPackage['Price'], 2); ?>
-                                    <span class="per-person">/ person</span>
+                                    <br>
+                                    <span class="per-person">per person</span>
                                 </div>
                             </div>
 
                             <div class="details-rating">
                                 <div class="details-stars">
+
                                     <?php echo generateStarRating($selectedPackage['avg_rating']); ?>
                                 </div>
                                 <strong><?php echo number_format($selectedPackage['avg_rating'], 1); ?></strong>

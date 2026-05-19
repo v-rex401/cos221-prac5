@@ -128,7 +128,7 @@
     }
 
     function getPackageImages($conn, $packageID) {
-        $sql = "SELECT Image_ID, Image_URL
+        $sql = "SELECT Image_URL
                 FROM package_images
                 WHERE Package_ID = ?";
 
@@ -144,7 +144,7 @@
         }
 
         $stmt->close();
-        
+
         return $images;
     }
 
