@@ -1,7 +1,7 @@
 <?php
  require_once __DIR__ . '/database.php';
 
-populateFlights($conn); 
+populateAccomodation($conn); 
 die(); 
 
  //Get the data from the js 
@@ -19,10 +19,17 @@ die();
         break; 
  }
 
+//* Helper Function 
+ function convertToMySQLDateTime($isoTime) {
+    // Parse ISO 8601 format
+    $datetime = new DateTime($isoTime);
+    // Convert to MySQL format (YYYY-MM-DD HH:MM:SS)
+    return $datetime->format('Y-m-d H:i:s');
+}
 
  function populateDestinations($conn, $data) {
     //Get the things from data 
-    $stmt = $conn->prepare('INSERT INTO destinations (Name, Country) VALUES (?,?) '); 
+    $stmt = $conn->prepare('INSERT IGNORE INTO destinations (Name, Country) VALUES (?,?) '); 
     foreach ($data as $c) {
         $stmt->bind_param('ss', $c['name'], $c['country']); 
         $stmt->execute(); 
@@ -39,32 +46,61 @@ die();
     //Fetch from the API 
     $response = file_get_contents($url); 
     $data = json_decode($response, true); 
-    
+    $stmt = $conn->prepare('INSERT IGNORE INTO flights (Airline, Departure_Loc, Arrival_Loc, Time_Dept, Time_Arrive, Price) 
+        VALUES (?,?,?,?,?,?)'); 
     foreach ($data['data'] as $flight){
+
+    if (empty($flight['departure']['scheduled']) || empty($flight['arrival']['scheduled'])) {
+        continue;
+    }
         $airline = $flight['airline']['name']; 
         $departureLoc = $flight['departure']['airport']; 
         $arrivalLoc = $flight['arrival']['airport']; 
-        $deptTime = $flight['departure']['scheduled']; 
-        $arrTime = $flight['arrival']['scheduled']; 
-        $price = 1000; //This should be decided by the agency 
+        $deptTime = convertToMySQLDateTime($flight['departure']['scheduled']); 
+        $arrTime = convertToMySQLDateTime($flight['arrival']['scheduled']); 
+        $price = 1000; //TODO: This should be decided by the agency 
 
-        if ($airline == "empty"){
+
+         if ($arrTime <= $deptTime) {
+        continue;
+    }
+        if ($airline === "empty" || $airline == NULL){
             $airline = "unknown"; 
         }
         echo  "$airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price";
         echo "<br>" ; 
+        
 
-        //TODO: INSERT INTO THE DATABASE 
-        $stmt = $conn->prepare('INSERT INTO flights (Airline, Departure_Loc, Arrival_Loc, Time_Dept, Time_Arrive, Price) 
-        VALUES (?,?,?,?,?,?)'); 
-
-        $stmt->bind_param('sssddi', 
+        $stmt->bind_param('sssssi', 
         $airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price
         ); 
+        // In your populateDatabase.php around line 64
         $stmt->execute();
     }
     $stmt->close(); 
 
  }
 
+ function populateAccomodation($conn){
+    $url = "https://tourism.api.opendatahub.com/v1/Accommodation"; 
+    //Fetch from the API 
+    $response = file_get_contents($url); 
+    $data = json_decode($response, true); 
+    $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)'); 
+     foreach ($data['Items'] as $item){
+        $name = isset($item['AccoDetail']['en']['Name']) ? $item['AccoDetail']['en']['Name'] : null;
+        $type = isset($item['AccoType']['Id']) ? $item['AccoType']['Id'] : null;
+        $price = 1000;
+        $image = isset($item['ImageGallery'][0]['ImageUrl']) ? $item['ImageGallery'][0]['ImageUrl'] : null;
+
+        $stmt->bind_param('ssis', 
+        $name, $type, $price, $image); 
+
+        $stmt->execute(); 
+
+     }
+     $stmt->close(); 
+ }
+
+ 
 ?> 
