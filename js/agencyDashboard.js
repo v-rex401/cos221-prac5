@@ -8,6 +8,10 @@ window.onload = function () {
   parent.appendChild(createPackageCard());
 };
 
+const createPackageButton = document.getElementById("createPackage");
+createPackageButton.onclick = function () {
+  //Open the create_package.php
+};
 //Create cards for each package
 
 function createPackageCard() {

@@ -26,15 +26,17 @@
     </head>
     <body>
         <p>you are now in agency_dashboard</p>
+        <div class="myContainer"> 
         <div class="sidepanel"> 
             <h1>Welcome, John Doe</h1> 
+            <a href="../traveller/logout.php">Logout</a>
          </div> 
          <div id="mainBoard"> 
-            <!-- <div class="card"> <button id="createPackageBtn">Create Package</button></div> -->
+           <button id="createPackage">Create Package</button> 
             
          </div> 
-        <a href="../traveller/logout.php">Logout</a>
-
+        
+</div> 
         <script src = "../../js/agencyDashboard.js"></script> 
     </body>
 </html>
