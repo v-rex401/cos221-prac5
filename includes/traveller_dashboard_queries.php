@@ -386,3 +386,75 @@
 
         return $row['count'] > 0;
     }
+
+    function userHasBookedPackage($conn, $userID, $packageID) {
+        $sql = "SELECT COUNT(*) as count
+                FROM bookings
+                WHERE User_ID = ? AND Package_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $userID, $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['count'] > 0;
+    }
+
+    function userHasReviewedPackage($conn, $userID, $packageID) {
+        $sql = "SELECT r.Review_ID
+                FROM reviews r
+                JOIN bookings b ON r.Booking_ID = b.Booking_ID
+                WHERE b.User_ID = ? AND b.Package_ID = ?
+                LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $userID, $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $review = $result->fetch_assoc();
+        $stmt->close();
+
+        return $review;
+    }
+
+    function submitReview($conn, $bookingID, $rating, $comment) {
+        $sql = "INSERT INTO reviews (Booking_ID, Rating, Comment, Date)
+                VALUES (?, ?, ?, NOW())";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return ['success' => false, 'error' => 'Database error'];
+
+        $stmt->bind_param("iis", $bookingID, $rating, $comment);
+        if ($stmt->execute()) {
+            $insertId = $stmt->insert_id;
+            $stmt->close();
+            return ['success' => true, 'review_id' => $insertId];
+        } else {
+            $stmt->close();
+            return ['success' => false, 'error' => 'Failed to submit review'];
+        }
+    }
+
+    function getTravellerReviews($conn, $userID) {
+        $sql = "SELECT r.Review_ID, r.Rating, r.Comment, r.Date,
+                        p.Name AS package_name, p.Package_ID,
+                        b.Booking_Date
+                FROM reviews r
+                JOIN bookings b ON r.Booking_ID = b.Booking_ID
+                JOIN packages p ON b.Package_ID = p.Package_ID
+                WHERE b.User_ID = ?
+                ORDER BY r.Date DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $userID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $reviews = [];
+        while ($row = $result->fetch_assoc()) {
+            $reviews[] = $row;
+        }
+        $stmt->close();
+
+        return $reviews;
+    }

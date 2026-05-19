@@ -310,6 +310,7 @@
             <div class="packages">
                 <div class="packages-header">
                     <h2>Available Travel Packages (<?php echo count($packages); ?>)</h2>
+                    <a href="create_private_group.php">Create Private Group</a>
 
                     <form method="GET">
                         <!-- Preserve other filters -->
