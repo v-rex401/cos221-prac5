@@ -1,19 +1,29 @@
 //Get Data for packages
-function getInfoData() {
+function getCountries() {
   const req = new XMLHttpRequest();
+  req.open(
+    "GET",
+    "https://restcountries.com/v3.1/all?fields=name,capital,region",
+  );
 
   req.onreadystatechange = function () {
-    if (req.readyState === 4 && req.status) {
-      const result = JSON.parse(req.responeText);
-      console.log(result);
+    if (req.readyState === 4 && req.status == 200) {
+      const result = JSON.parse(req.responseText);
+      const countries = [];
+      for (var i = 0; i < result.length; i++) {
+        countries.push({
+          name: result[i].capital[0],
+          country: result[i].name.common,
+        });
+      }
+      //Send to PHP
+      fetch("populateDatabase.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(countries),
+      });
     }
   };
-  req.open(
-    "POST",
-    "https://complete-travel-search-api.p.rapidapi.com/v1/api/flight-booking-options",
-  );
-  req.setRequestHeader("Content-Type", "application/json");
-
-  const requestData = JSON.stringify({});
-  req.send(requestData);
+  req.send();
 }
+getCountries();
