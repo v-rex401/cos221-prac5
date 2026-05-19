@@ -149,27 +149,136 @@
     }
 
     function getPackageDestinations($conn, $packageID) {
+        $sql = "SELECT destinations.Destination_ID, destinations.Name, destinations.Country, destinations.Image
+                FROM destinations
+                JOIN package_destinations ON destinations.Destination_ID = package_destinations.Destination_ID
+                WHERE package_destinations.Package_ID = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $destinations = [];
+        while ($row = $result->fetch_assoc()) {
+            $destinations[] = $row;
+        }
+
+        $stmt->close();
+
+        return $destinations;
     }
 
     function getPackageFlights($conn, $packageID) {
+        $sql = "SELECT flights.Flight_ID, flights.Airline, flights.Departure_Loc, flights.Arrival_Loc, flights.Time_Dept, flights.Time_Arrive, flights.Price
+                FROM flights
+                JOIN package_flights ON flights.Flight_ID = package_flights.Flight_ID
+                WHERE package_flights.Package_ID = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $flights = [];
+        while ($row = $result->fetch_assoc()) {
+            $flights[] = $row;
+        }
+
+        $stmt->close();
+
+        return $flights;
     }
 
     function getPackageAccommodations($conn, $packageID) {
+        $sql = "SELECT accommodations.Accommodation_ID, accommodations.Name, accommodations.Type, accommodations.Price_PN, accommodations.Image
+                FROM accommodations
+                JOIN package_accommodations ON accommodations.Accommodation_ID = package_accommodations.Accommodation_ID
+                WHERE package_accommodations.Package_ID = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $accommodations = [];
+        while ($row = $result->fetch_assoc()) {
+            $accommodations[] = $row;
+        }
+
+        $stmt->close();
+
+        return $accommodations;
     }
 
     function getPackageAttractions($conn, $packageID) {
+        $sql = "SELECT tourist_attractions.Attraction_ID, tourist_attractions.Name, tourist_attractions.Image
+                FROM tourist_attractions
+                JOIN package_attractions ON tourist_attractions.Attraction_ID = package_attractions.Attraction_ID
+                WHERE package_attractions.Package_ID = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $attractions = [];
+        while ($row = $result->fetch_assoc()) {
+            $attractions[] = $row;
+        }
+
+        $stmt->close();
+
+        return $attractions;
     }
 
     function getPackageRestaurants($conn, $packageID) {
+        $sql = "SELECT restaurants.Restaurant_ID, restaurants.Name, restaurants.Cuisine, restaurants.Image
+                FROM restaurants
+                JOIN package_restaurants ON restaurants.Restaurant_ID = package_restaurants.Restaurant_ID
+                WHERE package_restaurants.Package_ID = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $restaurants = [];
+        while ($row = $result->fetch_assoc()) {
+            $restaurants[] = $row;
+        }
+
+        $stmt->close();
+
+        return $restaurants;
     }
 
     function getPackageReviews($conn, $packageID) {
-        
+        $sql = "SELECT reviews.Review_ID, reviews.Booking_ID, reviews.Rating, reviews.Comment, reviews.Date, reviews.User_ID
+                FROM reviews
+                JOIN bookings ON reviews.Booking_ID = bookings.Booking_ID
+                JOIN packages ON bookings.Package_ID = packages.Package_ID
+                WHERE packages.Package_ID = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $reviews = [];
+        while ($row = $result->fetch_assoc()) {
+            $reviews[] = $row;
+        }
+
+        $stmt->close();
+
+        return $reviews;
     }
 
     function getAllDestinations($conn){
@@ -225,13 +334,46 @@
     }
     
     function packageHasAccommodations($conn, $packageID){
+        $sql = "SELECT COUNT(*) as count
+                FROM package_accommodations
+                WHERE Package_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
 
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['count'] > 0;
     }
 
     function packageHasRestaurants($conn, $packageID){
+        $sql = "SELECT COUNT(*) as count
+                FROM package_restaurants
+                WHERE Package_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
 
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['count'] > 0;
     }
 
     function packageHasAttractions($conn, $packageID){
+        $sql = "SELECT COUNT(*) as count
+                FROM package_attractions
+                WHERE Package_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $packageID);
+        $stmt->execute();
 
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['count'] > 0;
     }
