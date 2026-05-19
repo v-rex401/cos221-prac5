@@ -156,44 +156,6 @@
     <title>Tripistry Travel Booking</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/tinyview.css">
-    <style>
-        .package-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .package-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .package-duration-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #1e73ff;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 10;
-        }
-
-        .details-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #1e73ff;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 10;
-        }
-    </style>
 
 </head>
 

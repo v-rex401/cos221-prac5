@@ -28,7 +28,7 @@
         <div class="myContainer"> 
         <div class="sidepanel"> 
             <h1>Welcome</h1> 
-            <a href="../traveller/logout.php">Logout</a>
+            <a href="../logout.php">Logout</a>
          </div> 
          <div id="mainBoard"> 
         
