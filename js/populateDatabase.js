@@ -26,6 +26,28 @@ function getCountries() {
   req.send();
 }
 
+function getFlights() {
+  const req = new XMLHttpRequest();
+  req.open(
+    "POST",
+    "https://api.aviationstack.com/v1/flights?access_key=37eef15d86e0a204669b06f6c69f769f",
+  );
+  req.setRequestHeader("Content-Type", "application/json");
+
+  req.onreadystatechange = function () {
+    if (req.readyState == 4 && req.status == 200) {
+      const result = JSON.parse(req.responseText);
+      console.log(result);
+    }
+  };
+  const requestData = JSON.stringify({
+    limit: 100,
+  });
+  req.send(requestData);
+
+  //Send to PHP
+}
+
 //* Helper to send data to PHP
 function sendToPhp(endpoint, payload) {
   fetch(endpoint, {
