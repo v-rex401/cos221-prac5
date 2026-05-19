@@ -114,10 +114,6 @@ body {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
 }
 
-.formContainer input[type="number"] {
-  -moz-appearance: textfield;
-}
-
 .formContainer input[type="number"]::-webkit-inner-spin-button,
 .formContainer input[type="number"]::-webkit-outer-spin-button {
   opacity: 0.4;
