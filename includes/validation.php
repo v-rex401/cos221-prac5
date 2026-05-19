@@ -97,7 +97,7 @@
         if(empty($password)){
             $errors[] = "Password is required";
         }elseif(!isValidPassword($password)) {
-            $errors[] = "Password must be at least 6 characters";
+            $errors[] = "Password must be at least 8 characters";
         }
 
         if(empty($passwordConfirm)){
