@@ -309,7 +309,6 @@
             <!-- COLUMN 2: PACKAGES -->
             <div class="packages">
                 <div class="packages-header">
-                    <h2>Available Travel Packages (<?php echo count($packages); ?>)</h2>
                     <a href="create_private_group.php">Create Private Group</a>
 
                     <form method="GET">
@@ -338,11 +337,6 @@
 
                         <select name="sortBy" onchange="this.form.submit();">
                             <?php
-                                if($sortBy == 'popular'){
-                                    echo '<option value="popular" selected>Sort: Most Popular</option>';
-                                }else{
-                                    echo '<option value="popular">Sort: Most Popular</option>';
-                                }
                                 if($sortBy == 'price_low'){
                                     echo '<option value="price_low" selected>Sort: Price (Low to High)</option>';
                                 }else{
@@ -489,8 +483,7 @@
                             </div>
 
                             <div class="details-rating">
-                                <div class="details-stars">
-
+                                <div>
                                     <?php echo generateStarRating($selectedPackage['avg_rating']); ?>
                                 </div>
                                 <strong><?php echo number_format($selectedPackage['avg_rating'], 1); ?></strong>
