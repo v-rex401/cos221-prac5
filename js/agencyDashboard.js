@@ -23,7 +23,7 @@ function loadPackages() {
       if (packages.length === 0) {
         parent.innerHTML += "<p>No packages yet. Create one!<p>";
       } else {
-        packages.foreach((pkg) => {
+        packages.forEach((pkg) => {
           parent.appendChild(createPackageCard(pkg));
         });
       }
@@ -31,7 +31,7 @@ function loadPackages() {
 }
 //Create cards for each package
 
-function createPackageCard(package) {
+function createPackageCard(pkg) {
   //Create the card div
   const newPackage = document.createElement("div");
   //Add to correct styling
