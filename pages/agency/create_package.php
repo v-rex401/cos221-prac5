@@ -43,7 +43,7 @@
 
                 <div> 
                     <label for="accomodation">Accomodation</label> 
-                    <select id="accomodation" name="accomodation"> </select>
+                    <select id="accommodation" name="accomodation"> </select>
                 </div> 
 
                 <div> 
@@ -68,7 +68,7 @@
 
                 <div> 
                     <label for="agencyId"> Agency ID </label> 
-                    <input type="number" id="agencyId" name="agencyId" step="1" min="1"> 
+                    <input type="text" id="agencyId" name="agencyId">
                 </div> 
 
                 <div> <button id="createButton">Create </button> </div> 

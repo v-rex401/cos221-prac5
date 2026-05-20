@@ -23,7 +23,7 @@ createButton.onclick = function () {
     duration: duration,
     agency_id: agencyId,
   };
-  fetch("agency_dashboard_queries.php", {
+  fetch("../../includes/agency_dashboard_queries.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -32,3 +32,30 @@ createButton.onclick = function () {
     }),
   });
 };
+
+window.onload = function () {
+  populateDropdown("getDestinations", "destination", "Destination_ID", "Name");
+  populateDropdown(
+    "getAccommodations",
+    "accommodation",
+    "Accommodation_ID",
+    "Name",
+  );
+};
+function populateDropdown(type, elementId, valueKey, labelKey) {
+  fetch("../../includes/agency_dashboard_queries.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: type }),
+  })
+    .then((res) => res.json())
+    .then((items) => {
+      const select = document.getElementById(elementId);
+      items.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item[valueKey];
+        opt.textContent = item[labelKey];
+        select.appendChild(opt);
+      });
+    });
+}

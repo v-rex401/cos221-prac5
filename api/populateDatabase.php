@@ -1,121 +1,125 @@
 <?php
- require_once __DIR__ . '../includes/database.php';
+require_once __DIR__ . '/../includes/database.php';
 
-populateAccomodation($conn); 
-die(); 
+populateDestinations($conn);
+populateAccomodation($conn);
+populateFlights($conn);
+die();
 
- //Get the data from the js 
- $input = json_decode(file_get_contents('php://input'), true); 
-
- $type = $input['type']; 
- $data = $input['data']; 
-
- switch ($type){
-    case 'destinations':
-        populateDestinations($conn, $data); 
-        break; 
-    case 'attractions': 
-        populateAttractions($conn, $data); 
-        break; 
- }
-
-//* Helper Function 
- function convertToMySQLDateTime($isoTime) {
-    // Parse ISO 8601 format
+function convertToMySQLDateTime($isoTime) {
     $datetime = new DateTime($isoTime);
-    // Convert to MySQL format (YYYY-MM-DD HH:MM:SS)
     return $datetime->format('Y-m-d H:i:s');
 }
 
- function populateDestinations($conn, $data) {
-    //Get the things from data 
-    $stmt = $conn->prepare('INSERT IGNORE INTO destinations (Name, Country) VALUES (?,?) '); 
-    foreach ($data as $c) {
-        $stmt->bind_param('ss', $c['name'], $c['country']); 
-        $stmt->execute(); 
-    }
-    $stmt->close(); 
-    $conn->close(); 
- }
+function populateDestinations($conn) {
+    $url = "https://restcountries.com/v3.1/all?fields=name,capital,region";
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
 
+    $stmt = $conn->prepare('INSERT IGNORE INTO destinations (Name, Country) VALUES (?, ?)');
 
- function populateFlights($conn){
-    $apikey = "37eef15d86e0a204669b06f6c69f769f"; 
-    $url = "http://api.aviationstack.com/v1/flights?access_key=$apikey&limit=100"; 
+    for ($i = 0; $i < count($data); $i++) {
+        $name    = $data[$i]['capital'][0];
+        $country = $data[$i]['name']['common'];
 
-    //Fetch from the API 
-    $response = file_get_contents($url); 
-    $data = json_decode($response, true); 
-    $stmt = $conn->prepare('INSERT IGNORE INTO flights (Airline, Departure_Loc, Arrival_Loc, Time_Dept, Time_Arrive, Price) 
-        VALUES (?,?,?,?,?,?)'); 
-    foreach ($data['data'] as $flight){
-
-    if (empty($flight['departure']['scheduled']) || empty($flight['arrival']['scheduled'])) {
-        continue;
-    }
-        $airline = $flight['airline']['name']; 
-        $departureLoc = $flight['departure']['airport']; 
-        $arrivalLoc = $flight['arrival']['airport']; 
-        $deptTime = convertToMySQLDateTime($flight['departure']['scheduled']); 
-        $arrTime = convertToMySQLDateTime($flight['arrival']['scheduled']); 
-        $price = 1000; //TODO: This should be decided by the agency 
-
-
-         if ($arrTime <= $deptTime) {
-        continue;
-    }
-        if ($airline === "empty" || $airline == NULL){
-            $airline = "unknown"; 
-        }
-        echo  "$airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price";
-        echo "<br>" ; 
-        
-
-        $stmt->bind_param('sssssi', 
-        $airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price
-        ); 
-        // In your populateDatabase.php around line 64
+        $stmt->bind_param('ss', $name, $country);
         $stmt->execute();
+
+        echo "$name, $country <br>";
     }
-    $stmt->close(); 
 
- }
+    $stmt->close();
+    echo "Done!";
+}
 
- function populateAccomodation($conn){
-    $url = "https://tourism.api.opendatahub.com/v1/Accommodation"; 
-    //Fetch from the API 
-    $response = file_get_contents($url); 
-    $data = json_decode($response, true); 
-    $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)'); 
-     foreach ($data['Items'] as $item){
-        if (isset($item['AccoDetail']['en']['Name'])) {
-            $name = $item['AccoDetail']['en']['Name'];
-        } else {
-            $name = null;
+function populateFlights($conn) {
+    $check = $conn->query("SELECT COUNT(*) as total FROM flights");
+    $row = $check->fetch_assoc();
+    if ($row['total'] > 0) {
+        echo "Flights already populated ({$row['total']} records). Skipping.<br>";
+        return;
+    }
+
+    $apikey = "37eef15d86e0a204669b06f6c69f769f";
+    $url = "http://api.aviationstack.com/v1/flights?access_key=$apikey&limit=100";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($response, true);
+
+    $stmt = $conn->prepare('INSERT IGNORE INTO flights 
+        (Airline, Departure_Loc, Arrival_Loc, Time_Dept, Time_Arrive, Price) 
+        VALUES (?,?,?,?,?,?)');
+
+    $inserted = 0;
+    $skipped = 0;
+
+    foreach ($data['data'] as $flight) {
+        if (empty($flight['departure']['scheduled']) || empty($flight['arrival']['scheduled'])) {
+            $skipped++; continue;
+        }
+        if (empty($flight['airline']['name']) || $flight['airline']['name'] === 'empty') {
+            $skipped++; continue;
+        }
+        if (empty($flight['flight']['iata'])) {
+            $skipped++; continue;
         }
 
-        if (isset($item['AccoType']['Id'])) {
-            $type = $item['AccoType']['Id'];
-        } else {
-            $type = null;
-        }
+        $airline      = $flight['airline']['name'];
+        $departureLoc = $flight['departure']['airport'];
+        $arrivalLoc   = $flight['arrival']['airport'];
+        $deptTime     = convertToMySQLDateTime($flight['departure']['scheduled']);
+        $arrTime      = convertToMySQLDateTime($flight['arrival']['scheduled']);
+        $price        = 1000;
 
+        if ($arrTime <= $deptTime) { $skipped++; continue; }
+
+        $stmt->bind_param('sssssi',
+            $airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price
+        );
+        $stmt->execute();
+        $inserted++;
+    }
+
+    $stmt->close();
+    echo "Flights done! Inserted: $inserted | Skipped: $skipped <br>";
+}
+
+function populateAccomodation($conn) {
+    $check = $conn->query("SELECT COUNT(*) as total FROM accommodations");
+    $row = $check->fetch_assoc();
+    if ($row['total'] > 0) {
+        echo "Accommodations already populated ({$row['total']} records). Skipping.<br>";
+        return;
+    }
+
+    $url = "https://tourism.api.opendatahub.com/v1/Accommodation";
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
+
+    $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)');
+
+    $inserted = 0;
+    $skipped = 0;
+
+    foreach ($data['Items'] as $item) {
+        $name  = $item['AccoDetail']['en']['Name'] ?? null;
+        $type  = $item['AccoType']['Id']            ?? null;
         $price = 1000;
+        $image = $item['ImageGallery'][0]['ImageUrl'] ?? null;
 
-        if (isset($item['ImageGallery'][0]['ImageUrl'])) {
-            $image = $item['ImageGallery'][0]['ImageUrl'];
-        } else {
-            $image = null;
-        }
+        if (empty($name)) { $skipped++; continue; }
 
-        $stmt->bind_param('ssis', 
-        $name, $type, $price, $image); 
+        $stmt->bind_param('ssis', $name, $type, $price, $image);
+        $stmt->execute();
+        $inserted++;
+    }
 
-        $stmt->execute(); 
-
-     }
-     $stmt->close(); 
- }
-
- 
-?> 
+    $stmt->close();
+    echo "Accommodations done! Inserted: $inserted | Skipped: $skipped <br>";
+}
+?>
