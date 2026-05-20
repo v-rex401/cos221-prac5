@@ -1,6 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+
 function getAccommodations($conn) {
     $stmt = $conn->prepare('SELECT Accommodation_ID, Name FROM accommodations ORDER BY Name');
     $stmt->execute();
@@ -33,8 +32,8 @@ function getDestinations($conn) {
       $data['agency_id'],
       $data['packageName'],
       $data['price'],
-      $data['duration'],
-      $data['description']
+      $data['description'], 
+      $data['duration']
     ); 
     $stmt->execute(); 
 

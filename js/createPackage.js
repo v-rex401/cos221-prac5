@@ -31,6 +31,8 @@ createButton.onclick = function () {
       data: data,
     }),
   });
+  //Display message to user
+  alert("Package Created");
 };
 
 window.onload = function () {
