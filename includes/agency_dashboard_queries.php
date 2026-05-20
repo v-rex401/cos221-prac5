@@ -1,5 +1,16 @@
 <?php
-
+function getAgencyPackages($conn, $agency_id) {
+    $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
+    $stmt->bind_param('i', $agency_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $packages = [];
+    while ($row = $result->fetch_assoc()) {
+        $packages[] = $row;
+    }
+    $stmt->close();
+    return $packages;
+}
 function getAccommodations($conn) {
     $stmt = $conn->prepare('SELECT Accommodation_ID, Name FROM accommodations ORDER BY Name');
     $stmt->execute();
@@ -63,6 +74,8 @@ $stmt3->close();
     echo json_encode(getDestinations($conn));
 }else if ($body['type'] === 'getAccommodations') {
     echo json_encode(getAccommodations($conn));
+}else if ($body['type'] === 'getAgencyPackages') {
+    echo json_encode(getAgencyPackages($conn, $body['agency_id']));
 }
     exit;
 }
