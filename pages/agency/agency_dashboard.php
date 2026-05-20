@@ -10,9 +10,7 @@
     require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
 
     //check access
-
-    //! Removed function to work on front-end of UI 
-    //redirectIfNotAgency();
+    redirectIfNotAgency();
 
 ?>
 
