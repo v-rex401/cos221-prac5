@@ -11,6 +11,7 @@
 
     //check access
     redirectIfNotAgency();
+    $agency_id = getCurrentUserID(); 
 
 ?>
 
