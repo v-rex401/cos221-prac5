@@ -30,9 +30,20 @@ createButton.onclick = function () {
       type: "setPackage",
       data: data,
     }),
-  });
-  //Display message to user
-  alert("Package Created");
+  })
+    //Display message to user
+
+    //get message back from PHP then display alert
+    .then((res) => res.json())
+    .then((response) => {
+      if (response.success) {
+        alert("Package created successfully!");
+        window.location.href = "agency_dashboard.php"; // redirect back
+      } else {
+        alert("Error: " + response.message);
+      }
+    })
+    .catch((err) => console.error("Error:", err));
 };
 
 window.onload = function () {
@@ -53,6 +64,7 @@ function populateDropdown(type, elementId, valueKey, labelKey) {
     .then((res) => res.json())
     .then((items) => {
       const select = document.getElementById(elementId);
+      select.innerHTML = "";
       items.forEach((item) => {
         const opt = document.createElement("option");
         opt.value = item[valueKey];

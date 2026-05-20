@@ -1,7 +1,7 @@
 <?php
 function getAgencyPackages($conn, $agency_id) {
-    $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
-    $stmt->bind_param('i', $agency_id);
+    $stmt = $conn->prepare('SELECT * FROM packages WHERE User_ID = ? ORDER BY Name');
+    $stmt->bind_param('i', 1);
     $stmt->execute();
     $result = $stmt->get_result();
     $packages = [];
@@ -60,7 +60,13 @@ $stmt3->bind_param('ii', $package_id, $data['accommodation']);
 $stmt3->execute();
 $stmt3->close();
 
-    //Then get the id from the table and then add to other tables 
+    //send sucesss to js 
+    if ($package_id){
+        return ['success' => true, 'package_id' => $package_id, 'message' => 'Package created successfully']; 
+    } else {
+        return ['success' => false, 'message' => 'Failed to create package']; 
+    }
+
  }
 
  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
