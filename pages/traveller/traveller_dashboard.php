@@ -518,8 +518,8 @@
 
                         <!-- Buttons -->
                         <div class="details-buttons">
-                            <a href="package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>" class="btn btn-secondary">View Details</a>
-                            <button class="btn btn-primary">Book Now</button>
+                            <button type="button" class="view-btn" onclick="window.location.href='package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>'">View Details</button>
+                            <button type="button" class="book-btn">Book Now</button>
                         </div>
                     </div>
 
