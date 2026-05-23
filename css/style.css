@@ -265,7 +265,25 @@ body{
     font-size:13px;
 }
 
-/* PACKAGE CARD — horizontal on desktop, fills the middle column nicely */
+/*PRIVATE GROUP green button*/
+.create-group-btn{
+    display:inline-block;
+    padding:9px 18px;
+    background:#28a745;
+    color:#fff;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.create-group-btn:hover{
+    background:#218838;
+}
+
+/* PACKAGE CARD*/
 .package-card{
     background:white;
     border-radius:12px;

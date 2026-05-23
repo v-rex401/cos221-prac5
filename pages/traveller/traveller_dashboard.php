@@ -313,7 +313,7 @@
             <!-- COLUMN 1: PACKAGES -->
             <div class="packages">
                 <div class="packages-header">
-                    <a href="create_private_group.php">Create Private Group</a>
+                    <a href="create_private_group.php" class="create-group-btn">Create Private Group</a>
 
                     <form method="GET">
                         <!-- Preserve other filters -->
@@ -436,7 +436,7 @@
                 <?php endif; ?>
             </div>
 
-            <!-- COLUMN 3: PACKAGE DETAILS -->
+            <!-- COLUMN 2: PACKAGE DETAILS -->
             <div class="details-section">
                 <!-- Single Package Details View -->
                 <?php if ($selectedPackage): ?>
