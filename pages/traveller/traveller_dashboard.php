@@ -23,8 +23,9 @@
         $userName = 'Traveller';
     }
 
-    //includes/dashboard_queries.php
-    $topRatedPackage= getTopRatedPackages($conn, 4);
+    //includes/traveller_dashboard_queries.php
+    //top rated package for column 3 default view
+    $topRatedPackages = getTopRatedPackages($conn, 1);
 
     //get filtering parameters
     //destinations
@@ -136,10 +137,14 @@
     $selectedPackage = null;
 
     if (isset($_GET['view'])) {
+        // A package was clicked - show that package
         $viewPackageId = (int)$_GET['view'];
         $selectedPackage = getPackageDetails($conn, $viewPackageId);
+    } elseif (!empty($topRatedPackages)) {
+        // default to the top rated package
+        $selectedPackage = getPackageDetails($conn, $topRatedPackages[0]['Package_ID']);
     } elseif (!empty($packages)) {
-        // Default to first package if no specific view selected
+        // Fallback to first package if no rated packages exist
         $selectedPackage = getPackageDetails($conn, $packages[0]['Package_ID']);
     }
 
@@ -434,7 +439,6 @@
 
             <!-- COLUMN 3: PACKAGE DETAILS -->
             <div class="details-section">
-
                 <!-- Single Package Details View -->
                 <?php if ($selectedPackage): ?>
                     <!-- Hero Section -->
