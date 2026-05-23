@@ -203,11 +203,8 @@
             </div>
         </div>
 
-        <!-- 3-column grid : filters, packages, details(mini view for package) -->
-        <div class="content">
-
-            <!--COL 1 FILTERS -->
-            <div class="filters">
+        <!-- FILTER BAR — horizontal, sits just under the search bar -->
+        <div class="filters filters-bar">
                 <h3>Filter Packages</h3>
 
                 <form method="GET" id="filterForm">
@@ -306,12 +303,14 @@
                     </div>
 
                     <button type="submit">Apply Filters</button>
-                    <br><br>
-                    <a href="traveller_dashboard.php">Reset</a>
+                    <a href="traveller_dashboard.php" class="reset-link">Reset</a>
                 </form>
-            </div>
+        </div>
 
-            <!-- COLUMN 2: PACKAGES -->
+        <!-- 2-column grid : packages, details(mini view for package) -->
+        <div class="content">
+
+            <!-- COLUMN 1: PACKAGES -->
             <div class="packages">
                 <div class="packages-header">
                     <a href="create_private_group.php">Create Private Group</a>
@@ -519,7 +518,7 @@
 
                         <!-- Buttons -->
                         <div class="details-buttons">
-                            <a href="package-details.php?id=<?php echo $selectedPackage['Package_ID']; ?>" class="btn btn-secondary">View Details</a>
+                            <a href="package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>" class="btn btn-secondary">View Details</a>
                             <button class="btn btn-primary">Book Now</button>
                         </div>
                     </div>
