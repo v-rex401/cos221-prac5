@@ -95,14 +95,6 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET">
-                    <input type="text" name="search" placeholder="Search packages"
-                        value="<?php echo htmlspecialchars($searchQuery); ?>">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>

@@ -106,6 +106,10 @@ body{
     gap:15px;
 }
 
+.topbar-spacer {
+    flex: 1;
+}
+
 .logout-link{
     padding:8px 16px;
     background:#1e73ff;
