@@ -124,7 +124,7 @@ body{
 /* CONTENT — three-column grid: filters | packages | details */
 .content{
     display:grid;
-    grid-template-columns: 220px 1fr 300px;
+    grid-template-columns: 1fr 300px;
     align-items:start;
     gap:20px;
 }
@@ -183,6 +183,61 @@ body{
     margin:0;
     accent-color:#1e73ff;
     cursor:pointer;
+}
+
+/* HORIZONTAL FILTER BAR*/
+.filters-bar{
+    margin-bottom:20px;
+}
+
+.filters-bar #filterForm{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:14px;
+}
+
+.filters-bar .filter-group{
+    margin-bottom:0;
+}
+
+.filters-bar .filter-group > div{
+    display:flex;
+    gap:6px;
+}
+
+.filters-bar .filter-group select,
+.filters-bar .filter-group input:not([type="radio"]){
+    width:auto;
+    min-width:110px;
+}
+
+.filters-bar .filter-group input[type="number"]{
+    min-width:80px;
+    width:90px;
+}
+
+.filters-bar button[type="submit"]{
+    padding:9px 20px;
+    background:#1e73ff;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.filters-bar button[type="submit"]:hover{
+    background:#0d47a1;
+}
+
+.filters-bar .reset-link{
+    font-size:13px;
+    color:#1e73ff;
+    text-decoration:none;
+    padding:9px 6px;
 }
 
 /* PACKAGES — middle column */
