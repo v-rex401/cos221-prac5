@@ -79,7 +79,7 @@
     }
 
     //validate login form inputs
-    function validateLoginForm($email, $password, $userType){
+    function validateLoginForm($email, $password){
         $errors = [];
 
         if(empty($email)){
@@ -92,11 +92,6 @@
             $errors[] = "Password is required";
         }
 
-        if(empty($userType)){
-            $errors[] = "User type is required";
-        }else if(!in_array($userType, ['Traveller', 'Agency'])){
-            $errors[] = "Invalid user type";
-        }
         return $errors;
     }
 

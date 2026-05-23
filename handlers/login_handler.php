@@ -7,9 +7,8 @@
     require_once __DIR__ . '/../includes/auth.php';
     require_once __DIR__ . '/../includes/validation.php';
 
-    $error    = "";
-    $email    = "";
-    $userType = "";
+    $error = "";
+    $email = "";
 
     //check if already logged in
     redirectIfLoggedIn();
@@ -18,16 +17,15 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email    = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-        $userType = trim($_POST['user_type'] ?? '');
 
         //Validate input
-        $errors = validateLoginForm($email, $password, $userType);
+        $errors = validateLoginForm($email, $password);
 
         if(!empty($errors)){
             $error = $errors[0];
         }else{
             //authenticate user
-            $result = authenticateUser($email, $password, $userType);
+            $result = authenticateUser($email, $password);
 
             if($result['success']){
                 $user = $result['user'];

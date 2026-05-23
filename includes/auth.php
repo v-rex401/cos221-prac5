@@ -33,18 +33,18 @@
     }
 
     //authenticate user (find in database)
-    //login
-    function authenticateUser($email, $password, $userType){
+    //login - user type is not asked for at login, it comes from the database record
+    function authenticateUser($email, $password){
         global $conn;
 
         $statement = $conn->prepare("SELECT User_ID, Name, Password_Hash, Email, Type
                                     FROM users
-                                    WHERE Email = ? AND Type = ?");
+                                    WHERE Email = ?");
         if(!$statement){
             return ['success' => false, 'error' =>'Database error: '. $conn->error];
         }
 
-        $statement->bind_param("ss", $email, $userType);
+        $statement->bind_param("s", $email);
         $statement->execute();
         $result = $statement->get_result();
 
@@ -54,8 +54,6 @@
 
             if(password_verify($password, $user['Password_Hash'])){
                 return ['success' => true, 'user'=>$user];
-            }else{
-                $statement->close();
             }
         }
         return ['success' => false, 'error' => 'Invalid email or password'];
