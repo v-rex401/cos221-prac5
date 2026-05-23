@@ -524,6 +524,8 @@
                             </div>
                         <?php endif; ?>
 
+                        <br>
+
                         <!-- Buttons -->
                         <div class="details-buttons">
                             <button type="button" class="view-btn" onclick="window.location.href='package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>'">View Details</button>
