@@ -1,0 +1,369 @@
+/* Anke de Frey u24611400 */
+
+.compare-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+}
+
+/* welcome / profile sits on the right of the top bar */
+.topbar .profile{
+    margin-left:auto;
+}
+
+.compare-section-title{
+    font-size:20px;
+    color:#1a1a1a;
+    margin:0 0 4px;
+}
+
+.compare-section-sub{
+    font-size:13px;
+    color:#777;
+    margin:0 0 16px;
+}
+
+.compare-hero{
+    background:#1e73ff;
+    border-radius:18px;
+    padding:42px 36px;
+    color:#fff;
+    text-align:center;
+    box-shadow:0 8px 24px rgba(13,71,161,0.25);
+}
+
+.compare-hero h1{
+    font-size:30px;
+    margin:0 0 10px;
+    font-weight:800;
+}
+
+.compare-hero p{
+    font-size:15px;
+    max-width:560px;
+    margin:0 auto 22px;
+    opacity:0.92;
+    line-height:1.6;
+}
+
+.compare-cta-btn{
+    display:inline-block;
+    background:#ffffff;
+    color:#1e73ff;
+    font-size:16px;
+    font-weight:800;
+    padding:14px 34px;
+    border-radius:30px;
+    text-decoration:none;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow:0 6px 16px rgba(0,0,0,0.18);
+}
+
+.compare-cta-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 22px rgba(0,0,0,0.24);
+}
+
+/* ===================================================================
+   PANELS
+   =================================================================== */
+.compare-panel{
+    background:#fff;
+    border:1px solid #e8edf4;
+    border-radius:16px;
+    padding:22px 24px;
+}
+
+/* ---- package selectors ---- */
+.compare-selectors{
+    display:flex;
+    align-items:flex-end;
+    gap:18px;
+}
+
+.selector{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.selector label{
+    font-size:13px;
+    font-weight:700;
+    color:#444;
+}
+
+.selector select{
+    width:100%;
+    padding:12px 13px;
+    border:1px solid #ccd5e0;
+    border-radius:10px;
+    font-size:14px;
+    background:#fff;
+    cursor:pointer;
+}
+
+.selector.slot-a select:focus{ outline:2px solid #1e73ff; }
+.selector.slot-b select:focus{ outline:2px solid #7b3ff2; }
+
+.vs-badge{
+    flex-shrink:0;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:#f4f6f9;
+    border:2px solid #e1e7ef;
+    color:#8a94a6;
+    font-weight:800;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:3px;
+}
+
+.compare-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.compare-card{
+    background:#fff;
+    border:1px solid #e8edf4;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+/* image / placeholder */
+.compare-card-img{
+    position:relative;
+    height:170px;
+    display:flex;
+    align-items:flex-end;
+    padding:14px;
+    color:#fff;
+    font-weight:700;
+    font-size:14px;
+    text-shadow:0 1px 4px rgba(0,0,0,0.45);
+}
+
+.compare-card-img img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* placeholder gradients (used when a package has no image yet) */
+.ph-tropical{ background:linear-gradient(135deg,#11998e,#38ef7d); }
+.ph-city{     background:linear-gradient(135deg,#3a4a63,#7d8aa3); }
+.ph-mountain{ background:linear-gradient(135deg,#355c7d,#c06c84); }
+.ph-metro{    background:linear-gradient(135deg,#6a3093,#a044ff); }
+.ph-ocean{    background:linear-gradient(135deg,#2193b0,#6dd5ed); }
+.ph-island{   background:linear-gradient(135deg,#f7971e,#ffd200); }
+
+.compare-card-body{ padding:16px 18px 20px; }
+
+.compare-card-title{
+    font-size:18px;
+    margin:0 0 3px;
+    color:#1a1a1a;
+}
+
+.compare-card-loc{
+    font-size:12.5px;
+    color:#888;
+    margin-bottom:12px;
+}
+
+.compare-card-price{
+    font-size:26px;
+    font-weight:800;
+    color:#1e73ff;
+    margin-bottom:4px;
+}
+
+.card-b .compare-card-price{ color:#7b3ff2; }
+
+.compare-card-price span{
+    font-size:12px;
+    font-weight:600;
+    color:#999;
+}
+
+/* spec rows */
+.spec{
+    margin-top:14px;
+    border-top:1px solid #eef1f6;
+}
+
+.spec-row{
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    padding:9px 0;
+    border-bottom:1px solid #eef1f6;
+    font-size:13px;
+}
+
+.spec-label{
+    color:#8a94a6;
+    font-weight:700;
+    flex-shrink:0;
+    text-transform:uppercase;
+    font-size:10.5px;
+    letter-spacing:0.05em;
+    padding-top:2px;
+}
+
+.spec-val{
+    color:#333;
+    text-align:right;
+    line-height:1.5;
+}
+
+.spec-val .muted{ color:#999; font-size:12px; }
+
+.spec-stars{ color:#e9a800; letter-spacing:1px; }
+
+.spec-rating-num{ font-weight:700; }
+
+/* activity pills */
+.activity-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:flex-end;
+}
+
+.activity-pill{
+    background:#f4f7ff;
+    border:1px solid #dde5f8;
+    color:#4a5568;
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:20px;
+}
+
+/* link to the full package view page */
+.compare-card-link{
+    display:block;
+    margin-top:16px;
+    text-align:center;
+    padding:11px;
+    border-radius:9px;
+    font-size:13px;
+    font-weight:700;
+    text-decoration:none;
+    color:#fff;
+    transition:opacity 0.2s;
+}
+
+.compare-card-link:hover{ opacity:0.9; }
+
+.card-link-a{ background:#1e73ff; }
+.card-link-b{ background:#7b3ff2; }
+
+/* ===================================================================
+   COST BREAKDOWN
+   =================================================================== */
+.cost-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:24px;
+}
+
+.cost-table th,
+.cost-table td{
+    padding:11px 14px;
+    text-align:right;
+    font-size:13.5px;
+    border-bottom:1px solid #eef1f6;
+}
+
+.cost-table th:first-child,
+.cost-table td:first-child{
+    text-align:left;
+}
+
+.cost-table thead th{
+    font-size:12px;
+    color:#5a6577;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    border-bottom:2px solid #e1e7ef;
+}
+
+.cost-table thead th.col-a{ color:#1e73ff; }
+.cost-table thead th.col-b{ color:#7b3ff2; }
+
+.cost-cat{
+    color:#444;
+    font-weight:600;
+}
+
+.cost-table td.cheaper{
+    background:#eafaf0;
+    color:#1c8a43;
+    font-weight:700;
+    border-radius:4px;
+}
+
+.cost-table tr.cost-total-row td{
+    border-top:2px solid #e1e7ef;
+    border-bottom:none;
+    font-size:15px;
+    font-weight:800;
+    color:#1a1a1a;
+    padding-top:13px;
+}
+
+.cost-table tr.cost-total-row td.cheaper{
+    color:#1c8a43;
+}
+
+/* ===================================================================
+   SAME-PACKAGE NOTICE
+   =================================================================== */
+.compare-notice{
+    background:#fff8e6;
+    border:1px solid #f3e2b3;
+    color:#8a6d1a;
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:13px;
+    text-align:center;
+}
+
+.compare-noscript{
+    background:#fdeaea;
+    border:1px solid #f3c2c2;
+    color:#9a3434;
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:13px;
+    text-align:center;
+}
+
+/* ===================================================================
+   RESPONSIVE
+   =================================================================== */
+@media(max-width:880px){
+    .compare-cards{ grid-template-columns:1fr; }
+
+    .compare-selectors{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .vs-badge{
+        align-self:center;
+        margin:0;
+    }
+
+    .compare-hero{ padding:32px 22px; }
+    .compare-hero h1{ font-size:24px; }
+}

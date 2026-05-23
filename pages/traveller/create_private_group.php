@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/create_private_group_queries.php';
 
     redirectIfNotTraveller();
 
@@ -21,48 +22,48 @@
     // Handle form submission
     $createdGroup = null;
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $packageId = isset($_POST['package_id']) ? (int)$_POST['package_id'] : null;
-        $guestLimit = isset($_POST['max_participants']) ? (int)$_POST['max_participants'] : 10;
-        $groupName = isset($_POST['group_name']) ? sanitise($_POST['group_name']) : '';
-        $startDate = isset($_POST['start_date']) ? sanitise($_POST['start_date']) : date('Y-m-d');
+        if (isset($_POST['package_id'])) {
+            $packageId = (int)$_POST['package_id'];
+        } else {
+            $packageId = null;
+        }
+
+        if (isset($_POST['max_participants'])) {
+            $guestLimit = (int)$_POST['max_participants'];
+        } else {
+            $guestLimit = 10;
+        }
+
+        if (isset($_POST['group_name'])) {
+            $groupName = sanitise($_POST['group_name']);
+        } else {
+            $groupName = '';
+        }
+
+        if (isset($_POST['start_date'])) {
+            $startDate = sanitise($_POST['start_date']);
+        } else {
+            $startDate = date('Y-m-d');
+        }
 
         if ($packageId && $groupName && $guestLimit > 0 && $guestLimit <= 50) {
             $package = getPackageDetails($conn, $packageId);
             if ($package) {
                 $bookingDate = date('Y-m-d');
                 $endDate = date('Y-m-d', strtotime($startDate . ' + ' . (int)$package['Duration'] . ' days'));
+                $agencyId = (int)$package['Agency_ID'];
 
-                // Step 1: create the booking record
-                $sqlBooking = "INSERT INTO bookings (Package_ID, Booking_Date, Start_Date, End_Date, Booking_Type)
-                               VALUES (?, ?, ?, ?, 'Group')";
-                $stmtBooking = $conn->prepare($sqlBooking);
-                if ($stmtBooking) {
-                    $stmtBooking->bind_param("isss", $packageId, $bookingDate, $startDate, $endDate);
-                    if ($stmtBooking->execute()) {
-                        $bookingId = $stmtBooking->insert_id;
-                        $stmtBooking->close();
+                // Create the group booking (create_private_group_queries.php)
+                $bookingId = createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId);
 
-                        // Step 2: create the group_bookings record
-                        $agencyId = (int)$package['Agency_ID'];
-                        $sqlGroup = "INSERT INTO group_bookings (Booking_ID, Guest_Limit, Guest_Count, Agency_ID)
-                                     VALUES (?, ?, 1, ?)";
-                        $stmtGroup = $conn->prepare($sqlGroup);
-                        if ($stmtGroup) {
-                            $stmtGroup->bind_param("iii", $bookingId, $guestLimit, $agencyId);
-                            if ($stmtGroup->execute()) {
-                                $createdGroup = [
-                                    'id' => $bookingId,
-                                    'name' => $groupName,
-                                    'code' => (string)$bookingId,
-                                    'package' => $package['package_name'],
-                                    'max' => $guestLimit
-                                ];
-                            }
-                            $stmtGroup->close();
-                        }
-                    } else {
-                        $stmtBooking->close();
-                    }
+                if ($bookingId) {
+                    $createdGroup = [
+                        'id' => $bookingId,
+                        'name' => $groupName,
+                        'code' => (string)$bookingId,
+                        'package' => $package['package_name'],
+                        'max' => $guestLimit
+                    ];
                 }
             }
         }

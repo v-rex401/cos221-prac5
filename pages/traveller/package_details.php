@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/package_details_queries.php';
 
     redirectIfNotTraveller();
 
@@ -39,21 +40,22 @@
 
     if ($userHasBooked) {
         $userReview = userHasReviewedPackage($conn, $userID, $packageId);
-        // Get user's booking for this package
-        $sql = "SELECT Booking_ID FROM bookings
-                WHERE User_ID = ? AND Package_ID = ?
-                ORDER BY Booking_Date DESC LIMIT 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $userID, $packageId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $userBooking = $result->fetch_assoc();
-        $stmt->close();
+        // Get user's booking for this package (package_details_queries.php)
+        $userBooking = getLatestUserBooking($conn, $userID, $packageId);
     }
 
     // Handle success/error messages
-    $successMessage = isset($_GET['success']) ? sanitise($_GET['success']) : '';
-    $errorMessage = isset($_GET['error']) ? sanitise($_GET['error']) : '';
+    if (isset($_GET['success'])) {
+        $successMessage = sanitise($_GET['success']);
+    } else {
+        $successMessage = '';
+    }
+
+    if (isset($_GET['error'])) {
+        $errorMessage = sanitise($_GET['error']);
+    } else {
+        $errorMessage = '';
+    }
 
 ?>
 

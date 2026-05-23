@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/flights_queries.php';
 
     //session.php
     redirectIfNotTraveller();
@@ -23,15 +24,8 @@
         $userName = 'Traveller';
     }
 
-    // Get all flights
-    $sql = "SELECT Flight_ID, Airline, Departure_Loc, Arrival_Loc, Time_Dept, Time_Arrive, Price FROM flights";
-    $result = $conn->query($sql);
-    $allFlights = [];
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $allFlights[] = $row;
-        }
-    }
+    // Get all flights (flights_queries.php)
+    $allFlights = getAllFlights($conn);
 
     // Get unique airlines, departure locations, and arrival locations
     $airlines = [];

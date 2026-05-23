@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/join_group_queries.php';
 
     redirectIfNotTraveller();
 
@@ -18,57 +19,48 @@
         $userName = 'Traveller';
     }
 
-    $sharingCode = isset($_GET['code']) ? sanitise($_GET['code']) : '';
+    if (isset($_GET['code'])) {
+        $sharingCode = sanitise($_GET['code']);
+    } else {
+        $sharingCode = '';
+    }
     $group = null;
     $alreadyJoined = false;
     $groupFull = false;
     $error = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $code = isset($_POST['code']) ? sanitise($_POST['code']) : '';
+        if (isset($_POST['code'])) {
+            $code = sanitise($_POST['code']);
+        } else {
+            $code = '';
+        }
 
         if ($code) {
-            // Find group by code
-            $sql = "SELECT * FROM group_bookings WHERE Sharing_Code = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $code);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $group = $result->fetch_assoc();
-            $stmt->close();
+            // Find group by code (join_group_queries.php)
+            $group = getGroupByCode($conn, $code);
 
             if ($group) {
                 // Check if group is full
                 if ($group['Guest_Count'] >= $group['Guest_Limit']) {
                     $groupFull = true;
                 } else {
-                    // Update guest count
-                    $updateSql = "UPDATE group_bookings SET Guest_Count = Guest_Count + 1 WHERE Booking_ID = ?";
-                    $updateStmt = $conn->prepare($updateSql);
-                    $updateStmt->bind_param("i", $group['Booking_ID']);
-
-                    if ($updateStmt->execute()) {
+                    // Add this guest to the group (join_group_queries.php)
+                    if (addGuestToGroup($conn, $group['Booking_ID'])) {
                         // Redirect to confirmation
                         header('Location: group_join_confirmation.php?id=' . $group['Booking_ID']);
                         exit;
                     } else {
                         $error = "Failed to join group. Please try again.";
                     }
-                    $updateStmt->close();
                 }
             } else {
                 $error = "Invalid code or group is no longer available.";
             }
         }
     } else if ($sharingCode) {
-        // Get group from URL code
-        $sql = "SELECT * FROM group_bookings WHERE Sharing_Code = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $sharingCode);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $group = $result->fetch_assoc();
-        $stmt->close();
+        // Get group from URL code (join_group_queries.php)
+        $group = getGroupByCode($conn, $sharingCode);
 
         if ($group) {
             // Check if full
@@ -78,13 +70,8 @@
 
     // Get group details with package info
     if ($group) {
-        $pkgSql = "SELECT * FROM packages WHERE Package_ID = ?";
-        $pkgStmt = $conn->prepare($pkgSql);
-        $pkgStmt->bind_param("i", $group['Package_ID']);
-        $pkgStmt->execute();
-        $pkgResult = $pkgStmt->get_result();
-        $package = $pkgResult->fetch_assoc();
-        $pkgStmt->close();
+        // Get the package for this group (join_group_queries.php)
+        $package = getPackageRow($conn, $group['Package_ID']);
 
         // Get participant count from group_bookings
         $participantCount = $group['Guest_Count'];

@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/group_join_confirmation_queries.php';
 
     redirectIfNotTraveller();
 
@@ -26,18 +27,8 @@
 
     $groupId = (int)$_GET['id'];
 
-    // Get group details
-    $sql = "SELECT g.*, p.package_name, p.Price, p.Duration
-            FROM group_bookings g
-            JOIN packages p ON g.Package_ID = p.Package_ID
-            WHERE g.Booking_ID = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $groupId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $group = $result->fetch_assoc();
-    $stmt->close();
+    // Get group details (group_join_confirmation_queries.php)
+    $group = getGroupConfirmation($conn, $groupId);
 
     if (!$group) {
         header('Location: traveller_dashboard.php');
