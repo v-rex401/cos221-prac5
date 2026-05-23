@@ -33,18 +33,6 @@
                     <input type="password" id="password" name="password" required>
                 </div>
 
-                <div class="radio-group">
-                    <label>Login as:</label><br>
-                    <label>
-                        <input type="radio" name="user_type" value="Traveller" required <?php if ($userType === 'Traveller' || empty($userType)) { echo 'checked'; } ?> >
-                        Traveller
-                    </label>
-                    <label>
-                        <input type="radio" name="user_type" value="Agency" required <?php if ($userType === 'Agency') { echo 'checked'; } ?> >
-                        Agency
-                    </label>
-                </div>
-
                 <input class="submit_button" type="submit" value="Log in">
 
                 <div class="link-group">
