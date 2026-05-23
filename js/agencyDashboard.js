@@ -14,20 +14,20 @@ function loadPackages() {
       type: "getAgencyPackages",
       agency_id: AGENCY_ID,
     }),
-  })
-    .then((res) => res.json())
+  });
+  /* .then((res) => res.json())
     .then((packages) => {
       parent.innerHTML =
         "<button onclick=\"window.location.href='create_package.php'\">Create Package</button>";
 
-      if (packages.length === 0) {
+      if (packages.length == 0) {
         parent.innerHTML += "<p>No packages yet. Create one!<p>";
       } else {
-        packages.forEach((pkg) => {
+        packages.foreach((pkg) => {
           parent.appendChild(createPackageCard(pkg));
         });
       }
-    });
+    }); */
 }
 //Create cards for each package
 
@@ -36,11 +36,11 @@ function createPackageCard(pkg) {
   const newPackage = document.createElement("div");
   //Add to correct styling
   newPackage.classList.add("dashboardCard");
-  newPackage.innerHTML = `
+  /* newPackage.innerHTML = `
   <h3>${pkg.Name}</h3>
   <p><strong>Price:</strong> R${pkg.Price}</p>
   <p><strong>Duration:</strong> ${pkg.Duration} days
-  <p> <strong>Description:</strong> ${pkg.Description}</p>`;
+  <p> <strong>Description:</strong> ${pkg.Description}</p>`; */
   const editButton = document.createElement("button");
   const deleteButton = document.createElement("button");
 

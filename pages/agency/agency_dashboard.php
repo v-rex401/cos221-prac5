@@ -12,6 +12,7 @@
     //check access
     redirectIfNotAgency();
     $agency_id = getCurrentUserID(); 
+    $packages = getAgencyPackages($conn, 3);
 
 ?>
 
@@ -34,7 +35,7 @@
          <div id="mainBoard"> 
         
            <button onclick="window.location.href='create_package.php'">Create Package</button> 
-        
+           
          </div> 
         
 </div> 
