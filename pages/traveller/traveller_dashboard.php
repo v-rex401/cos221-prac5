@@ -312,6 +312,7 @@
 
             <!-- COLUMN 1: PACKAGES -->
             <div class="packages">
+                <h2 class="section-heading">Packages</h2>
                 <div class="packages-header">
                     <a href="create_private_group.php" class="create-group-btn">Create Private Group</a>
 
@@ -438,6 +439,13 @@
 
             <!-- COLUMN 2: PACKAGE DETAILS -->
             <div class="details-section">
+                <!-- Initially shows top rated package and when package clicked show a mini preview of that package -->
+                <?php if (isset($_GET['view'])): ?>
+                    <h2 class="details-heading">Package Details</h2>
+                <?php else: ?>
+                    <h2 class="details-heading">Highest Rated Package</h2>
+                <?php endif; ?>
+
                 <!-- Single Package Details View -->
                 <?php if ($selectedPackage): ?>
                     <!-- Hero Section -->

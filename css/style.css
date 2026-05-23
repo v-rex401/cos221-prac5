@@ -283,6 +283,21 @@ body{
     background:#218838;
 }
 
+/* SECTION HEADINGS */
+.section-heading{
+    font-size:18px;
+    color:#333;
+    margin:0;
+}
+
+.details-heading{
+    font-size:15px;
+    color:#333;
+    margin:0;
+    padding:14px 16px;
+    border-bottom:1px solid #e8edf4;
+}
+
 /* PACKAGE CARD*/
 .package-card{
     background:white;
