@@ -192,7 +192,7 @@
         <div class="logo">Tripistry</div>
 
         <ul>
-            <li><a href="traveller_dashboard.php">Home</a></li>
+            <li><a href="traveller_dashboard.php" class="active-link">Home</a></li>
             <li><a href="destinations.php">Destinations</a></li>
             <li><a href="flights.php">Flights</a></li>
             <li><a href="accommodations.php">Accommodations</a></li>
@@ -200,9 +200,11 @@
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
-            <li><a href="bookings.php">Bookings</a></li>
+            <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
+
+        <a href="../logout.php" class="sidebar-logout">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -219,7 +221,6 @@
 
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 
@@ -583,3 +584,4 @@
 </html>
 
 <script src="../../js/package_traveller_dashboard.js"></script>
+                                                          

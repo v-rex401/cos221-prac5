@@ -19,11 +19,31 @@
 
     // Get all attractions (attractions_queries.php)
     $allAttractions = getAllAttractions($conn);
+    $allDestinations = getAllDestinations($conn);
+
+    $countries = [];
+    foreach($allDestinations as $dest){
+        if(!in_array($dest['Country'], $countries)) {
+            $countries[] = $dest['Country'];
+        }
+    }
+    sort($countries);
 
     // Get filter parameters
     $searchQuery = '';
+    $selectedCountry = '';
+    $sortBy = 'name_asc';
+
     if (isset($_GET['search'])) {
         $searchQuery = sanitise($_GET['search']);
+    }
+
+    if (isset($_GET['country'])) {
+        $selectedCountry = sanitise($_GET['country']);
+    }
+
+    if (isset($_GET['sort'])) {
+        $sortBy = sanitise($_GET['sort']);
     }
 
     // Filter attractions
@@ -34,6 +54,17 @@
             $filteredAttractions[] = $attr;
         }
     }
+
+    usort($filteredAttractions, function ($a, $b) use ($sortBy) {
+        switch ($sortBy) {
+            case 'name_asc':
+                return strcasecmp($a['Name'], $b['Name']);
+            case 'name_desc':
+                return strcasecmp($b['Name'], $a['Name']);
+            default:
+                return 0;
+        }
+    });
 
 ?>
 
@@ -64,9 +95,12 @@
             <li><a href="attractions.php" class="active-link">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
-            <li><a href="bookings.php">Bookings</a></li>
+            <li><a href="compare_packages.php">Compare Packages</a></li>
+            <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
+
+        <a href="../logout.php" class="sidebar-logout">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -76,7 +110,6 @@
             <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 

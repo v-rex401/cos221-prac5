@@ -160,3 +160,34 @@
     border-radius: 6px;
     font-weight: bold;
 }
+
+.filter-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.sort-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sort-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.sort-group select {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.filter-group input,
+.filter-group select {
+    min-width: auto;
+}
