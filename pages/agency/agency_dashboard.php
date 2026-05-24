@@ -12,13 +12,14 @@
     //check access
     redirectIfNotAgency();
     $agency_id = getCurrentUserID(); 
-    $packages = getAgencyPackages($conn, 3);
+    $packages = getAgencyPackages($conn, $agency_id);
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        const AGENCY_ID = <?php json_encode($agency_id) ?> 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
@@ -26,16 +27,29 @@
          <link rel="stylesheet" href="../../css/dashboard.css">
     </head>
     <body>
-        <p>you are now in agency_dashboard</p>
         <div class="myContainer"> 
         <div class="sidepanel"> 
-            <h1>Welcome</h1> 
+            <h1>Welcome Agency Name</h1> 
             <a href="../logout.php">Logout</a>
          </div> 
          <div id="mainBoard"> 
         
            <button onclick="window.location.href='create_package.php'">Create Package</button> 
-           
+           <?php if (empty($packages)): ?> 
+            <p> No packages yet. Create one!</p> 
+            <?php else: ?> 
+                    <?php foreach ($packages as $pkg): ?> 
+                        <div class="dashboardCard"> 
+                            <h3> <?php echo htmlsepcialchars($pkg['Name']) ?> </h3> 
+                            <p><strong>Price:</strong> R <?php echo htmlspecialchars($pkg['Price']) ?> </p> 
+                            <p><strong>Duration</strong> <?php echo htmlspecialchars($pkg['Duration']) ?> days </p> 
+                            <p><strong>Description</strong> <?php echo htmlspecialchars($pkg['Description']) ?></p> 
+                            <button onclick="window.location.href='create_package.php?package_id=<?php echo $pkg['Package_ID'] ?>' ">Edit</button> 
+                            <button onclick="deletePackage(<?php echo $pkg['Package_ID'] ?>)">Delete</button>
+                    </div> 
+                    <?php endforeach; ?> 
+                    <?php endif; ?> 
+
          </div> 
         
 </div> 
