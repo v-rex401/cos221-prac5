@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        const AGENCY_ID = <?php json_encode($agency_id) ?> 
+        <script> const AGENCY_ID = <?php json_encode($agency_id) ?> </script> 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Agency Dashboard</title>
