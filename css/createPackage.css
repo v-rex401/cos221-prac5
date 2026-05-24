@@ -13,6 +13,8 @@ body {
 }
 
 .outsideDiv {
+  display: flex;
+  gap: 2rem;
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
@@ -76,6 +78,7 @@ body {
 }
 
 .formContainer > div {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -142,4 +145,8 @@ body {
 
 #createButton:active {
   transform: scale(0.98);
+}
+
+.previewSide {
+  flex: 1;
 }
