@@ -291,17 +291,18 @@ CREATE TABLE `packages` (
   `Name` varchar(200) NOT NULL,
   `Price` decimal(10,2) NOT NULL CHECK (`Price` > 0),
   `Description` text NOT NULL,
-  `Duration` int(11) NOT NULL CHECK (`Duration` > 0)
+  `Duration` int(11) NOT NULL CHECK (`Duration` > 0),
+  `Capacity` int(11) NOT NULL DEFAULT 20 CHECK (`Capacity` > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `packages`
 --
 
-INSERT INTO `packages` (`Package_ID`, `Agency_ID`, `Name`, `Price`, `Description`, `Duration`) VALUES
-(1, 3, 'Cape Town Getaway', 12500.00, 'Explore the Mother City with Table Mountain, beaches, and wine tours.', 5),
-(2, 3, 'Kruger Safari Experience', 22000.00, 'Big 5 game drives, luxury lodge, all meals included.', 4),
-(3, 3, 'Garden Route Road Trip', 18000.00, 'Scenic coastal drive from Cape Town to Gqeberha.', 7);
+INSERT INTO `packages` (`Package_ID`, `Agency_ID`, `Name`, `Price`, `Description`, `Duration`, `Capacity`) VALUES
+(1, 3, 'Cape Town Getaway', 12500.00, 'Explore the Mother City with Table Mountain, beaches, and wine tours.', 5, 20),
+(2, 3, 'Kruger Safari Experience', 22000.00, 'Big 5 game drives, luxury lodge, all meals included.', 4, 20),
+(3, 3, 'Garden Route Road Trip', 18000.00, 'Scenic coastal drive from Cape Town to Gqeberha.', 7, 20);
 
 -- --------------------------------------------------------
 

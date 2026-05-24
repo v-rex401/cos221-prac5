@@ -95,9 +95,12 @@
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
-            <li><a href="bookings.php">Bookings</a></li>
+            <li><a href="compare_packages.php">Compare Packages</a></li>
+            <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
+
+        <a href="../logout.php" class="sidebar-logout">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -107,7 +110,6 @@
             <h1 class="topbar-heading">View</h1>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 
@@ -149,6 +151,12 @@
                     <span class="meta-label">Rating</span>
                     <span class="meta-value"><?php echo number_format($package['avg_rating'], 1); ?></span>
                     <span style="font-size: 12px; color: #999;"><?php echo $package['review_count']; ?> reviews</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Availability</span>
+                    <?php $detailSpots = getSpotsStatus($package['spots_left']); ?>
+                    <span class="meta-value <?php echo $detailSpots['class']; ?>"><?php echo $detailSpots['text']; ?></span>
+                    <span style="font-size: 12px; color: #999;"><?php echo (int)$package['Capacity']; ?> total</span>
                 </div>
             </div>
 
@@ -527,6 +535,19 @@
 
     .btn-secondary:hover {
         background: #e8e8e8;
+    }
+
+    /* spots-left colours on the meta row */
+    .meta-value.spots-open {
+        color: #27ae60;
+    }
+
+    .meta-value.spots-low {
+        color: #e67e22;
+    }
+
+    .meta-value.spots-full {
+        color: #c92a2a;
     }
 
     /* Reviews Styling */

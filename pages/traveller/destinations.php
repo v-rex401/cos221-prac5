@@ -86,9 +86,12 @@
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
-            <li><a href="bookings.php">Bookings</a></li>
+            <li><a href="compare_packages.php">Compare Packages</a></li>
+            <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
+
+        <a href="../logout.php" class="sidebar-logout">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -97,7 +100,6 @@
         <div class="topbar">
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 

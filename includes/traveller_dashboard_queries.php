@@ -27,10 +27,11 @@
     }
 
     function getAllPackages($conn){
-        $sql = "SELECT p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration,
+        $sql = "SELECT p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration, p.Capacity,
                 u.Name AS agency_name,
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
-                COUNT(r.Review_ID) AS review_count
+                COUNT(r.Review_ID) AS review_count,
+                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
                     LEFT JOIN bookings b ON p.Package_ID = b.Package_ID
@@ -50,10 +51,11 @@
     }
 
     function getPackagesByDestination($conn, $destinationID) {
-        $sql = "SELECT p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration,
+        $sql = "SELECT p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration, p.Capacity,
                 u.Name AS agency_name,
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
                 COUNT(r.Review_ID) AS review_count,
+                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left,
                 (SELECT Image_URL FROM package_images WHERE Package_ID = p.Package_ID LIMIT 1) AS image_url
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
@@ -80,10 +82,11 @@
 
     function getPackageDetails($conn, $packageID){
         $sql = "SELECT
-                p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration,
+                p.Package_ID, p.Agency_ID, p.Name AS package_name, p.Price, p.Description, p.Duration, p.Capacity,
                 u.Name AS agency_name,
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
-                COUNT(r.Review_ID) AS review_count
+                COUNT(r.Review_ID) AS review_count,
+                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
                     LEFT JOIN bookings b ON p.Package_ID = b.Package_ID
@@ -326,7 +329,28 @@
 
         return $html;
     }
-    
+
+    //returns the display text + css class for a package's remaining spots
+    function getSpotsStatus($spotsLeft){
+        $spotsLeft = (int)$spotsLeft;
+
+        if ($spotsLeft <= 0) {
+            return ['text' => 'Fully booked', 'class' => 'spots-full'];
+        }
+
+        if ($spotsLeft === 1) {
+            $word = 'spot';
+        } else {
+            $word = 'spots';
+        }
+
+        if ($spotsLeft <= 3) {
+            return ['text' => 'Only ' . $spotsLeft . ' ' . $word . ' left', 'class' => 'spots-low'];
+        }
+
+        return ['text' => $spotsLeft . ' ' . $word . ' left', 'class' => 'spots-open'];
+    }
+
     function packageHasFlights($conn, $packageID){
         $sql = "SELECT COUNT(*) as count
                 FROM package_flights

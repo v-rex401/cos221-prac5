@@ -54,9 +54,12 @@
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
+            <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php" class="active-link">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
+
+        <a href="../logout.php" class="sidebar-logout">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -67,7 +70,6 @@
             <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
-                <a href="../logout.php" class="logout-link">Logout</a>
             </div>
         </div>
 
@@ -81,7 +83,7 @@
             <?php if (empty($bookings)): ?>
                 <div class="empty-state">
                     <h2>No bookings yet</h2>
-                    <p>You have not booked any packages. Browse packages and book your next trip.</p>
+                    <p>You have not booked any packages</p>
                     <a href="traveller_dashboard.php">Browse packages</a>
                 </div>
             <?php else: ?>
