@@ -1,0 +1,196 @@
+/*  My Bookings page styles
+    Anke de Frey u24611400
+    Loaded on top of style.css (which provides the sidebar / layout). */
+
+.bookings-page{
+    max-width:1100px;
+}
+
+/* ---- header ---- */
+.bookings-header{
+    margin-bottom:22px;
+}
+
+.bookings-header h1{
+    font-size:24px;
+    color:#1a1a1a;
+    margin:0 0 4px;
+}
+
+.bookings-header p{
+    font-size:13px;
+    color:#777;
+    margin:0;
+}
+
+.bookings-count{
+    font-size:13px;
+    color:#888;
+    margin-bottom:14px;
+}
+
+/* ---- empty state ---- */
+.empty-state{
+    background:#fff;
+    border:1px solid #e8edf4;
+    border-radius:14px;
+    padding:48px 24px;
+    text-align:center;
+}
+
+.empty-state h2{
+    font-size:18px;
+    color:#333;
+    margin:0 0 8px;
+}
+
+.empty-state p{
+    font-size:13px;
+    color:#888;
+    margin:0 0 16px;
+}
+
+.empty-state a{
+    display:inline-block;
+    background:#1e73ff;
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+    padding:10px 20px;
+    border-radius:8px;
+}
+
+.empty-state a:hover{
+    background:#0d47a1;
+}
+
+/* ---- bookings grid ---- */
+.bookings-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));
+    gap:20px;
+}
+
+/* the whole card is a link to the package view page */
+.booking-card-link{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+}
+
+.booking-card{
+    background:#fff;
+    border:1px solid #e8edf4;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    height:100%;
+}
+
+.booking-card-link:hover .booking-card{
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* ---- card image ---- */
+.booking-card-image{
+    position:relative;
+    height:150px;
+}
+
+.booking-card-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.booking-card-image .no-image{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef1f6;
+    color:#9aa4b2;
+    font-size:13px;
+}
+
+.booking-type-badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(30,115,255,0.92);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 11px;
+    border-radius:20px;
+}
+
+/* ---- card body ---- */
+.booking-card-body{
+    padding:14px 16px 16px;
+}
+
+.booking-ref{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:#1e73ff;
+    margin-bottom:4px;
+}
+
+.booking-card-body h3{
+    font-size:16px;
+    color:#1a1a1a;
+    margin:0 0 12px;
+}
+
+.booking-detail-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    font-size:12.5px;
+    padding:5px 0;
+}
+
+.booking-detail-label{
+    color:#8a94a6;
+    font-weight:600;
+    flex-shrink:0;
+}
+
+.booking-detail-value{
+    color:#444;
+    text-align:right;
+}
+
+/* ---- card footer ---- */
+.booking-card-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid #eef1f6;
+}
+
+.booking-price{
+    font-size:18px;
+    font-weight:800;
+    color:#1e73ff;
+}
+
+.booking-view-link{
+    font-size:12.5px;
+    font-weight:700;
+    color:#1e73ff;
+}
+
+.booking-card-link:hover .booking-view-link{
+    text-decoration:underline;
+}
