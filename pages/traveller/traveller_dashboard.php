@@ -204,7 +204,7 @@
             </div>
         </div>
 
-        <!-- FILTER BAR — horizontal, sits just under the search bar -->
+        <!-- FILTER BAR -->
         <div class="filters filters-bar">
                 <h3>Filter Packages</h3>
 

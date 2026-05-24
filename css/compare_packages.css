@@ -17,12 +17,6 @@
     margin:0 0 4px;
 }
 
-.compare-section-sub{
-    font-size:13px;
-    color:#777;
-    margin:0 0 16px;
-}
-
 .compare-hero{
     background:#1e73ff;
     border-radius:18px;
@@ -44,24 +38,6 @@
     margin:0 auto 22px;
     opacity:0.92;
     line-height:1.6;
-}
-
-.compare-cta-btn{
-    display:inline-block;
-    background:#ffffff;
-    color:#1e73ff;
-    font-size:16px;
-    font-weight:800;
-    padding:14px 34px;
-    border-radius:30px;
-    text-decoration:none;
-    transition:transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow:0 6px 16px rgba(0,0,0,0.18);
-}
-
-.compare-cta-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 22px rgba(0,0,0,0.24);
 }
 
 /* ===================================================================
@@ -107,21 +83,6 @@
 .selector.slot-a select:focus{ outline:2px solid #1e73ff; }
 .selector.slot-b select:focus{ outline:2px solid #7b3ff2; }
 
-.vs-badge{
-    flex-shrink:0;
-    width:46px;
-    height:46px;
-    border-radius:50%;
-    background:#f4f6f9;
-    border:2px solid #e1e7ef;
-    color:#8a94a6;
-    font-weight:800;
-    font-size:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:3px;
-}
 
 .compare-cards{
     display:grid;
@@ -338,16 +299,6 @@
     text-align:center;
 }
 
-.compare-noscript{
-    background:#fdeaea;
-    border:1px solid #f3c2c2;
-    color:#9a3434;
-    border-radius:10px;
-    padding:12px 16px;
-    font-size:13px;
-    text-align:center;
-}
-
 /* ===================================================================
    RESPONSIVE
    =================================================================== */
@@ -357,11 +308,6 @@
     .compare-selectors{
         flex-direction:column;
         align-items:stretch;
-    }
-
-    .vs-badge{
-        align-self:center;
-        margin:0;
     }
 
     .compare-hero{ padding:32px 22px; }
