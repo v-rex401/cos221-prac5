@@ -21,7 +21,7 @@ $packages = getAgencyPackages($conn, $agency_id);
 
 <head>
     <script>
-        const AGENCY_ID = <?php json_encode($agency_id) ?>
+        const AGENCY_ID = <?php echo json_encode($agency_id) ?>
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

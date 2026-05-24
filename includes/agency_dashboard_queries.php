@@ -1,4 +1,5 @@
 <?php
+
 function getAgencyPackages($conn, $agency_id)
 {
     $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
@@ -52,29 +53,58 @@ function getFlights($conn)
 }
 function setPackage($conn, $data)
 {
-    $stmt = $conn->prepare('INSERT IGNORE INTO packages (Agency_ID, Name, Price, Description, Duration)
-    VALUES (?,?,?,?,?)');
+    $checkStmt = $conn->prepare('SELECT Package_ID FROM packages WHERE Name = ? AND Agency_ID = ?');
+    $checkStmt->bind_param('si', $data['name'], $data['agency_id']);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        $checkStmt->close();
+        return ['success' => false, 'message' => 'A package with this name already exists'];
+    }
+    $checkStmt->close();
+
+
+    $stmt = $conn->prepare('INSERT INTO packages (Agency_ID, Name, Price, Description, Duration, Capacity)
+    VALUES (?,?,?,?,?,?)');
     $stmt->bind_param(
-        'isdsi',
+        'isdsii',
         $data['agency_id'],
-        $data['packageName'],
+        $data['name'],
         $data['price'],
         $data['description'],
-        $data['duration']
+        $data['duration'],
+        $data['maxGuests']
     );
     $stmt->execute();
 
     $package_id = $conn->insert_id;
 
+    //Insert into package_destinations
     $stmt2 = $conn->prepare('INSERT INTO package_destinations (Package_ID, Destination_ID) VALUES (?, ?)');
-    $stmt2->bind_param('ii', $package_id, $data['destination']);
-    $stmt2->execute();
+    foreach ($data['destinations'] as $destinationItem) {
+        $stmt2->bind_param('ii', $package_id, $destinationItem);
+        $stmt2->execute();
+    }
     $stmt2->close();
-
+    //Insert into package_accommodations
     $stmt3 = $conn->prepare('INSERT INTO package_accommodations (Package_ID, Accommodation_ID) VALUES (?, ?)');
-    $stmt3->bind_param('ii', $package_id, $data['accommodation']);
-    $stmt3->execute();
+    foreach ($data['accommodations'] as $item) {
+        $stmt3->bind_param('ii', $package_id, $item);
+        $stmt3->execute();
+    }
     $stmt3->close();
+
+    //Insert into package_flights
+    $stmt4 = $conn->prepare('INSERT INTO package_flights (Package_ID, Flight_ID) VALUES (?, ?)');
+    foreach ($data['flights'] as $item) {
+        $stmt4->bind_param('ii', $package_id, $item);
+        $stmt4->execute();
+    }
+    $stmt4->close();
+
+    //TODO: Add other insert statements 
+
 
     //send sucesss to js 
     if ($package_id) {
@@ -83,8 +113,8 @@ function setPackage($conn, $data)
         return ['success' => false, 'message' => 'Failed to create package'];
     }
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     header('Content-Type: application/json');
     $body = json_decode(file_get_contents('php://input'), true);
     require_once __DIR__ . '/database.php';

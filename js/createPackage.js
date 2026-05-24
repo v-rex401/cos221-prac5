@@ -1,3 +1,4 @@
+
 populateDropdown("getDestinations", "destination", "Destination_ID", "Name");
 populateAccommodations();
 populateFlights("getFlights", "flights", "Flight_ID", "Airline");
@@ -9,36 +10,34 @@ document.getElementById("destination").addEventListener("change", updateDestinat
 document.getElementById("accommodation").addEventListener("change", updateAccommodation);
 document.getElementById("flights").addEventListener("change", updateFlights);
 
+
+const packageData = {
+  name: "",
+  price: 0,
+  duration: 0,
+  description: "",
+  maxGuests: 0,
+  destinations: [],
+  accommodations: [],
+  flights: [],
+  agency_id: AGENCY_ID,
+  departureDate: "",
+  arrivalDate: "",
+};
+
+
 const createButton = document.getElementById("createButton");
 createButton.onclick = function () {
   //Store the stuff from the form
-  const packageName = document.getElementById("packageName").value;
-  const destination = document.getElementById("destination").value;
-  const maxGuests = document.getElementById("maxGuests").value;
-  const departureDate = document.getElementById("depDate").value;
-  const arrivalDate = document.getElementById("arrDate").value;
-  const price = document.getElementById("price").value;
-  const description = document.getElementById("description").value;
-  const duration = document.getElementById("days").value;
-  const agencyId = document.getElementById("agencyId").value;
+  packageData.departureDate = document.getElementById("depDate").value;
+  packageData.arrivalDate = document.getElementById("arrDate").value;
 
-  const data = {
-    packageName: packageName,
-    destination: destination,
-    maxGuests: maxGuests,
-    departureDate: departureDate,
-    arrivalDate: arrivalDate,
-    price: price,
-    description: description,
-    duration: duration,
-    agency_id: agencyId,
-  };
   fetch("../../includes/agency_dashboard_queries.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       type: "setPackage",
-      data: data,
+      data: packageData,
     }),
   })
     //Display message to user
@@ -52,8 +51,8 @@ createButton.onclick = function () {
       } else {
         alert("Error: " + response.message);
       }
-    })
-    .catch((err) => console.error("Error:", err));
+    });
+
 };
 
 // =================================== POPULATION OF DROPDOWNS ===================================================
@@ -152,7 +151,11 @@ function updatePreview() {
   document.getElementById("prev-accommodation-cost").textContent = "R" + accommodationCost.toFixed(2);
   document.getElementById("prev-total").textContent = "R" + total.toFixed(2);
 
-
+  packageData.name = document.getElementById("packageName").value;
+  packageData.price = parseFloat(document.getElementById("price").value) || 0;
+  packageData.duration = parseFloat(document.getElementById("days").value) || 0;
+  packageData.description = document.getElementById("description").value;
+  packageData.maxGuests = parseInt(document.getElementById("maxGuests").value) || 0;
 }
 
 
@@ -162,6 +165,7 @@ function updateDestination() {
   // Loop through selected options and add each one
   const destSelect = document.getElementById("destination");
   for (const option of destSelect.selectedOptions) {
+    packageData.destinations.push(option.value);
     const li = document.createElement("li");
     li.textContent = option.textContent;
     destList.appendChild(li);
@@ -173,6 +177,7 @@ function updateAccommodation() {
   const days = parseInt(document.getElementById("days").value) || 1;
   const accommodationSelect = document.getElementById("accommodation");
   for (const option of accommodationSelect.selectedOptions) {
+    packageData.accommodations.push(option.value);
     const li = document.createElement("li");
     const cost = (parseFloat(option.dataset.price) || 0) * days;
     li.dataset.price = cost.toFixed(2);
@@ -186,6 +191,7 @@ function updateFlights() {
   const flightList = document.getElementById("prev-flights");
   const flightSelect = document.getElementById("flights");
   for (const option of flightSelect.selectedOptions) {
+    packageData.flights.push(option.value);
     const li = document.createElement("li");
     li.dataset.price = parseFloat(option.dataset.price).toFixed(2);
     li.textContent = `${option.textContent} — R${li.dataset.price}`;

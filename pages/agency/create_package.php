@@ -5,12 +5,22 @@ require_once __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../includes/database.php';
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
+
+
+$agency_id = getCurrentUserID();
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <script>
+        <?php if ($agency_id) ?>
+        alert("Please login to create package");
+        const AGENCY_ID = <?= json_encode($agency_id) ?>
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agency Dashboard</title>
