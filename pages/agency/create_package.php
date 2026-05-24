@@ -10,15 +10,18 @@ require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
 $agency_id = getCurrentUserID();
 
 ?>
-
+<?php if (!$agency_id): ?>
+    <script>
+        alert("Please login to create a package");
+        window.location.href = "../login.php";
+    </script>
+<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <script>
-        <?php if ($agency_id) ?>
-        alert("Please login to create package");
         const AGENCY_ID = <?= json_encode($agency_id) ?>
     </script>
     <meta charset="UTF-8">
