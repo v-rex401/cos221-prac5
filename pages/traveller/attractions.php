@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/attractions_queries.php';
 
     redirectIfNotTraveller();
     $userID = getCurrentUserID();
@@ -16,15 +17,8 @@
         $userName = 'Traveller';
     }
 
-    // Get all attractions
-    $sql = "SELECT Attraction_ID, Name, Image FROM tourist_attractions ORDER BY Name";
-    $result = $conn->query($sql);
-    $allAttractions = [];
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $allAttractions[] = $row;
-        }
-    }
+    // Get all attractions (attractions_queries.php)
+    $allAttractions = getAllAttractions($conn);
 
     // Get filter parameters
     $searchQuery = '';
@@ -79,14 +73,7 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET">
-                    <input type="text" name="search" placeholder="Search packages"
-                        value="">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
+            <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>

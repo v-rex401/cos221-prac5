@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/restaurants_queries.php';
 
     redirectIfNotTraveller();
 
@@ -18,15 +19,8 @@
         $userName = 'Traveller';
     }
 
-    // Get all restaurants
-    $sql = "SELECT Restaurant_ID, Name, Cuisine, Image FROM restaurants ORDER BY Name";
-    $result = $conn->query($sql);
-    $allRestaurants = [];
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $allRestaurants[] = $row;
-        }
-    }
+    // Get all restaurants (restaurants_queries.php)
+    $allRestaurants = getAllRestaurants($conn);
 
     // Get unique cuisines
     $cuisines = [];
@@ -96,14 +90,7 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET">
-                    <input type="text" name="search" placeholder="Search packages"
-                        value="">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
+            <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>

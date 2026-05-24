@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2026 at 01:38 AM
+-- Generation Time: May 24, 2026 at 12:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -81,7 +81,9 @@ INSERT INTO `bookings` (`Booking_ID`, `Package_ID`, `Booking_Date`, `Start_Date`
 (4, 3, '2026-03-01', '2026-08-20', '2026-08-26', 'Solo', NULL),
 (5, 1, '2026-03-10', '2026-09-01', '2026-09-05', 'Solo', NULL),
 (6, 2, '2026-04-05', '2026-10-15', '2026-10-18', 'Solo', NULL),
-(7, 1, '2026-05-20', '2026-05-20', '2026-05-25', 'Group', NULL);
+(7, 1, '2026-05-20', '2026-05-20', '2026-05-25', 'Group', NULL),
+(8, 1, '2026-05-20', '2026-05-20', '2026-05-25', 'Group', NULL),
+(9, 1, '2026-05-24', '2026-05-24', '2026-05-29', 'Group', NULL);
 
 -- --------------------------------------------------------
 
@@ -273,7 +275,9 @@ CREATE TABLE `group_bookings` (
 
 INSERT INTO `group_bookings` (`Booking_ID`, `Package_ID`, `Start_Date`, `End_Date`, `Sharing_Code`, `Guest_Limit`, `Guest_Count`, `Agency_ID`) VALUES
 (3, 0, NULL, NULL, NULL, 10, 4, 3),
-(7, 0, NULL, NULL, NULL, 10, 1, 3);
+(7, 0, NULL, NULL, NULL, 10, 1, 3),
+(8, 0, NULL, NULL, NULL, 10, 1, 3),
+(9, 0, NULL, NULL, NULL, 10, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -536,7 +540,8 @@ INSERT INTO `users` (`User_ID`, `Name`, `Password_Hash`, `Email`, `Cell`, `Type`
 (2, 'Ravi Naidoo', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ravi.naidoo@outlook.com', '+27829876543', 'Traveller'),
 (3, 'Safari & Sun Agency', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'bookings@safarisun.co.za', '+27213456789', 'Agency'),
 (4, 'Test1', '$2y$10$5YtlK0fz3P9pueJ3AHbtme5BmYtGHqeco8Fs12mvRPvYjhAl9Ya8W', 'test1@gmail.com', '0835698541', 'Traveller'),
-(5, 'agency1', '$2y$10$uKoMRMk0lgRdCYbZh23OqeV3FTOXmVz3B.kQ.3ItQQBZnBl4ajL8q', 'agency1@gmail.com', '0836578952', 'Agency');
+(5, 'agency1', '$2y$10$uKoMRMk0lgRdCYbZh23OqeV3FTOXmVz3B.kQ.3ItQQBZnBl4ajL8q', 'agency1@gmail.com', '0836578952', 'Agency'),
+(6, 'Test2', '$2y$10$di1WnNeTs17wRlUiN0u.DOoL2avZobYv/59SQt8pD1bjwyfeJI.eC', 'test2@gmail.com', '0839874587', 'Traveller');
 
 --
 -- Indexes for dumped tables
@@ -678,7 +683,7 @@ ALTER TABLE `accommodations`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `Booking_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Booking_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `destinations`
@@ -720,7 +725,7 @@ ALTER TABLE `tourist_attractions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `User_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `User_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

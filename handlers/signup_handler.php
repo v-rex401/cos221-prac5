@@ -39,9 +39,15 @@
             $result = registerUser($name, $email, $cell, $password, $userType);
 
             if($result['success']){
-                $success = "Account created successfully. You can now login.";
-                //Clear form
-                $name = $email = $cell = $userType = '';
+                //log the new user in straight away so no login step is needed
+                createSession($result['userID'], $userType, $email);
+
+                //redirect directly to the relevant dashboard
+                if($userType === 'Traveller'){
+                    redirectTo('pages/traveller/traveller_dashboard.php');
+                }else{
+                    redirectTo('pages/agency/agency_dashboard.php');
+                }
             }else{
                 $error = $result['error'];
             }

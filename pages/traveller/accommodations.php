@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/accommodations_queries.php';
 
     //session.php
     redirectIfNotTraveller();
@@ -23,15 +24,8 @@
         $userName = 'Traveller';
     }
 
-    // Get all accommodations
-    $sql = "SELECT Accommodation_ID, Name, Type, Price_PN, Image FROM accommodations ORDER BY Name";
-    $result = $conn->query($sql);
-    $allAccommodations = [];
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $allAccommodations[] = $row;
-        }
-    }
+    // Get all accommodations (accommodations_queries.php)
+    $allAccommodations = getAllAccommodations($conn);
 
     // Get unique types
     $types = [];
@@ -141,14 +135,7 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET">
-                    <input type="text" name="search" placeholder="Search packages"
-                        value="">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
+            <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>

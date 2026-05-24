@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/booking_confirmation_queries.php';
 
     redirectIfNotTraveller();
 
@@ -26,27 +27,20 @@
 
     $bookingId = (int)$_GET['id'];
 
-    // Get booking details
-    $sql = "SELECT b.*, p.package_name, p.Price, p.Duration
-            FROM bookings b
-            JOIN packages p ON b.Package_ID = p.Package_ID
-            WHERE b.Booking_ID = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $bookingId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $booking = $result->fetch_assoc();
+    // Get booking details (booking_confirmation_queries.php)
+    $booking = getBookingConfirmation($conn, $bookingId);
 
     if (!$booking) {
         header('Location: traveller_dashboard.php');
         exit;
     }
 
-    $stmt->close();
-
     // Get booking info from session
-    $numTravellers = isset($_SESSION['booking_travellers']) ? $_SESSION['booking_travellers'] : 1;
+    if (isset($_SESSION['booking_travellers'])) {
+        $numTravellers = $_SESSION['booking_travellers'];
+    } else {
+        $numTravellers = 1;
+    }
     $totalPrice = $booking['Price'] * $numTravellers;
 
 ?>
@@ -129,7 +123,7 @@
 
                 <div class="detail-row">
                     <span class="detail-label">Travellers</span>
-                    <span class="detail-value"><?php echo $numTravellers; ?> <?php echo $numTravellers === 1 ? 'person' : 'people'; ?></span>
+                    <span class="detail-value"><?php echo $numTravellers; ?> <?php if ($numTravellers === 1) { echo 'person'; } else { echo 'people'; } ?></span>
                 </div>
 
                 <div class="detail-row">

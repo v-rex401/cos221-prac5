@@ -419,13 +419,14 @@
         return $review;
     }
 
-    function submitReview($conn, $bookingID, $rating, $comment) {
-        $sql = "INSERT INTO reviews (Booking_ID, Rating, Comment, Date)
-                VALUES (?, ?, ?, NOW())";
+    function submitReview($conn, $bookingID, $userID, $rating, $comment) {
+        //reviews.User_ID is NOT NULL, so the reviewer must be stored too
+        $sql = "INSERT INTO reviews (Booking_ID, User_ID, Rating, Comment, Date)
+                VALUES (?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return ['success' => false, 'error' => 'Database error'];
 
-        $stmt->bind_param("iis", $bookingID, $rating, $comment);
+        $stmt->bind_param("iiis", $bookingID, $userID, $rating, $comment);
         if ($stmt->execute()) {
             $insertId = $stmt->insert_id;
             $stmt->close();

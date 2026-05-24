@@ -60,7 +60,9 @@
                     <label for="description">Description</label> 
                     <input type="text" id="description" name="description"> 
                 </div> 
-
+<div> <label for="flights">Available Flights</label>
+    <select id="flights" name="flights"> </select>
+     </div>
                 <div> 
                     <label for="price"> Price </label> 
                     <input type="text" id="price" name="price"> 

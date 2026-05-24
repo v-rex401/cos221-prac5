@@ -180,6 +180,7 @@
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
             <li><a href="packages.php">Packages</a></li>
+            <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
         </ul>
@@ -203,7 +204,7 @@
             </div>
         </div>
 
-        <!-- FILTER BAR — horizontal, sits just under the search bar -->
+        <!-- FILTER BAR -->
         <div class="filters filters-bar">
                 <h3>Filter Packages</h3>
 
@@ -312,8 +313,9 @@
 
             <!-- COLUMN 1: PACKAGES -->
             <div class="packages">
+                <h2 class="section-heading">Packages</h2>
                 <div class="packages-header">
-                    <a href="create_private_group.php">Create Private Group</a>
+                    <a href="create_private_group.php" class="create-group-btn">Create Private Group</a>
 
                     <form method="GET">
                         <!-- Preserve other filters -->
@@ -436,8 +438,15 @@
                 <?php endif; ?>
             </div>
 
-            <!-- COLUMN 3: PACKAGE DETAILS -->
+            <!-- COLUMN 2: PACKAGE DETAILS -->
             <div class="details-section">
+                <!-- Initially shows top rated package and when package clicked show a mini preview of that package -->
+                <?php if (isset($_GET['view'])): ?>
+                    <h2 class="details-heading">Package Details</h2>
+                <?php else: ?>
+                    <h2 class="details-heading">Highest Rated Package</h2>
+                <?php endif; ?>
+
                 <!-- Single Package Details View -->
                 <?php if ($selectedPackage): ?>
                     <!-- Hero Section -->
@@ -516,10 +525,12 @@
                             </div>
                         <?php endif; ?>
 
+                        <br>
+
                         <!-- Buttons -->
                         <div class="details-buttons">
-                            <a href="package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>" class="btn btn-secondary">View Details</a>
-                            <button class="btn btn-primary">Book Now</button>
+                            <button type="button" class="view-btn" onclick="window.location.href='package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>'">View Details</button>
+                            <button type="button" class="book-btn">Book Now</button>
                         </div>
                     </div>
 

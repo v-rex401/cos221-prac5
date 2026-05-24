@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../includes/auth.php';
     require_once __DIR__ . '/../../includes/validation.php';
     require_once __DIR__ . '/../../includes/traveller_dashboard_queries.php';
+    require_once __DIR__ . '/../../includes/package_details_queries.php';
 
     redirectIfNotTraveller();
 
@@ -36,24 +37,35 @@
     $userHasBooked = userHasBookedPackage($conn, $userID, $packageId);
     $userReview = null;
     $userBooking = null;
+    $tripCompleted = false;
 
     if ($userHasBooked) {
         $userReview = userHasReviewedPackage($conn, $userID, $packageId);
-        // Get user's booking for this package
-        $sql = "SELECT Booking_ID FROM bookings
-                WHERE User_ID = ? AND Package_ID = ?
-                ORDER BY Booking_Date DESC LIMIT 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $userID, $packageId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $userBooking = $result->fetch_assoc();
-        $stmt->close();
+        // Get user's booking for this package (package_details_queries.php)
+        $userBooking = getLatestUserBooking($conn, $userID, $packageId);
+
+        // the trip counts as completed once its end date has passed
+        if ($userBooking && !empty($userBooking['End_Date']) && $userBooking['End_Date'] < date('Y-m-d')) {
+            $tripCompleted = true;
+        }
     }
 
     // Handle success/error messages
-    $successMessage = isset($_GET['success']) ? sanitise($_GET['success']) : '';
-    $errorMessage = isset($_GET['error']) ? sanitise($_GET['error']) : '';
+    if (isset($_GET['success'])) {
+        $successMessage = sanitise($_GET['success']);
+    } else {
+        $successMessage = '';
+    }
+
+    if (isset($_GET['error'])) {
+        $errorMessage = sanitise($_GET['error']);
+    } else {
+        $errorMessage = '';
+    }
+
+    // Set departure dates for this package (package_details_queries.php).
+    // Empty until the agency-side scheduling backend is built.
+    $packageDepartureDates = getPackageDepartureDates($conn, $packageId);
 
 ?>
 
@@ -92,13 +104,7 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET" action="traveller_dashboard.php">
-                    <input type="text" name="search" placeholder="Search packages">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
+            <h1 class="topbar-heading">View</h1>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>
@@ -109,6 +115,8 @@
         <div class="back-button-wrapper">
             <a href="traveller_dashboard.php" class="back-link">Back to Packages</a>
         </div>
+
+        <br>
 
         <div class="package-details-hero">
             <?php if (!empty($package['images'])): ?>
@@ -217,8 +225,12 @@
                 <div class="error-message">You have already reviewed this package.</div>
             <?php endif; ?>
 
-            <!-- REVIEW SUBMISSION FORM (for users who have booked) -->
-            <?php if ($userHasBooked && !$userReview && $userBooking): ?>
+            <?php if ($errorMessage === 'trip_not_completed'): ?>
+                <div class="error-message">You can only review this package once your trip is complete.</div>
+            <?php endif; ?>
+
+            <!-- REVIEW SUBMISSION FORM (only available once the trip is completed) -->
+            <?php if ($userHasBooked && !$userReview && $userBooking && $tripCompleted): ?>
                 <div class="review-form-card">
                     <h3>Share Your Experience</h3>
                     <form method="POST" action="review_process.php" class="review-form">
@@ -242,6 +254,14 @@
 
                         <button type="submit" class="btn btn-primary">Submit Review</button>
                     </form>
+                </div>
+            <?php elseif ($userHasBooked && !$userReview && $userBooking && !$tripCompleted): ?>
+                <div class="review-form-card">
+                    <h3>Share Your Experience</h3>
+                    <p class="review-pending-note">
+                        You can leave a review once your trip is complete &mdash; after
+                        <?php echo date('M d, Y', strtotime($userBooking['End_Date'])); ?>.
+                    </p>
                 </div>
             <?php endif; ?>
 
@@ -280,16 +300,28 @@
 <div id="bookingModal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Book This Package</h2>
+            <h2>Book: <?php echo htmlspecialchars($package['package_name']); ?></h2>
             <button class="modal-close" onclick="closeBookingModal()">✕</button>
         </div>
 
-        <form method="POST" action="booking-process.php" class="booking-form">
+        <form method="POST" action="booking_process.php" class="booking-form">
             <input type="hidden" name="package_id" value="<?php echo $package['Package_ID']; ?>">
 
+            <!-- Departure date - confirm one of the package's set dates -->
             <div class="form-group">
-                <label for="start_date">Travel Start Date</label>
-                <input type="date" id="start_date" name="start_date" value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" required>
+                <label for="start_date">Departure Date</label>
+                <select id="start_date" name="start_date" required>
+                    <?php if (empty($packageDepartureDates)): ?>
+                        <option value="" disabled selected>No set departure dates available yet</option>
+                    <?php else: ?>
+                        <option value="" disabled selected>Select a departure date</option>
+                        <?php foreach ($packageDepartureDates as $departureDate): ?>
+                            <option value="<?php echo htmlspecialchars($departureDate); ?>">
+                                <?php echo date('M d, Y', strtotime($departureDate)); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
             </div>
 
             <div class="form-group">
@@ -297,7 +329,17 @@
                 <input type="number" id="num_travellers" name="num_travellers" min="1" max="20" value="1" required>
             </div>
 
+            <!-- Traveller details - one name + cellphone per traveller -->
+            <div class="form-group">
+                <label>Traveller Details</label>
+                <div id="traveller-fields"></div>
+            </div>
+
             <div class="booking-summary">
+                <div class="summary-row">
+                    <span>Trip Length</span>
+                    <span><?php echo (int)$package['Duration']; ?> days</span>
+                </div>
                 <div class="summary-row">
                     <span>Price per Person</span>
                     <span>R<?php echo number_format($package['Price'], 2); ?></span>
@@ -384,6 +426,7 @@
     }
 
     .form-group input,
+    .form-group select,
     .form-group textarea {
         width: 100%;
         padding: 10px 12px;
@@ -392,14 +435,40 @@
         font-family: inherit;
         font-size: 14px;
         outline: none;
+        background: white;
         transition: border-color 0.2s ease;
         box-sizing: border-box;
     }
 
     .form-group input:focus,
+    .form-group select:focus,
     .form-group textarea:focus {
         border-color: #1e73ff;
         box-shadow: 0 0 0 2px rgba(30, 115, 255, 0.1);
+    }
+
+    /* one block of name + cellphone inputs per traveller */
+    .traveller-row {
+        padding: 12px;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        background: #fafafa;
+    }
+
+    .traveller-row-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #1e73ff;
+        margin-bottom: 8px;
+    }
+
+    .traveller-row input {
+        margin-bottom: 8px;
+    }
+
+    .traveller-row input:last-child {
+        margin-bottom: 0;
     }
 
     .booking-summary {
@@ -596,10 +665,18 @@
         color: #999;
         font-size: 14px;
     }
+
+    .review-pending-note {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    }
 </style>
 
 <script>
     const pricePerPerson = <?php echo $package['Price']; ?>;
+    const loggedInName = <?php echo json_encode($userName); ?>;
 
     function openBookingModal() {
         document.getElementById('bookingModal').style.display = 'flex';
@@ -609,13 +686,60 @@
         document.getElementById('bookingModal').style.display = 'none';
     }
 
-    document.getElementById('num_travellers').addEventListener('change', function() {
-        const numTravellers = parseInt(this.value) || 1;
+    function escapeAttr(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    // build one name + cellphone block per traveller
+    function renderTravellerFields() {
+        const numTravellers = parseInt(document.getElementById('num_travellers').value) || 1;
+        const container = document.getElementById('traveller-fields');
+
+        // remember anything already typed so changing the count keeps it
+        const typedNames = [];
+        const typedCells = [];
+        container.querySelectorAll('input[name="traveller_name[]"]').forEach(function (input, i) {
+            typedNames[i] = input.value;
+        });
+        container.querySelectorAll('input[name="traveller_cell[]"]').forEach(function (input, i) {
+            typedCells[i] = input.value;
+        });
+
+        let html = '';
+        for (let i = 0; i < numTravellers; i++) {
+            let nameValue = typedNames[i] || '';
+            // traveller 1 defaults to the logged-in traveller
+            if (i === 0 && nameValue === '') {
+                nameValue = loggedInName;
+            }
+            const cellValue = typedCells[i] || '';
+            html +=
+                '<div class="traveller-row">' +
+                    '<div class="traveller-row-title">Traveller ' + (i + 1) + '</div>' +
+                    '<input type="text" name="traveller_name[]" placeholder="Full name" value="' + escapeAttr(nameValue) + '" required>' +
+                    '<input type="tel" name="traveller_cell[]" placeholder="Cellphone number" value="' + escapeAttr(cellValue) + '" required>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    // refresh the price summary and traveller blocks when the count changes
+    function updateBookingForm() {
+        const numTravellers = parseInt(document.getElementById('num_travellers').value) || 1;
         const totalPrice = pricePerPerson * numTravellers;
 
         document.getElementById('traveller-count').textContent = numTravellers;
-        document.getElementById('total-price').textContent = 'R' + totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    });
+        document.getElementById('total-price').textContent =
+            'R' + totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        renderTravellerFields();
+    }
+
+    document.getElementById('num_travellers').addEventListener('input', updateBookingForm);
 
     // Close modal when clicking outside
     document.getElementById('bookingModal').addEventListener('click', function(e) {
@@ -623,6 +747,9 @@
             closeBookingModal();
         }
     });
+
+    // initial traveller block
+    renderTravellerFields();
 </script>
 
 </body>

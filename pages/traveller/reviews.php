@@ -66,13 +66,7 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET" action="traveller_dashboard.php">
-                    <input type="text" name="search" placeholder="Search packages">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
+            <div class="topbar-spacer"></div>
             <div class="profile">
                 Welcome, <?php echo htmlspecialchars($userName); ?>
                 <a href="../logout.php" class="logout-link">Logout</a>
