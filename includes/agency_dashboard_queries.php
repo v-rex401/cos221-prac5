@@ -1,5 +1,6 @@
 <?php
-function getAgencyPackages($conn, $agency_id) {
+function getAgencyPackages($conn, $agency_id)
+{
     $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
     $stmt->bind_param('i', $agency_id);
     $stmt->execute();
@@ -11,7 +12,8 @@ function getAgencyPackages($conn, $agency_id) {
     $stmt->close();
     return $packages;
 }
-function getAccommodations($conn) {
+function getAccommodations($conn)
+{
     $stmt = $conn->prepare('SELECT Accommodation_ID, Name FROM accommodations ORDER BY Name');
     $stmt->execute();
     $result = $stmt->get_result();
@@ -23,7 +25,8 @@ function getAccommodations($conn) {
     return $accommodations;
 }
 
-function getDestinations($conn) {
+function getDestinations($conn)
+{
     $stmt = $conn->prepare('SELECT Destination_ID, Name FROM destinations ORDER BY Name');
     $stmt->execute();
     $result = $stmt->get_result();
@@ -33,43 +36,55 @@ function getDestinations($conn) {
     }
     $stmt->close();
     return $destinations;
- }
+}
 
-
- function setPackage($conn, $data){
+function getFlights($conn)
+{
+    $stmt = $conn->prepare('SELECT Flight_ID, Airline, Departure_Loc, Arrival_Loc FROM flights');
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $flights = [];
+    while ($row = $result->fetch_assoc()) {
+        $flights[] = $row;
+    }
+    $stmt->close();
+    return $flights;
+}
+function setPackage($conn, $data)
+{
     $stmt = $conn->prepare('INSERT IGNORE INTO packages (Agency_ID, Name, Price, Description, Duration)
-    VALUES (?,?,?,?,?)'); 
-      $stmt->bind_param('isdsi', 
-      $data['agency_id'],
-      $data['packageName'],
-      $data['price'],
-      $data['description'], 
-      $data['duration']
-    ); 
-    $stmt->execute(); 
+    VALUES (?,?,?,?,?)');
+    $stmt->bind_param(
+        'isdsi',
+        $data['agency_id'],
+        $data['packageName'],
+        $data['price'],
+        $data['description'],
+        $data['duration']
+    );
+    $stmt->execute();
 
     $package_id = $conn->insert_id;
 
-$stmt2 = $conn->prepare('INSERT INTO package_destinations (Package_ID, Destination_ID) VALUES (?, ?)');
-$stmt2->bind_param('ii', $package_id, $data['destination']);
-$stmt2->execute();
-$stmt2->close();
+    $stmt2 = $conn->prepare('INSERT INTO package_destinations (Package_ID, Destination_ID) VALUES (?, ?)');
+    $stmt2->bind_param('ii', $package_id, $data['destination']);
+    $stmt2->execute();
+    $stmt2->close();
 
-$stmt3 = $conn->prepare('INSERT INTO package_accommodations (Package_ID, Accommodation_ID) VALUES (?, ?)');
-$stmt3->bind_param('ii', $package_id, $data['accommodation']);
-$stmt3->execute();
-$stmt3->close();
+    $stmt3 = $conn->prepare('INSERT INTO package_accommodations (Package_ID, Accommodation_ID) VALUES (?, ?)');
+    $stmt3->bind_param('ii', $package_id, $data['accommodation']);
+    $stmt3->execute();
+    $stmt3->close();
 
     //send sucesss to js 
-    if ($package_id){
-        return ['success' => true, 'package_id' => $package_id, 'message' => 'Package created successfully']; 
+    if ($package_id) {
+        return ['success' => true, 'package_id' => $package_id, 'message' => 'Package created successfully'];
     } else {
-        return ['success' => false, 'message' => 'Failed to create package']; 
+        return ['success' => false, 'message' => 'Failed to create package'];
     }
+}
 
- }
-
- if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $body = json_decode(file_get_contents('php://input'), true);
     require_once __DIR__ . '/database.php';
@@ -77,12 +92,13 @@ $stmt3->close();
     if ($body['type'] === 'setPackage') {
         echo json_encode(setPackage($conn, $body['data']));
     } else if ($body['type'] === 'getDestinations') {
-    echo json_encode(getDestinations($conn));
-}else if ($body['type'] === 'getAccommodations') {
-    echo json_encode(getAccommodations($conn));
-}else if ($body['type'] === 'getAgencyPackages') {
-    echo json_encode(getAgencyPackages($conn, $body['agency_id']));
-}
+        echo json_encode(getDestinations($conn));
+    } else if ($body['type'] === 'getAccommodations') {
+        echo json_encode(getAccommodations($conn));
+    } else if ($body['type'] === 'getAgencyPackages') {
+        echo json_encode(getAgencyPackages($conn, $body['agency_id']));
+    } else if ($body['type'] === 'getFlights') {
+        echo json_encode(getFlights($conn));
+    }
     exit;
 }
- ?>

@@ -1,5 +1,19 @@
-const createButton = document.getElementById("createButton");
+populateDropdown("getDestinations", "destination", "Destination_ID", "Name");
+populateDropdown(
+  "getAccommodations",
+  "accommodation",
+  "Accommodation_ID",
+  "Name",
+);
+populateFlights("getFlights", "flights", "Flight_ID", "Airline");
+document.getElementById("packageName").addEventListener("input", updatePreview);
+document.getElementById("price").addEventListener("input", updatePreview);
+document.getElementById("days").addEventListener("input", updatePreview);
+document.getElementById("description").addEventListener("input", updatePreview);
+document.getElementById("destination").addEventListener("change", updateDestination);
+document.getElementById("accommodation").addEventListener("change", updateAccommodation);
 
+const createButton = document.getElementById("createButton");
 createButton.onclick = function () {
   //Store the stuff from the form
   const packageName = document.getElementById("packageName").value;
@@ -46,15 +60,6 @@ createButton.onclick = function () {
     .catch((err) => console.error("Error:", err));
 };
 
-window.onload = function () {
-  populateDropdown("getDestinations", "destination", "Destination_ID", "Name");
-  populateDropdown(
-    "getAccommodations",
-    "accommodation",
-    "Accommodation_ID",
-    "Name",
-  );
-};
 function populateDropdown(type, elementId, valueKey, labelKey) {
   fetch("../../includes/agency_dashboard_queries.php", {
     method: "POST",
@@ -72,4 +77,67 @@ function populateDropdown(type, elementId, valueKey, labelKey) {
         select.appendChild(opt);
       });
     });
+}
+
+function populateFlights(type, elementId, valueKey, labelKey) {
+  // Instead of populateDropdown for flights, do this:
+  fetch("../../includes/agency_dashboard_queries.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "getFlights" }),
+  })
+    .then((res) => res.json())
+    .then((flights) => {
+      const select = document.getElementById("flights");
+      flights.forEach((flight) => {
+        const opt = document.createElement("option");
+        opt.value = flight.Flight_ID;
+        opt.textContent = `${flight.Airline} | ${flight.Departure_Loc} → ${flight.Arrival_Loc}`;
+        select.appendChild(opt);
+      });
+    });
+}
+
+
+
+function updatePreview() {
+  document.getElementById("prev-name").textContent =
+    document.getElementById("packageName").value || "Package Name";
+
+  document.getElementById("prev-price").textContent =
+    "R" + (document.getElementById("price").value || "0");
+
+  document.getElementById("prev-duration").textContent =
+    (document.getElementById("days").value || "0") + " days";
+
+  document.getElementById("prev-description").textContent =
+    document.getElementById("description").value || "No description yet.";
+
+  // Clear the list first
+
+
+}
+
+
+function updateDestination() {
+  const destList = document.getElementById("prev-destinations");
+
+  // Loop through selected options and add each one
+  const destSelect = document.getElementById("destination");
+  for (const option of destSelect.selectedOptions) {
+    const li = document.createElement("li");
+    li.textContent = option.textContent;
+    destList.appendChild(li);
+  }
+}
+
+function updateAccommodation() {
+  const accommodationList = document.getElementById("prev-accommodations");
+
+  const accommodationSelect = document.getElementById("accommodation");
+  for (const option of accommodationSelect.selectedOptions) {
+    const li = document.createElement("li");
+    li.textContent = option.textContent;
+    accommodationList.appendChild(li);
+  }
 }
