@@ -14,7 +14,7 @@ function getAgencyPackages($conn, $agency_id)
 }
 function getAccommodations($conn)
 {
-    $stmt = $conn->prepare('SELECT Accommodation_ID, Name FROM accommodations ORDER BY Name');
+    $stmt = $conn->prepare('SELECT Accommodation_ID, Name, Price_PN FROM accommodations ORDER BY Name');
     $stmt->execute();
     $result = $stmt->get_result();
     $accommodations = [];
@@ -40,7 +40,7 @@ function getDestinations($conn)
 
 function getFlights($conn)
 {
-    $stmt = $conn->prepare('SELECT Flight_ID, Airline, Departure_Loc, Arrival_Loc FROM flights');
+    $stmt = $conn->prepare('SELECT Flight_ID, Airline, Departure_Loc, Arrival_Loc, Price FROM flights');
     $stmt->execute();
     $result = $stmt->get_result();
     $flights = [];

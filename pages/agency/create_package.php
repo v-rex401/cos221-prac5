@@ -86,6 +86,14 @@ require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
 
             <h4>Flights</h4>
             <ul id="prev-flights"></ul>
+
+
+            <hr>
+            <p>Flights: <span id="prev-flight-cost">R0</span></p>
+            <p>Accommodation: <span id="prev-accommodation-cost">R0</span></p>
+            <hr>
+            <p>Total: <span id="prev-total">R0</span></p>
+
         </div>
     </div>
     <script src="../../js/createPackage.js"> </script>
