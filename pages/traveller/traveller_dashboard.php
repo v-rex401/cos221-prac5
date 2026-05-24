@@ -29,7 +29,7 @@
 
     //get filtering parameters
     //destinations
-    if(isset($_GET['destinations'])){
+    if(isset($_GET['destination']) && $_GET['destination'] !== ''){
         $destination = (int)$_GET['destination'];
     }else{
         $destination = null;
@@ -43,13 +43,13 @@
     }
 
     //price range
-    if(isset($_GET['minPrice'])){
+    if(isset($_GET['minPrice']) && $_GET['minPrice'] !== ''){
         $minPrice = (float)$_GET['minPrice'];
     }else{
         $minPrice = 0;
     }
 
-    if(isset($_GET['maxPrice'])){
+    if(isset($_GET['maxPrice']) && $_GET['maxPrice'] !== ''){
         $maxPrice = (float)$_GET['maxPrice'];
     }else{
         $maxPrice = 999999;
@@ -65,13 +65,13 @@
     $packages = $filteredPackages;
 
     //duration
-    if(isset($_GET['minDuration'])){
+    if(isset($_GET['minDuration']) && $_GET['minDuration'] !== ''){
         $minDuration = (int)$_GET['minDuration'];
     }else{
         $minDuration = 1;
     }
 
-    if(isset($_GET['maxDuration'])){
+    if(isset($_GET['maxDuration']) && $_GET['maxDuration'] !== ''){
         $maxDuration = (int)$_GET['maxDuration'];
     }else{
         $maxDuration = 365;
@@ -131,6 +131,25 @@
             }
         }
         $packages = $filteredPackages;
+    }
+
+    // Apply sorting
+    if($sortBy == 'price_low'){
+        usort($packages, function($a, $b) {
+            return $a['Price'] <=> $b['Price'];
+        });
+    }elseif($sortBy == 'price_high'){
+        usort($packages, function($a, $b) {
+            return $b['Price'] <=> $a['Price'];
+        });
+    }elseif($sortBy == 'rating'){
+        usort($packages, function($a, $b) {
+            return $b['avg_rating'] <=> $a['avg_rating'];
+        });
+    }elseif($sortBy == 'duration'){
+        usort($packages, function($a, $b) {
+            return $a['Duration'] <=> $b['Duration'];
+        });
     }
 
     // Handle package view parameter
