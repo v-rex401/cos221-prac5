@@ -53,10 +53,10 @@
     if (isset($_GET['country'])) {
         $selectedCountry = sanitise($_GET['country']);
     }
-    if (isset($_GET['minPrice'])) {
+    if (isset($_GET['minPrice']) && $_GET['minPrice'] !== '') {
         $minPrice = (float)$_GET['minPrice'];
     }
-    if (isset($_GET['maxPrice'])) {
+    if (isset($_GET['maxPrice']) && $_GET['maxPrice'] !== '') {
         $maxPrice = (float)$_GET['maxPrice'];
     }
     if (isset($_GET['sort'])) {
@@ -68,6 +68,7 @@
     foreach ($allAccommodations as $acc) {
         $nameMatch = empty($searchQuery) || stripos($acc['Name'], $searchQuery) !== false;
         $typeMatch = empty($selectedType) || strcasecmp($acc['Type'], $selectedType) === 0;
+        //$countryMatch = empty($selectedCountry) || strcasecmp($acc['Country'], $selectedCountry) === 0;
         $priceMatch = $acc['Price_PN'] >= $minPrice && $acc['Price_PN'] <= $maxPrice;
 
         if ($nameMatch && $typeMatch && $priceMatch) {
@@ -186,9 +187,9 @@
                         <label>Price Range (per night)</label>
                         <div class="price-range">
                             <input type="number" name="minPrice" placeholder="Min"
-                                value="<?php if ($minPrice == 0) { echo ''; } else { echo $minPrice; } ?>">
+                                value="<?php echo isset($_GET['minPrice']) && $_GET['minPrice'] !== '' ? htmlspecialchars($_GET['minPrice']) : ''; ?>">
                             <input type="number" name="maxPrice" placeholder="Max"
-                                value="<?php if ($maxPrice == 999999) { echo ''; } else { echo $maxPrice; } ?>">
+                                value="<?php echo isset($_GET['maxPrice']) && $_GET['maxPrice'] !== '' ? htmlspecialchars($_GET['maxPrice']) : ''; ?>">
                         </div>
                     </div>
 
@@ -256,3 +257,4 @@
 
 </body>
 </html>
+
