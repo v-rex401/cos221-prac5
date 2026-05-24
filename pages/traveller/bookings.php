@@ -81,7 +81,7 @@
             <?php if (empty($bookings)): ?>
                 <div class="empty-state">
                     <h2>No bookings yet</h2>
-                    <p>You have not booked any packages. Browse packages and book your next trip.</p>
+                    <p>You have not booked any packages</p>
                     <a href="traveller_dashboard.php">Browse packages</a>
                 </div>
             <?php else: ?>

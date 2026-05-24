@@ -434,6 +434,12 @@
 
                                         <div class="package-price">R<?php echo number_format($package['Price'], 2); ?></div>
                                     </div>
+
+                                    <!-- Spots left -->
+                                    <?php $cardSpots = getSpotsStatus($package['spots_left']); ?>
+                                    <div class="package-spots <?php echo $cardSpots['class']; ?>">
+                                        <?php echo $cardSpots['text']; ?>
+                                    </div>
                                 </div>
 
                                 <!-- Inclusion indicators -->
@@ -520,6 +526,12 @@
                                 <strong><?php echo number_format($selectedPackage['avg_rating'], 1); ?></strong>
                                 <span class="details-rating-count">(<?php echo $selectedPackage['review_count']; ?> reviews)</span>
                             </div>
+                        </div>
+
+                        <!-- Spots left -->
+                        <?php $previewSpots = getSpotsStatus($selectedPackage['spots_left']); ?>
+                        <div class="details-spots <?php echo $previewSpots['class']; ?>">
+                            <?php echo $previewSpots['text']; ?>
                         </div>
 
                         <!-- Description -->

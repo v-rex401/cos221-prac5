@@ -21,3 +21,28 @@
     font-weight: bold;
     z-index: 10;
 }
+
+/* spots-left indicator */
+.package-spots {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.details-spots {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.spots-open {
+    color: #27ae60;
+}
+
+.spots-low {
+    color: #e67e22;
+}
+
+.spots-full {
+    color: #c92a2a;
+}
