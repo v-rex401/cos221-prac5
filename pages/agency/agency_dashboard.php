@@ -35,6 +35,8 @@ $packages = getAgencyPackages($conn, $agency_id);
         <div class="sidepanel">
             <h1>Welcome <?php echo $agency_id ?> </h1>
             <hr>
+            <p>Manage Group Bookings</p>
+            <hr>
             <p>Analytics</p>
             <hr>
             <p>My Details</p>
