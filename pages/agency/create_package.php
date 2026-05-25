@@ -92,6 +92,12 @@ $agency_id = getCurrentUserID();
                 <input type="text" id="price" name="price">
             </div>
 
+            <div>
+                <input type="text" id="image-search" oninput="fetchImageOptions(this.value)" placeholder="Destination">
+                <input type="hidden" id="selected_image" name="image_url">
+                <div id="image-grid" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;"></div>
+            </div>
+
             <div> <button id="createButton">Create </button> </div>
         </div>
         <div class="previewSide">

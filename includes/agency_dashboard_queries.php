@@ -153,7 +153,13 @@ function setPackage($conn, $data)
     }
     $stmt6->close();
 
-
+    //Insert into package_images 
+    if (!empty($data['image'])) {
+        $imgStmt = $conn->prepare("INSERT INTO package_images (Package_ID, Image_URL) VALUES (?, ?)");
+        $imgStmt->bind_param('is', $package_id, $data['image']);
+        $imgStmt->execute();
+        $imgStmt->close();
+    }
     //send sucesss to js 
     if ($package_id) {
         return ['success' => true, 'package_id' => $package_id, 'message' => 'Package created successfully'];

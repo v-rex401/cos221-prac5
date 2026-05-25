@@ -30,6 +30,7 @@ const packageData = {
   agency_id: AGENCY_ID,
   departureDate: "",
   arrivalDate: "",
+  image: ""
 };
 
 
@@ -246,4 +247,31 @@ function updateAttractions() {
     attractionList.appendChild(li);
   }
   updatePreview();
+}
+var imageSearchTimer = null;
+async function fetchImageOptions(query) {
+  clearTimeout(imageSearchTimer);
+  imageSearchTimer = setTimeout(async () => {
+    const response = await fetch(`../../api/get_images.php?query=${encodeURIComponent(query)}`);
+    const images = await response.json();
+
+    const grid = document.getElementById('image-grid');
+    grid.innerHTML = '';
+
+    images.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.cssText = 'width:100%; height:80px; object-fit:cover; cursor:pointer; border:3px solid transparent; border-radius:4px;';
+      img.onclick = () => selectImage(url, img);
+      grid.appendChild(img);
+    });
+  }, 500);
+
+}
+
+function selectImage(url, imgElement) {
+  document.querySelectorAll('#image-grid img').forEach(img => img.style.borderColor = 'transparent');
+  imgElement.style.borderColor = '#00aaff'; // highlight selected
+  document.getElementById('selected_image').value = url;
+  packageData.image = url; // store in packageData too
 }
