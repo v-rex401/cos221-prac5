@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/database.php';
 
-
+populateImages($conn);
 die();
 populateRestaurants($conn);
 populateDestinations($conn);
@@ -297,4 +297,84 @@ function populateAccomodation($conn)
 
     $stmt->close();
     echo "Accommodations done!";
+}
+
+// ======================================= IMAGES ============================================================================
+function getPexelsImage($query, $apiKey)
+{
+    $url = "https://api.pexels.com/v1/search?"
+        . "query=" . urlencode($query)
+        . "&per_page=1";
+
+    $options = [
+        'http' => [
+            'header' => "Authorization: " . $apiKey
+        ]
+    ];
+
+    $context  = stream_context_create($options);
+    $response = file_get_contents($url, false, $context);
+    $data     = json_decode($response, true);
+
+    return $data['photos'][0]['src']['large'] ?? '';
+}
+
+function populateImages($conn)
+{
+    set_time_limit(0);
+    $pexelsKey = "e2Xsrlja3B2PSS75BMF7OrFDQNcsFMsuVJJi9sQYmUVzvEsjahAie3Mo";
+
+    // ---- Restaurants ----
+    $result = $conn->query("SELECT Restaurant_ID, Name FROM restaurants WHERE Image = '' OR Image IS NULL");
+    $stmt   = $conn->prepare("UPDATE restaurants SET Image = ? WHERE Restaurant_ID = ?");
+    while ($row = $result->fetch_assoc()) {
+        $image = getPexelsImage($row['Name'] . ' restaurant', $pexelsKey);
+        if (empty($image)) continue;
+        $stmt->bind_param('si', $image, $row['Restaurant_ID']);
+        $stmt->execute();
+        echo "Restaurant image updated: {$row['Name']}<br>";
+        flush();
+    }
+    $stmt->close();
+
+    // ---- Destinations ----
+    $result = $conn->query("SELECT Destination_ID, Name FROM destinations WHERE Image = '' OR Image IS NULL");
+    $stmt   = $conn->prepare("UPDATE destinations SET Image = ? WHERE Destination_ID = ?");
+    while ($row = $result->fetch_assoc()) {
+        $image = getPexelsImage($row['Name'] . ' city', $pexelsKey);
+        if (empty($image)) continue;
+        $stmt->bind_param('si', $image, $row['Destination_ID']);
+        $stmt->execute();
+        echo "Destination image updated: {$row['Name']}<br>";
+        flush();
+    }
+    $stmt->close();
+
+    // ---- Accommodations ----
+    $result = $conn->query("SELECT Accommodation_ID, Name FROM accommodations WHERE Image = '' OR Image IS NULL");
+    $stmt   = $conn->prepare("UPDATE accommodations SET Image = ? WHERE Accommodation_ID = ?");
+    while ($row = $result->fetch_assoc()) {
+        $image = getPexelsImage($row['Name'] . ' hotel', $pexelsKey);
+        if (empty($image)) continue;
+        $stmt->bind_param('si', $image, $row['Accommodation_ID']);
+        $stmt->execute();
+        echo "Accommodation image updated: {$row['Name']}<br>";
+        flush();
+    }
+    $stmt->close();
+
+    // ---- Attractions ----
+    $result = $conn->query("SELECT Attraction_ID, Name FROM tourist_attractions WHERE Image = '' OR Image IS NULL");
+    $stmt   = $conn->prepare("UPDATE tourist_attractions SET Image = ? WHERE Attraction_ID = ?");
+    while ($row = $result->fetch_assoc()) {
+        $image = getPexelsImage($row['Name'] . ' landmark', $pexelsKey);
+        if (empty($image)) continue;
+        $stmt->bind_param('si', $image, $row['Attraction_ID']);
+        $stmt->execute();
+        echo "Attraction image updated: {$row['Name']}<br>";
+        flush();
+    }
+    $stmt->close();
+
+    echo "All images done!<br>";
 }
