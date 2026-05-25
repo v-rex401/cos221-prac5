@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/database.php';
-populateAttractions($conn);
+
 die();
 populateDestinations($conn);
+populateAttractions($conn);
 populateAccomodation($conn);
 populateFlights($conn);
 populateRestaurants($conn);
