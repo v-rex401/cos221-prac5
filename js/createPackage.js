@@ -7,7 +7,7 @@ populateDropdown("getAttractions", "attractions", "Attraction_ID", "Name");
 
 document.getElementById("packageName").addEventListener("input", updatePreview);
 document.getElementById("price").addEventListener("input", updatePreview);
-document.getElementById("days").addEventListener("input", updatePreview);
+document.getElementById("days").addEventListener("input", updateDates);
 document.getElementById("description").addEventListener("input", updatePreview);
 document.getElementById("destination").addEventListener("change", updateDestination);
 document.getElementById("accommodation").addEventListener("change", updateAccommodation);
@@ -39,6 +39,7 @@ createButton.onclick = function () {
   packageData.departureDate = document.getElementById("depDate").value;
   packageData.arrivalDate = document.getElementById("arrDate").value;
 
+  //TODO: Validation Checks
   fetch("../../includes/agency_dashboard_queries.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -129,17 +130,16 @@ function updatePreview() {
   document.getElementById("prev-price").textContent =
     "R" + (document.getElementById("price").value || "0");
 
-  document.getElementById("prev-duration").textContent =
-    (document.getElementById("days").value || "0") + " days";
+  /* document.getElementById("prev-duration").textContent =
+    (document.getElementById("days").value || "0") + " days"; */
 
   document.getElementById("prev-description").textContent =
     document.getElementById("description").value || "No description yet.";
 
 
 
-  const days = parseInt(document.getElementById("days").value) || 1;
+  // const days = parseInt(document.getElementById("days").value) || 1;
   const basePrice = parseFloat(document.getElementById("price").value) || 0;
-
 
   let flightCost = 0;
   document.querySelectorAll("#prev-flights li").forEach((li) => {
@@ -160,7 +160,7 @@ function updatePreview() {
 
   packageData.name = document.getElementById("packageName").value;
   packageData.price = parseFloat(document.getElementById("price").value) || 0;
-  packageData.duration = parseFloat(document.getElementById("days").value) || 0;
+  // packageData.duration = parseFloat(document.getElementById("days").value) || 0;
   packageData.description = document.getElementById("description").value;
   packageData.maxGuests = parseInt(document.getElementById("maxGuests").value) || 0;
 }
@@ -178,9 +178,26 @@ function updateDestination() {
     destList.appendChild(li);
   }
 }
+function updateDates() {
+  document.getElementById("prev-duration").textContent =
+    (document.getElementById("days").value || "0") + " days";
+  const days = parseInt(document.getElementById("days").value) || 1;
+  packageData.duration = parseFloat(document.getElementById("days").value) || 0;
 
+  if (packageData.accommodations.length !== 0) {
+    const accommodationSelect = document.getElementById("accommodation");
+    const option = accommodationSelect.selectedOptions[0];
+    const li = document.getElementById("prev-accommodations").querySelector("li");
+    const pricePerNight = parseFloat(option.dataset.price);
+    li.textContent =
+      `${option.textContent} — R${(pricePerNight * days).toFixed(2)} (R${pricePerNight.toFixed(2)}/night × ${days} days)`;
+  }
+  //get the accomodation and update those dates 
+}
 function updateAccommodation() {
+  packageData.accommodations = [];
   const aList = document.getElementById("prev-accommodations");
+  aList.innerHTML = "";
   const days = parseInt(document.getElementById("days").value) || 1;
   const accommodationSelect = document.getElementById("accommodation");
   for (const option of accommodationSelect.selectedOptions) {
