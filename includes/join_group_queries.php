@@ -36,7 +36,7 @@
     function addGuestToGroup($conn, $bookingId, $userID){
         //record this traveller as a member of the group
         $sqlInsert = "INSERT INTO booking_travelers (Booking_ID, User_ID, Joined_Date)
-                      VALUES (?, ?, CURDATE())";
+                        VALUES (?, ?, CURDATE())";
         $stmtInsert = $conn->prepare($sqlInsert);
         if(!$stmtInsert){
             return false;

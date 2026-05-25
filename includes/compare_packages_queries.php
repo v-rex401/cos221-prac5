@@ -53,8 +53,8 @@
         foreach($details['flights'] as $flight){
             $flights[] = [
                 'airline' => $flight['Airline'],
-                'route'   => $flight['Departure_Loc'] . ' to ' . $flight['Arrival_Loc'],
-                'price'   => (float)$flight['Price'],
+                'route' => $flight['Departure_Loc'] . ' to ' . $flight['Arrival_Loc'],
+                'price'=> (float)$flight['Price'],
             ];
             $flightsTotal = $flightsTotal + (float)$flight['Price'];
         }
@@ -64,8 +64,8 @@
         $accommodationPerNight = 0;
         foreach($details['accommodations'] as $accommodation){
             $accommodations[] = [
-                'name'    => $accommodation['Name'],
-                'type'    => $accommodation['Type'],
+                'name' => $accommodation['Name'],
+                'type' => $accommodation['Type'],
                 'pricePN' => (float)$accommodation['Price_PN'],
             ];
             $accommodationPerNight = $accommodationPerNight + (float)$accommodation['Price_PN'];
@@ -81,30 +81,30 @@
         $restaurants = [];
         foreach($details['restaurants'] as $restaurant){
             $restaurants[] = [
-                'name'    => $restaurant['Name'],
+                'name' => $restaurant['Name'],
                 'cuisine' => $restaurant['Cuisine'],
             ];
         }
 
         return [
-            'id'                    => (int)$details['Package_ID'],
-            'name'                  => $details['package_name'],
-            'location'              => $location,
-            'image'                 => $image,
-            'agency'                => $details['agency_name'],
-            'duration'              => (int)$details['Duration'],
-            'price'                 => (float)$details['full_price'],
-            'fee'                   => (float)$details['Price'],
-            'capacity'              => (int)$details['Capacity'],
-            'spotsLeft'             => (int)$details['spots_left'],
-            'rating'                => (float)$details['avg_rating'],
-            'reviews'               => (int)$details['review_count'],
-            'flights'               => $flights,
-            'flightsTotal'          => $flightsTotal,
-            'accommodations'        => $accommodations,
+            'id'=> (int)$details['Package_ID'],
+            'name'=> $details['package_name'],
+            'location'=> $location,
+            'image' => $image,
+            'agency'=> $details['agency_name'],
+            'duration'=> (int)$details['Duration'],
+            'price'=> (float)$details['full_price'],
+            'fee' => (float)$details['Price'],
+            'capacity' => (int)$details['Capacity'],
+            'spotsLeft' => (int)$details['spots_left'],
+            'rating' => (float)$details['avg_rating'],
+            'reviews' => (int)$details['review_count'],
+            'flights'=> $flights,
+            'flightsTotal'=> $flightsTotal,
+            'accommodations'=> $accommodations,
             'accommodationPerNight' => $accommodationPerNight,
-            'attractions'           => $attractions,
-            'restaurants'           => $restaurants,
+            'attractions' => $attractions,
+            'restaurants' => $restaurants,
         ];
     }
 ?>

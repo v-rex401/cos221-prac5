@@ -298,8 +298,10 @@
         $result = $conn->query($sql);
 
         $destinations = [];
-        while ($row = $result->fetch_assoc()) {
-            $destinations[] = $row;
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $destinations[] = $row;
+            }
         }
 
         return $destinations;

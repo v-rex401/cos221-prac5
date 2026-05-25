@@ -586,4 +586,3 @@
 </html>
 
 <script src="../../js/package_traveller_dashboard.js"></script>
-                  

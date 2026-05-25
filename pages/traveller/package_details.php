@@ -265,10 +265,6 @@
             <?php elseif ($userHasBooked && !$userReview && $userBooking && !$tripCompleted): ?>
                 <div class="review-form-card">
                     <h3>Share Your Experience</h3>
-                    <p class="review-pending-note">
-                        You can leave a review once your trip is complete &mdash; after
-                        <?php echo date('M d, Y', strtotime($userBooking['End_Date'])); ?>.
-                    </p>
                 </div>
             <?php endif; ?>
 

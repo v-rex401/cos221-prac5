@@ -31,7 +31,7 @@
     function createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId, $userID){
         //Step 1: create the booking record
         $sqlBooking = "INSERT INTO bookings (Package_ID, Booking_Date, Start_Date, End_Date, Booking_Type)
-                       VALUES (?, ?, ?, ?, 'Group')";
+                        VALUES (?, ?, ?, ?, 'Group')";
         $stmtBooking = $conn->prepare($sqlBooking);
         if(!$stmtBooking){
             return null;
@@ -52,7 +52,7 @@
         //Step 3: create the group_bookings record (with the package, dates and code)
         $sqlGroup = "INSERT INTO group_bookings
                         (Booking_ID, Package_ID, Start_Date, End_Date, Sharing_Code, Guest_Limit, Guest_Count, Agency_ID)
-                     VALUES (?, ?, ?, ?, ?, ?, 1, ?)";
+                        VALUES (?, ?, ?, ?, ?, ?, 1, ?)";
         $stmtGroup = $conn->prepare($sqlGroup);
         if(!$stmtGroup){
             return null;
@@ -67,7 +67,7 @@
 
         //record the creator as the first member of the group
         $sqlMember = "INSERT INTO booking_travelers (Booking_ID, User_ID, Joined_Date)
-                      VALUES (?, ?, CURDATE())";
+                        VALUES (?, ?, CURDATE())";
         $stmtMember = $conn->prepare($sqlMember);
         if($stmtMember){
             $stmtMember->bind_param("ii", $bookingId, $userID);
