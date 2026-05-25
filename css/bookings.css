@@ -226,3 +226,223 @@
     padding:3px 9px;
     border-radius:20px;
 }
+
+/* ---- sections (upcoming/past) ---- */
+.bookings-section{
+    margin-bottom:40px;
+}
+
+.bookings-header-secondary{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.bookings-header-secondary h2{
+    font-size:18px;
+    color:#1a1a1a;
+    margin:0;
+}
+
+.bookings-count-badge{
+    background:#f0f4ff;
+    color:#1e73ff;
+    font-size:12px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:12px;
+}
+
+/* ---- past bookings ---- */
+.past-bookings-section{
+    border-top:2px solid #e8edf4;
+    padding-top:30px;
+}
+
+.booking-card-static{
+    cursor:default;
+    display:block;
+}
+
+.booking-card-static .booking-card{
+    opacity:0.95;
+}
+
+.booking-type-badge.completed{
+    background:rgba(76,175,80,0.9);
+    color:#fff;
+}
+
+/* ---- Leave a Review button on past bookings ---- */
+.booking-review-btn{
+    background:#4caf50;
+    color:#fff;
+    border:none;
+    padding:7px 12px;
+    border-radius:6px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background 0.15s ease;
+}
+
+.booking-review-btn:hover{
+    background:#45a049;
+}
+
+/* ---- Review Modal ---- */
+.review-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+}
+
+.review-modal-overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:-1;
+}
+
+.review-modal-content{
+    background:#fff;
+    border-radius:12px;
+    padding:32px;
+    max-width:500px;
+    width:90%;
+    box-shadow:0 10px 40px rgba(0,0,0,0.2);
+    position:relative;
+}
+
+.review-modal-close{
+    position:absolute;
+    top:16px;
+    right:16px;
+    background:none;
+    border:none;
+    font-size:28px;
+    color:#999;
+    cursor:pointer;
+    padding:0;
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.review-modal-close:hover{
+    color:#333;
+}
+
+.review-modal-content h2{
+    font-size:20px;
+    color:#1a1a1a;
+    margin:0 0 24px;
+}
+
+.review-form-group{
+    margin-bottom:24px;
+}
+
+.review-form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#444;
+    margin-bottom:8px;
+}
+
+.review-form-group textarea,
+.review-form-group select{
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-family:inherit;
+    font-size:13px;
+    resize:vertical;
+}
+
+.review-form-group textarea{
+    min-height:100px;
+}
+
+.review-form-group select{
+    height:40px;
+    cursor:pointer;
+}
+
+.review-rating-input{
+    display:flex;
+    gap:12px;
+}
+
+.star-label{
+    display:flex;
+    align-items:center;
+    cursor:pointer;
+    font-size:0;
+}
+
+.star-label input{
+    display:none;
+}
+
+.star-icon{
+    font-size:32px;
+    color:#ddd;
+    transition:color 0.2s ease;
+}
+
+.star-label input:checked ~ .star-icon,
+.star-label:hover .star-icon{
+    color:#ffc107;
+}
+
+.review-form-actions{
+    display:flex;
+    gap:12px;
+    justify-content:flex-end;
+    margin-top:24px;
+}
+
+.review-btn-cancel,
+.review-btn-submit{
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+.review-btn-cancel{
+    background:#f0f0f0;
+    color:#333;
+}
+
+.review-btn-cancel:hover{
+    background:#e0e0e0;
+}
+
+.review-btn-submit{
+    background:#1e73ff;
+    color:#fff;
+}
+
+.review-btn-submit:hover{
+    background:#1560dd;
+}

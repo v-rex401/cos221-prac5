@@ -39,6 +39,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Reviews - Tripistry</title>
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/reviews.css">
 </head>
 
 <body>
@@ -78,44 +79,9 @@
         <div class="reviews-container">
             <div class="page-header">
                 <h1>My Reviews</h1>
-                <p><?php echo count($reviews); ?> review<?php echo count($reviews) !== 1 ? 's' : ''; ?> submitted</p>
             </div>
 
             <?php if (count($reviews) > 0): ?>
-                <!-- STATS -->
-                <div class="reviews-stats">
-                    <div class="stat-card">
-                        <div class="stat-number"><?php echo count($reviews); ?></div>
-                        <div class="stat-label">Total Reviews</div>
-                    </div>
-
-                    <?php
-                    $avgRating = 0;
-                    if (count($reviews) > 0) {
-                        $totalRating = 0;
-                        foreach ($reviews as $review) {
-                            $totalRating += $review['Rating'];
-                        }
-                        $avgRating = $totalRating / count($reviews);
-                    }
-                    ?>
-
-                    <div class="stat-card">
-                        <div class="stat-number"><?php echo number_format($avgRating, 1); ?></div>
-                        <div class="stat-label">Average Rating</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-number">
-                            <?php
-                            $fiveStarCount = count(array_filter($reviews, function($r) { return $r['Rating'] === 5; }));
-                            echo $fiveStarCount;
-                            ?>
-                        </div>
-                        <div class="stat-label">5-Star Reviews</div>
-                    </div>
-                </div>
-
                 <!-- FILTER -->
                 <div class="filter-section">
                     <label>Filter by Rating:</label>
@@ -158,10 +124,6 @@
                             <?php if (!empty($review['Comment'])): ?>
                                 <p class="review-comment"><?php echo htmlspecialchars($review['Comment']); ?></p>
                             <?php endif; ?>
-
-                            <div class="review-actions">
-                                <a href="package_details.php?id=<?php echo $review['Package_ID']; ?>" class="review-action-link">View Reviews</a>
-                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
