@@ -43,14 +43,14 @@ if ($agencyResult['success']) {
         <div class="sidepanel">
             <h1>Welcome <?php echo htmlspecialchars($agencyName); ?></h1>
             <hr>
-            <p>Manage Group Bookings</p>
+            <a href="group_bookings.php" class="menu">Manage Group Bookings</a>
             <hr>
-            <p>Analytics</p>
+            <a href="agency_analytics.php" class="menu">Analytics</a>
             <hr>
-            <p>My Details</p>
+            <a href="agency_analytics.php" class="menu">My Details</a>
             <hr>
-            <p>Currency Converter</p>
-            <a href="../logout.php">Logout</a>
+            <a href="agency_analytics.php" class="menu">Currency Converter</a>
+            <a href="../logout.php" class="logout-btn">Logout</a>
         </div>
         <div id="mainBoard">
 
