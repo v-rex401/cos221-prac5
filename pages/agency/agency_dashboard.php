@@ -33,7 +33,7 @@ $packages = getAgencyPackages($conn, $agency_id);
 <body>
     <div class="myContainer">
         <div class="sidepanel">
-            <h1>Welcome <?php echo $agency_id ?> </h1> //TODO: Put the agency name here
+            <h1>Welcome <?php echo $agency_id ?> </h1>
             <a href="../logout.php">Logout</a>
         </div>
         <div id="mainBoard">

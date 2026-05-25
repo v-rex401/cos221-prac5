@@ -113,6 +113,25 @@ function setPackage($conn, $data)
         return ['success' => false, 'message' => 'Failed to create package'];
     }
 }
+
+
+
+function deletePackage($conn, $package_id, $agency_id)
+{
+    $stmt = $conn->prepare('DELETE FROM packages WHERE Package_ID = ? AND Agency_ID = ?');
+    $stmt->bind_param('ii', $package_id, $agency_id);
+    $stmt->execute();
+    $affected = $stmt->affected_rows;
+    $stmt->close();
+
+    if ($affected > 0) {
+        return ['success' => true, 'message' => 'Package deleted'];
+    } else {
+        return ['success' => false, 'message' => 'Package not found or unauthorised'];
+    }
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header('Content-Type: application/json');
@@ -129,6 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(getAgencyPackages($conn, $body['agency_id']));
     } else if ($body['type'] === 'getFlights') {
         echo json_encode(getFlights($conn));
+    } else if ($body['type'] === 'deletePackage') {
+        echo json_encode(deletePackage($conn, $body['package_id'], $body['agency_id']));
     }
     exit;
 }

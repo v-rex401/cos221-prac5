@@ -1,17 +1,142 @@
 <?php
 require_once __DIR__ . '/../includes/database.php';
-
+populateAttractions($conn);
+die();
 populateDestinations($conn);
 populateAccomodation($conn);
 populateFlights($conn);
-die();
+populateRestaurants($conn);
 
-function convertToMySQLDateTime($isoTime) {
+
+
+function convertToMySQLDateTime($isoTime)
+{
     $datetime = new DateTime($isoTime);
     return $datetime->format('Y-m-d H:i:s');
 }
 
-function populateDestinations($conn) {
+function getDestinationsFromDB($conn)
+{
+    $result = $conn->query('SELECT Destination_ID, Name FROM destinations LIMIT 20');
+    $destinations = [];
+    while ($row = $result->fetch_assoc()) {
+        $destinations[] = $row;
+    }
+    return $destinations;
+}
+function populateRestaurants($conn)
+{
+    $apiKey = "b20b4c07e70347b5a578846ba64e6d3c";
+    $destinations = getDestinationsFromDB($conn);
+    $stmt = $conn->prepare('INSERT IGNORE INTO restaurants (Name, Cuisine, Image) VALUES (?, ?, ?)');
+
+    foreach ($destinations as $dest) {
+        $coords = getCoordinates($dest['Name'], $apiKey);
+        if (!$coords) {
+            echo "Could not find coordinates for {$dest['Name']}, skipping.<br>";
+            continue;
+        }
+
+        $url = "https://api.geoapify.com/v2/places?"
+            . "categories=catering.restaurant"
+            . "&filter=circle:{$coords['lon']},{$coords['lat']},10000"
+            . "&limit=10"
+            . "&lang=en"
+            . "&apiKey=" . $apiKey;
+
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+        $places = $data['features'] ?? [];
+
+        foreach ($places as $place) {
+            $name = $place['properties']['name'] ?? null;
+            $cuisine = 'Various';
+            $image = '';
+            if (empty($name)) continue;
+
+            $stmt->bind_param('sss', $name, $cuisine, $image);
+            $stmt->execute();
+        }
+
+        echo "Restaurants done for {$dest['Name']}<br>";
+        flush();
+    }
+
+    $stmt->close();
+    echo "All restaurants populated!<br>";
+}
+
+function populateAttractions($conn)
+{
+    $apiKey = "b20b4c07e70347b5a578846ba64e6d3c";
+    $destinations = getDestinationsFromDB($conn);
+    $stmt = $conn->prepare('INSERT IGNORE INTO tourist_attractions (Name, Image) VALUES (?, ?)');
+
+    foreach ($destinations as $dest) {
+        $coords = getCoordinates($dest['Name'], $apiKey);
+        if (!$coords) {
+            echo "Could not find coordinates for {$dest['Name']}, skipping.<br>";
+            continue;
+        }
+
+        $url = "https://api.geoapify.com/v2/places?"
+            . "categories=tourism.attraction"
+            . "&filter=circle:{$coords['lon']},{$coords['lat']},10000"
+            . "&limit=10"
+            . "&lang=en"
+            . "&apiKey=" . $apiKey;
+
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+        $places = $data['features'] ?? [];
+
+        foreach ($places as $place) {
+            $name = $place['properties']['name'] ?? null;
+            $image = '';
+            if (empty($name)) continue;
+
+            $stmt->bind_param('ss', $name, $image);
+            $stmt->execute();
+        }
+
+        echo "Attractions done for {$dest['Name']}<br>";
+        flush();
+    }
+
+    $stmt->close();
+    echo "All attractions populated!<br>";
+}
+
+function getCoordinates($destinationName, $apiKey)
+{
+    $url = "https://api.geoapify.com/v1/geocode/search?"
+        . "text=" . urlencode($destinationName)
+        . "&limit=1"
+        . "&apiKey=" . $apiKey;
+
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
+
+    $feature = $data['features'][0] ?? null;
+    if (!$feature) return null;
+
+    return [
+        'lat' => $feature['properties']['lat'],
+        'lon' => $feature['properties']['lon'],
+    ];
+}
+
+
+
+
+
+
+
+
+
+
+function populateDestinations($conn)
+{
     $url = "https://restcountries.com/v3.1/all?fields=name,capital,region";
     $response = file_get_contents($url);
     $data = json_decode($response, true);
@@ -19,8 +144,8 @@ function populateDestinations($conn) {
     $stmt = $conn->prepare('INSERT IGNORE INTO destinations (Name, Country) VALUES (?, ?)');
 
     for ($i = 0; $i < count($data); $i++) {
-        $name    = $data[$i]['capital'][0];
-        $country = $data[$i]['name']['common'];
+        $name    = $data[$i]['capital'][0] ?? "Not Available";
+        $country = $data[$i]['name']['common'] ?? "Not Available";
 
         $stmt->bind_param('ss', $name, $country);
         $stmt->execute();
@@ -32,7 +157,8 @@ function populateDestinations($conn) {
     echo "Done!";
 }
 
-function populateFlights($conn) {
+function populateFlights($conn)
+{
     $check = $conn->query("SELECT COUNT(*) as total FROM flights");
     $row = $check->fetch_assoc();
     if ($row['total'] > 0) {
@@ -60,13 +186,16 @@ function populateFlights($conn) {
 
     foreach ($data['data'] as $flight) {
         if (empty($flight['departure']['scheduled']) || empty($flight['arrival']['scheduled'])) {
-            $skipped++; continue;
+            $skipped++;
+            continue;
         }
         if (empty($flight['airline']['name']) || $flight['airline']['name'] === 'empty') {
-            $skipped++; continue;
+            $skipped++;
+            continue;
         }
         if (empty($flight['flight']['iata'])) {
-            $skipped++; continue;
+            $skipped++;
+            continue;
         }
 
         $airline      = $flight['airline']['name'];
@@ -76,10 +205,19 @@ function populateFlights($conn) {
         $arrTime      = convertToMySQLDateTime($flight['arrival']['scheduled']);
         $price        = 1000;
 
-        if ($arrTime <= $deptTime) { $skipped++; continue; }
+        if ($arrTime <= $deptTime) {
+            $skipped++;
+            continue;
+        }
 
-        $stmt->bind_param('sssssi',
-            $airline, $departureLoc, $arrivalLoc, $deptTime, $arrTime, $price
+        $stmt->bind_param(
+            'sssssi',
+            $airline,
+            $departureLoc,
+            $arrivalLoc,
+            $deptTime,
+            $arrTime,
+            $price
         );
         $stmt->execute();
         $inserted++;
@@ -89,7 +227,8 @@ function populateFlights($conn) {
     echo "Flights done! Inserted: $inserted | Skipped: $skipped <br>";
 }
 
-function populateAccomodation($conn) {
+function populateAccomodation($conn)
+{
     $check = $conn->query("SELECT COUNT(*) as total FROM accommodations");
     $row = $check->fetch_assoc();
     if ($row['total'] > 0) {
@@ -97,29 +236,42 @@ function populateAccomodation($conn) {
         return;
     }
 
-    $url = "https://tourism.api.opendatahub.com/v1/Accommodation";
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-
     $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)');
 
     $inserted = 0;
     $skipped = 0;
+    $pageNumber = 1;
+    $pageSize = 100; // max per page
 
-    foreach ($data['Items'] as $item) {
-        $name  = $item['AccoDetail']['en']['Name'] ?? null;
-        $type  = $item['AccoType']['Id']            ?? null;
-        $price = 1000;
-        $image = $item['ImageGallery'][0]['ImageUrl'] ?? null;
+    do {
+        $url = "https://tourism.api.opendatahub.com/v1/Accommodation?pagenumber={$pageNumber}&pagesize={$pageSize}";
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
 
-        if (empty($name)) { $skipped++; continue; }
+        $totalPages = $data['TotalPages'] ?? 1;
 
-        $stmt->bind_param('ssis', $name, $type, $price, $image);
-        $stmt->execute();
-        $inserted++;
-    }
+        foreach ($data['Items'] as $item) {
+            $name  = $item['AccoDetail']['en']['Name'] ?? null;
+            $type  = $item['AccoType']['Id']           ?? null;
+            $price = 1000;
+            $image = $item['ImageGallery'][0]['ImageUrl'] ?? '';
+
+            if (empty($name)) {
+                $skipped++;
+                continue;
+            }
+
+            $stmt->bind_param('ssis', $name, $type, $price, $image);
+            $stmt->execute();
+            $inserted++;
+        }
+
+        echo "Page {$pageNumber}/{$totalPages} done<br>";
+        flush(); // shows progress in browser as it runs
+
+        $pageNumber++;
+    } while ($pageNumber <= $totalPages);
 
     $stmt->close();
-    echo "Accommodations done! Inserted: $inserted | Skipped: $skipped <br>";
+    echo "Accommodations done! Inserted: $inserted | Skipped: $skipped<br>";
 }
-?>
