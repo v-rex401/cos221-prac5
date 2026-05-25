@@ -35,6 +35,9 @@
         exit;
     }
 
+    // Get the travellers stored for this booking (booking_confirmation_queries.php)
+    $travellerDetails = getBookingTravellerDetails($conn, $bookingId);
+
     // Get booking info from session
     if (isset($_SESSION['booking_travellers'])) {
         $numTravellers = $_SESSION['booking_travellers'];
@@ -147,6 +150,20 @@
                     <span class="detail-value"><?php echo date('M d, Y', strtotime($booking['Booking_Date'])); ?></span>
                 </div>
             </div>
+
+            <?php if (!empty($travellerDetails)): ?>
+                <div class="booking-details">
+                    <?php foreach ($travellerDetails as $index => $traveller): ?>
+                        <div class="detail-row">
+                            <span class="detail-label">Traveller <?php echo $index + 1; ?></span>
+                            <span class="detail-value">
+                                <?php echo htmlspecialchars($traveller['Name']); ?>
+                                &middot; <?php echo htmlspecialchars($traveller['Cell']); ?>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
             <div class="confirmation-note">
                 A confirmation email has been sent to your registered email address. You can view and manage your booking from the Bookings page.

@@ -20,4 +20,27 @@
 
         return $booking;
     }
+
+    //returns every traveller's name + cellphone stored for a booking
+    function getBookingTravellerDetails($conn, $bookingId){
+        $sql = "SELECT Name, Cell FROM booking_traveller_details
+                WHERE Booking_ID = ? ORDER BY Detail_ID";
+
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){
+            return [];
+        }
+
+        $stmt->bind_param("i", $bookingId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $travellers = [];
+        while($row = $result->fetch_assoc()){
+            $travellers[] = $row;
+        }
+        $stmt->close();
+
+        return $travellers;
+    }
 ?>

@@ -4,9 +4,9 @@
 
 ## Default Login
 
-### User Login 
-test1@gmail.com 
-Test1Unicorn? 
+### User Login
+test1@gmail.com
+Test1Unicorn?
 
 ### Agency Login
 jet2holiday@gmail.com

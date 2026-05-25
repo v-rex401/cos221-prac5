@@ -24,4 +24,34 @@
         $stmt->close();
         return ['success' => false, 'error' => 'Failed to create booking. Please try again.'];
     }
+
+    //stores the entered name + cellphone for each traveller on a booking.
+    function saveBookingTravellerDetails($conn, $bookingId, $names, $cells){
+        if(!is_array($names)){
+            return;
+        }
+
+        $sql = "INSERT INTO booking_traveller_details (Booking_ID, Name, Cell) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){
+            return;
+        }
+
+        $count = count($names);
+        for($i = 0; $i < $count; $i++){
+            $name = sanitise($names[$i]);
+
+            if(is_array($cells) && isset($cells[$i])){
+                $cell = sanitise($cells[$i]);
+            } else {
+                $cell = '';
+            }
+
+            if($name !== ''){
+                $stmt->bind_param("iss", $bookingId, $name, $cell);
+                $stmt->execute();
+            }
+        }
+        $stmt->close();
+    }
 ?>

@@ -54,13 +54,13 @@
                 $agencyId = (int)$package['Agency_ID'];
 
                 // Create the group booking (create_private_group_queries.php)
-                $bookingId = createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId);
+                $groupResult = createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId);
 
-                if ($bookingId) {
+                if ($groupResult) {
                     $createdGroup = [
-                        'id' => $bookingId,
+                        'id' => $groupResult['booking_id'],
                         'name' => $groupName,
-                        'code' => (string)$bookingId,
+                        'code' => $groupResult['sharing_code'],
                         'package' => $package['package_name'],
                         'max' => $guestLimit
                     ];
@@ -132,16 +132,46 @@
 
         <!-- CONTENT -->
         <div class="content-wrapper">
-            <div class="two-column">
-                <!-- Form -->
+
+            <?php if ($createdGroup): ?>
+
+                <?php
+                    // the link friends use to join this group
+                    $joinLink = 'http://' . $_SERVER['HTTP_HOST']
+                              . '/cos221-prac5/pages/traveller/join_group.php?code='
+                              . $createdGroup['code'];
+                ?>
+
+                <!-- Once the group exists the form is replaced by this block -->
+                <div class="success-card">
+                    <div class="success-title">Group Created</div>
+                    <div class="success-text">
+                        <strong><?php echo htmlspecialchars($createdGroup['name']); ?></strong><br>
+                        Package: <?php echo htmlspecialchars($createdGroup['package']); ?><br>
+                        Max: <?php echo (int)$createdGroup['max']; ?> participants
+                    </div>
+
+                    <div class="share-code-box">
+                        <div class="code-label">Share This Code</div>
+                        <div class="share-code"><?php echo htmlspecialchars($createdGroup['code']); ?></div>
+                    </div>
+
+                    <div class="share-url">
+                        Share this link:<br>
+                        <strong id="join-link"><?php echo htmlspecialchars($joinLink); ?></strong>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-small" id="copy-link-btn" onclick="copyJoinLink()">Copy Link</button>
+                        <a href="create_private_group.php" class="btn-small">Create Another Group</a>
+                    </div>
+                </div>
+
+            <?php else: ?>
+
+                <!-- New Private Group form -->
                 <div class="form-card">
                     <h2>New Private Group</h2>
-
-                    <?php if ($createdGroup): ?>
-                        <div class="success-notice">
-                            Private group created successfully!
-                        </div>
-                    <?php endif; ?>
 
                     <form method="POST" class="create-group-form">
                         <div class="form-group">
@@ -175,35 +205,26 @@
                     </form>
                 </div>
 
-                <!-- Success Message -->
-                <?php if ($createdGroup): ?>
-                    <div class="success-card">
-                        <div class="success-title">Group Created</div>
-                        <div class="success-text">
-                            <strong><?php echo htmlspecialchars($createdGroup['name']); ?></strong><br>
-                            Package: <?php echo htmlspecialchars($createdGroup['package']); ?><br>
-                            Max: <?php echo $createdGroup['max']; ?> participants
-                        </div>
+            <?php endif; ?>
 
-                        <div class="share-code-box">
-                            <div class="code-label">Share This Code</div>
-                            <div class="share-code"><?php echo $createdGroup['code']; ?></div>
-                        </div>
-
-                        <div class="share-url">
-                            Share this link:<br>
-                            <strong><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/cos221-prac5/pages/traveller/join_group.php?code=<?php echo $createdGroup['code']; ?></strong>
-                        </div>
-
-                    </div>
-                <?php endif; ?>
-            </div>
         </div>
 
     </div>
 
 </div>
 
+<script>
+    // copy the join link to the clipboard
+    function copyJoinLink() {
+        var link = document.getElementById('join-link').textContent;
+        var btn = document.getElementById('copy-link-btn');
+
+        navigator.clipboard.writeText(link).then(function () {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy Link'; }, 2000);
+        });
+    }
+</script>
 
 </body>
 </html>

@@ -69,6 +69,16 @@
     if ($bookingResult['success']) {
         $bookingId = $bookingResult['booking_id'];
 
+        // Store each traveller's name + cellphone (booking_process_queries.php)
+        if (isset($_POST['traveller_name'])) {
+            if (isset($_POST['traveller_cell'])) {
+                $travellerCells = $_POST['traveller_cell'];
+            } else {
+                $travellerCells = [];
+            }
+            saveBookingTravellerDetails($conn, $bookingId, $_POST['traveller_name'], $travellerCells);
+        }
+
         // Store booking info in session for confirmation page
         $_SESSION['booking_success'] = true;
         $_SESSION['booking_id'] = $bookingId;
