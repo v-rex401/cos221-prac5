@@ -72,7 +72,7 @@ $agency_id = getCurrentUserID();
 
             <div>
                 <label for="description">Description</label>
-                <input type="text" id="description" name="description">
+                <textarea id="description" name="description" rows="4" cols="50"></textarea>
             </div>
             <div> <label for="flights">Available Flights</label>
                 <select id="flights" name="flights" multiple> </select>
@@ -105,6 +105,7 @@ $agency_id = getCurrentUserID();
             <div class="previewImage">
                 <img src="" alt="Package Image" id="packageImage">
             </div>
+            <br>
             <h2 id="prev-name">Package Name</h2>
             <p id="prev-price">R0</p>
             <p id="prev-duration">0 days</p>
