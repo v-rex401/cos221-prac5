@@ -55,6 +55,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Confirmed - Tripistry</title>
     <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .content-wrapper {
+            padding: 50px 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .confirmation-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .confirmation-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .confirmation-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .group-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #1e73ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1560dd;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-link {
+            color: #1e73ff;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .logout-link:hover {
+            background: #f0f7ff;
+        }
+    </style>
 </head>
 
 <body>
@@ -84,94 +217,82 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <div class="topbar">
-            <div class="search-bar">
-                <form method="GET" action="traveller_dashboard.php">
-                    <input type="text" name="search" placeholder="Search packages">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
-            <div class="profile">
-                Welcome, <?php echo htmlspecialchars($userName); ?>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div></div>
+                <div class="profile">
+                    Welcome, <?php echo htmlspecialchars($userName); ?>
+                </div>
             </div>
         </div>
 
-        <!-- CONFIRMATION -->
-        <div class="confirmation-container">
-            <div class="confirmation-header">
-                <div class="success-icon">✓</div>
-                <h1>Booking Confirmed!</h1>
-                <p>Your package has been successfully booked</p>
-            </div>
+        <!-- CONTENT -->
+        <div class="content-wrapper">
+            <div class="confirmation-card">
+                <h1 class="confirmation-title">Booking Confirmed!</h1>
+                <p class="confirmation-text">
+                    Your package has been successfully booked<br>
+                    Booking Reference: #<?php echo str_pad($booking['Booking_ID'], 6, '0', STR_PAD_LEFT); ?>
+                </p>
 
-            <div class="booking-id">
-                <div class="booking-id-label">Booking Reference</div>
-                <div class="booking-id-value">#<?php echo str_pad($booking['Booking_ID'], 6, '0', STR_PAD_LEFT); ?></div>
-            </div>
+                <div class="group-info">
 
-            <div class="booking-details">
-                <div class="detail-row">
-                    <span class="detail-label">Package</span>
-                    <span class="detail-value"><?php echo htmlspecialchars($booking['package_name']); ?></span>
+                    <div class="info-row">
+                        <span class="info-label">Package</span>
+                        <span class="info-value"><?php echo htmlspecialchars($booking['package_name']); ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Duration</span>
+                        <span class="info-value"><?php echo $booking['Duration']; ?> days</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Travel Dates</span>
+                        <span class="info-value"><?php echo date('M d, Y', strtotime($booking['Start_Date'])); ?> - <?php echo date('M d, Y', strtotime($booking['End_Date'])); ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Travellers</span>
+                        <span class="info-value"><?php echo $numTravellers; ?> <?php if ($numTravellers === 1) { echo 'person'; } else { echo 'people'; } ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Price per Person</span>
+                        <span class="info-value">R<?php echo number_format($booking['full_price'], 2); ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Total Price</span>
+                        <span class="info-value">R<?php echo number_format($totalPrice, 2); ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Booking Type</span>
+                        <span class="info-value"><?php echo htmlspecialchars($booking['Booking_Type']); ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Booked On</span>
+                        <span class="info-value"><?php echo date('M d, Y', strtotime($booking['Booking_Date'])); ?></span>
+                    </div>
+
+                    <?php if (!empty($travellerDetails)): ?>
+                        <?php foreach ($travellerDetails as $index => $traveller): ?>
+                            <div class="info-row">
+                                <span class="info-label">Traveller <?php echo $index + 1; ?></span>
+                                <span class="info-value">
+                                    <?php echo htmlspecialchars($traveller['Name']); ?>
+                                    &middot; <?php echo htmlspecialchars($traveller['Cell']); ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
 
-                <div class="detail-row">
-                    <span class="detail-label">Duration</span>
-                    <span class="detail-value"><?php echo $booking['Duration']; ?> days</span>
+                <div class="button-group">
+                    <a href="bookings.php" class="btn btn-primary">View My Bookings</a>
+                    <a href="traveller_dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
                 </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Travel Dates</span>
-                    <span class="detail-value"><?php echo date('M d, Y', strtotime($booking['Start_Date'])); ?> - <?php echo date('M d, Y', strtotime($booking['End_Date'])); ?></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Travellers</span>
-                    <span class="detail-value"><?php echo $numTravellers; ?> <?php if ($numTravellers === 1) { echo 'person'; } else { echo 'people'; } ?></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Price per Person</span>
-                    <span class="detail-value">R<?php echo number_format($booking['full_price'], 2); ?></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Total Price</span>
-                    <span class="detail-value price">R<?php echo number_format($totalPrice, 2); ?></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Booking Type</span>
-                    <span class="detail-value"><?php echo htmlspecialchars($booking['Booking_Type']); ?></span>
-                </div>
-
-                <div class="detail-row">
-                    <span class="detail-label">Booked On</span>
-                    <span class="detail-value"><?php echo date('M d, Y', strtotime($booking['Booking_Date'])); ?></span>
-                </div>
-            </div>
-
-            <?php if (!empty($travellerDetails)): ?>
-                <div class="booking-details">
-                    <?php foreach ($travellerDetails as $index => $traveller): ?>
-                        <div class="detail-row">
-                            <span class="detail-label">Traveller <?php echo $index + 1; ?></span>
-                            <span class="detail-value">
-                                <?php echo htmlspecialchars($traveller['Name']); ?>
-                                &middot; <?php echo htmlspecialchars($traveller['Cell']); ?>
-                            </span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-
-            <div class="confirmation-note">
-                A confirmation email has been sent to your registered email address. You can view and manage your booking from the Bookings page.
-            </div>
-
-            <div class="action-buttons">
-                <a href="bookings.php" class="btn btn-primary">View My Bookings</a>
-                <a href="traveller_dashboard.php" class="btn btn-secondary">Continue Shopping</a>
             </div>
         </div>
 

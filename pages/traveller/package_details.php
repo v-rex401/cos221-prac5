@@ -180,7 +180,7 @@
 
             <!-- ACTION BUTTONS -->
             <div class="action-buttons">
-                <button onclick="openBookingModal()" class="btn btn-primary">Book Now</button>
+                <a href="book_package.php?id=<?php echo $package['Package_ID']; ?>" class="btn btn-primary">Book Now</a>
                 <a href="traveller_dashboard.php" class="btn btn-secondary">Back</a>
             </div>
         </div>
@@ -301,71 +301,6 @@
 
     </div>
 
-</div>
-
-<!-- BOOKING MODAL -->
-<div id="bookingModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Book: <?php echo htmlspecialchars($package['package_name']); ?></h2>
-            <button class="modal-close" onclick="closeBookingModal()">✕</button>
-        </div>
-
-        <form method="POST" action="booking_process.php" class="booking-form">
-            <input type="hidden" name="package_id" value="<?php echo $package['Package_ID']; ?>">
-
-            <!-- Departure date - confirm one of the package's set dates -->
-            <div class="form-group">
-                <label for="start_date">Departure Date</label>
-                <select id="start_date" name="start_date" required>
-                    <?php if (empty($packageDepartureDates)): ?>
-                        <option value="" disabled selected>No set departure dates available yet</option>
-                    <?php else: ?>
-                        <?php foreach ($packageDepartureDates as $dateIndex => $departureDate): ?>
-                            <option value="<?php echo htmlspecialchars($departureDate); ?>" <?php if ($dateIndex === 0) { echo 'selected'; } ?>>
-                                <?php echo date('M d, Y', strtotime($departureDate)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="num_travellers">Number of Travellers</label>
-                <input type="number" id="num_travellers" name="num_travellers" min="1" max="20" value="1" required>
-            </div>
-
-            <!-- Traveller details - one name + cellphone per traveller -->
-            <div class="form-group">
-                <label>Traveller Details</label>
-                <div id="traveller-fields"></div>
-            </div>
-
-            <div class="booking-summary">
-                <div class="summary-row">
-                    <span>Trip Length</span>
-                    <span><?php echo (int)$package['Duration']; ?> days</span>
-                </div>
-                <div class="summary-row">
-                    <span>Price per Person</span>
-                    <span>R<?php echo number_format($package['full_price'], 2); ?></span>
-                </div>
-                <div class="summary-row">
-                    <span>Number of Travellers</span>
-                    <span id="traveller-count">1</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Total Price</span>
-                    <span id="total-price">R<?php echo number_format($package['full_price'], 2); ?></span>
-                </div>
-            </div>
-
-            <div class="modal-buttons">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Booking</button>
-                <button type="button" class="btn btn-secondary" onclick="closeBookingModal()" style="width: 100%;">Cancel</button>
-            </div>
-        </form>
-    </div>
 </div>
 
 <style>
@@ -692,84 +627,6 @@
         line-height: 1.6;
     }
 </style>
-
-<script>
-    const pricePerPerson = <?php echo $package['full_price']; ?>;
-    const loggedInName = <?php echo json_encode($userName); ?>;
-
-    function openBookingModal() {
-        document.getElementById('bookingModal').style.display = 'flex';
-    }
-
-    function closeBookingModal() {
-        document.getElementById('bookingModal').style.display = 'none';
-    }
-
-    function escapeAttr(value) {
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    }
-
-    // build one name + cellphone block per traveller
-    function renderTravellerFields() {
-        const numTravellers = parseInt(document.getElementById('num_travellers').value) || 1;
-        const container = document.getElementById('traveller-fields');
-
-        // remember anything already typed so changing the count keeps it
-        const typedNames = [];
-        const typedCells = [];
-        container.querySelectorAll('input[name="traveller_name[]"]').forEach(function (input, i) {
-            typedNames[i] = input.value;
-        });
-        container.querySelectorAll('input[name="traveller_cell[]"]').forEach(function (input, i) {
-            typedCells[i] = input.value;
-        });
-
-        let html = '';
-        for (let i = 0; i < numTravellers; i++) {
-            let nameValue = typedNames[i] || '';
-            // traveller 1 defaults to the logged-in traveller
-            if (i === 0 && nameValue === '') {
-                nameValue = loggedInName;
-            }
-            const cellValue = typedCells[i] || '';
-            html +=
-                '<div class="traveller-row">' +
-                    '<div class="traveller-row-title">Traveller ' + (i + 1) + '</div>' +
-                    '<input type="text" name="traveller_name[]" placeholder="Full name" value="' + escapeAttr(nameValue) + '" required>' +
-                    '<input type="tel" name="traveller_cell[]" placeholder="Cellphone number" value="' + escapeAttr(cellValue) + '" required>' +
-                '</div>';
-        }
-        container.innerHTML = html;
-    }
-
-    // refresh the price summary and traveller blocks when the count changes
-    function updateBookingForm() {
-        const numTravellers = parseInt(document.getElementById('num_travellers').value) || 1;
-        const totalPrice = pricePerPerson * numTravellers;
-
-        document.getElementById('traveller-count').textContent = numTravellers;
-        document.getElementById('total-price').textContent =
-            'R' + totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-        renderTravellerFields();
-    }
-
-    document.getElementById('num_travellers').addEventListener('input', updateBookingForm);
-
-    // Close modal when clicking outside
-    document.getElementById('bookingModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeBookingModal();
-        }
-    });
-
-    // initial traveller block
-    renderTravellerFields();
-</script>
 
 </body>
 </html>

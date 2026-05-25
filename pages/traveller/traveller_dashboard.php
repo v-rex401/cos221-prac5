@@ -561,7 +561,7 @@
                         <!-- Buttons -->
                         <div class="details-buttons">
                             <button type="button" class="view-btn" onclick="window.location.href='package_details.php?id=<?php echo $selectedPackage['Package_ID']; ?>'">View Details</button>
-                            <button type="button" class="book-btn">Book Now</button>
+                            <button type="button" class="book-btn" onclick="window.location.href='book_package.php?id=<?php echo $selectedPackage['Package_ID']; ?>'">Book Now</button>
                         </div>
                     </div>
 

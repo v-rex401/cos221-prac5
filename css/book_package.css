@@ -1,0 +1,156 @@
+/* Standalone booking page - Anke de Frey u24611400
+   Loaded on top of style.css (which provides the sidebar / layout). */
+
+.book-page {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 4px 0 40px;
+}
+
+.book-back {
+    display: inline-block;
+    color: #1e73ff;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.book-back:hover {
+    text-decoration: underline;
+}
+
+.book-card {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    padding: 30px;
+}
+
+.book-card h1 {
+    font-size: 20px;
+    color: #333;
+    margin: 0 0 22px;
+}
+
+/* form fields */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 13px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #1e73ff;
+    box-shadow: 0 0 0 2px rgba(30, 115, 255, 0.1);
+}
+
+/* one block of name + cellphone inputs per traveller */
+.traveller-row {
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+.traveller-row-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e73ff;
+    margin-bottom: 8px;
+}
+
+.traveller-row input {
+    margin-bottom: 8px;
+}
+
+.traveller-row input:last-child {
+    margin-bottom: 0;
+}
+
+/* price summary */
+.booking-summary {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.summary-row.total {
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    font-weight: bold;
+    font-size: 16px;
+    color: #27ae60;
+}
+
+/* action buttons */
+.book-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background: #1e73ff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1560dd;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background: #e8e8e8;
+}
