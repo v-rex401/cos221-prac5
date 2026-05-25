@@ -1,12 +1,14 @@
 <?php
 require_once __DIR__ . '/../includes/database.php';
 
+
 die();
-populateDestinations($conn);
-populateAttractions($conn);
-populateAccomodation($conn);
-populateFlights($conn);
 populateRestaurants($conn);
+populateDestinations($conn);
+populateAccomodation($conn);
+populateAttractions($conn);
+populateFlights($conn);
+
 
 
 
@@ -25,11 +27,17 @@ function getDestinationsFromDB($conn)
     }
     return $destinations;
 }
-function populateRestaurants($conn)
+function populateRestaurants($conn) //TODO: cHECK THIS CODE IS CORRECT 
 {
     $apiKey = "b20b4c07e70347b5a578846ba64e6d3c";
     $destinations = getDestinationsFromDB($conn);
-    $stmt = $conn->prepare('INSERT IGNORE INTO restaurants (Name, Cuisine, Image) VALUES (?, ?, ?)');
+    $stmt = $conn->prepare('INSERT INTO restaurants (Name, Cuisine, Image) VALUES (?, ?, ?)');
+
+    $existing = [];
+    $result = $conn->query('SELECT Name FROM restaurants');
+    while ($row = $result->fetch_assoc()) {
+        $existing[$row['Name']] = true;
+    }
 
     foreach ($destinations as $dest) {
         $coords = getCoordinates($dest['Name'], $apiKey);
@@ -50,13 +58,28 @@ function populateRestaurants($conn)
         $places = $data['features'] ?? [];
 
         foreach ($places as $place) {
-            $name = $place['properties']['name'] ?? null;
-            $cuisine = 'Various';
-            $image = '';
-            if (empty($name)) continue;
+            $name       = $place['properties']['name']       ?? null;  // name was pointing to categories
+            $categories = $place['properties']['categories'] ?? [];    // categories was never being set
 
+            if (empty($name) || !is_string($name)) continue;
+            if (isset($existing[$name])) continue;
+
+            $cuisine = 'Various';
+            if (!empty($categories)) {
+                $cat = end($categories);
+                if (is_string($cat)) {
+                    $parts = explode('.', $cat);
+                    $label = end($parts);
+                    if (!in_array($label, ['restaurant', 'catering', 'food'])) {
+                        $cuisine = ucfirst(str_replace('_', ' ', $label));
+                    }
+                }
+            }
+
+            $image = '';
             $stmt->bind_param('sss', $name, $cuisine, $image);
             $stmt->execute();
+            $existing[$name] = true;
         }
 
         echo "Restaurants done for {$dest['Name']}<br>";
@@ -230,17 +253,15 @@ function populateFlights($conn)
 
 function populateAccomodation($conn)
 {
-    $check = $conn->query("SELECT COUNT(*) as total FROM accommodations");
-    $row = $check->fetch_assoc();
-    if ($row['total'] > 0) {
-        echo "Accommodations already populated ({$row['total']} records). Skipping.<br>";
-        return;
+    $existing = [];
+    $result = $conn->query('SELECT Name FROM accommodations');
+    while ($row = $result->fetch_assoc()) {
+        $existing[$row['Name']] = true;
     }
+
 
     $stmt = $conn->prepare('INSERT IGNORE INTO accommodations (Name, Type, Price_PN, Image) VALUES (?,?,?,?)');
 
-    $inserted = 0;
-    $skipped = 0;
     $pageNumber = 1;
     $pageSize = 100; // max per page
 
@@ -253,26 +274,27 @@ function populateAccomodation($conn)
 
         foreach ($data['Items'] as $item) {
             $name  = $item['AccoDetail']['en']['Name'] ?? null;
-            $type  = $item['AccoType']['Id']           ?? null;
-            $price = 1000;
+            $type  = $item['AccoType']['Id']           ?? 'Unknown';
+            $price = rand(500, 5000);
             $image = $item['ImageGallery'][0]['ImageUrl'] ?? '';
 
             if (empty($name)) {
-                $skipped++;
+                continue;
+            }
+            if (isset($existing[$name])) {
                 continue;
             }
 
-            $stmt->bind_param('ssis', $name, $type, $price, $image);
+            $stmt->bind_param('ssds', $name, $type, $price, $image);
             $stmt->execute();
-            $inserted++;
+            $existing[$name] = true;
         }
 
         echo "Page {$pageNumber}/{$totalPages} done<br>";
         flush(); // shows progress in browser as it runs
-
         $pageNumber++;
     } while ($pageNumber <= $totalPages);
 
     $stmt->close();
-    echo "Accommodations done! Inserted: $inserted | Skipped: $skipped<br>";
+    echo "Accommodations done!";
 }
