@@ -432,7 +432,10 @@
                                             <span class="package-review-count">(<?php echo $package['review_count']; ?> reviews)</span>
                                         </div>
 
-                                        <div class="package-price">R<?php echo number_format($package['full_price'], 2); ?></div>
+                                        <div class="package-meta-right">
+                                            <div class="package-price">R<?php echo number_format($package['full_price'], 2); ?></div>
+                                            <a href="package_details.php?id=<?php echo $package['Package_ID']; ?>" class="package-view-btn" onclick="event.stopPropagation();">View Details</a>
+                                        </div>
                                     </div>
 
                                     <!-- Spots left -->

@@ -46,3 +46,37 @@
 .spots-full {
     color: #c92a2a;
 }
+
+/* Package meta layout */
+.package-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.package-meta-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+/* View Details Button on package cards */
+.package-view-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #1e73ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.package-view-btn:hover {
+    background: #1560dd;
+    text-decoration: none;
+}
