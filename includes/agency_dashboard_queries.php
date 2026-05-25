@@ -129,7 +129,21 @@ function setPackage($conn, $data)
     }
     $stmt4->close();
 
-    //TODO: Add other insert statements 
+    // Insert into package_restaurants
+    $stmt5 = $conn->prepare('INSERT INTO package_restaurants (Package_ID, Restaurant_ID) VALUES (?, ?)');
+    foreach ($data['restaurants'] as $item) {
+        $stmt5->bind_param('ii', $package_id, $item);
+        $stmt5->execute();
+    }
+    $stmt5->close();
+
+    // Insert into package_attractions
+    $stmt6 = $conn->prepare('INSERT INTO package_attractions (Package_ID, Attraction_ID) VALUES (?, ?)');
+    foreach ($data['attractions'] as $item) {
+        $stmt6->bind_param('ii', $package_id, $item);
+        $stmt6->execute();
+    }
+    $stmt6->close();
 
 
     //send sucesss to js 

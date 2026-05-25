@@ -77,8 +77,18 @@ $agency_id = getCurrentUserID();
             <div> <label for="flights">Available Flights</label>
                 <select id="flights" name="flights" multiple> </select>
             </div>
+
+            <div> <label for="restaurants">Restaurants</label>
+                <select id="restaurants" name="restaurants" multiple> </select>
+            </div>
+
+            <div> <label for="attractions">Attractions</label>
+                <select id="attractions" name="attractions" multiple> </select>
+            </div>
+
+
             <div>
-                <label for="price"> Price </label>
+                <label for="price"> Commission </label>
                 <input type="text" id="price" name="price">
             </div>
 

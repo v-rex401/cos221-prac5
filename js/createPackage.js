@@ -2,6 +2,9 @@
 populateDropdown("getDestinations", "destination", "Destination_ID", "Name");
 populateAccommodations();
 populateFlights("getFlights", "flights", "Flight_ID", "Airline");
+populateDropdown("getRestaurants", "restaurants", "Restaurant_ID", "Name");
+populateDropdown("getAttractions", "attractions", "Attraction_ID", "Name");
+
 document.getElementById("packageName").addEventListener("input", updatePreview);
 document.getElementById("price").addEventListener("input", updatePreview);
 document.getElementById("days").addEventListener("input", updatePreview);
@@ -9,6 +12,8 @@ document.getElementById("description").addEventListener("input", updatePreview);
 document.getElementById("destination").addEventListener("change", updateDestination);
 document.getElementById("accommodation").addEventListener("change", updateAccommodation);
 document.getElementById("flights").addEventListener("change", updateFlights);
+document.getElementById("restaurants").addEventListener("change", updateRestaurants);
+document.getElementById("attractions").addEventListener("change", updateAttractions);
 
 
 const packageData = {
@@ -20,6 +25,8 @@ const packageData = {
   destinations: [],
   accommodations: [],
   flights: [],
+  restaurants: [],
+  attractions: [],
   agency_id: AGENCY_ID,
   departureDate: "",
   arrivalDate: "",
@@ -196,6 +203,30 @@ function updateFlights() {
     li.dataset.price = parseFloat(option.dataset.price).toFixed(2);
     li.textContent = `${option.textContent} — R${li.dataset.price}`;
     flightList.appendChild(li);
+  }
+  updatePreview();
+}
+
+function updateRestaurants() {
+  const restaurantList = document.getElementById("prev-restaurants");
+  const restaurantSelect = document.getElementById("restaurants");
+  for (const option of restaurantSelect.selectedOptions) {
+    packageData.restaurants.push(option.value);
+    const li = document.createElement("li");
+    li.textContent = option.textContent;
+    restaurantList.appendChild(li);
+  }
+  updatePreview();
+}
+
+function updateAttractions() {
+  const attractionList = document.getElementById("prev-attractions");
+  const attractionSelect = document.getElementById("attractions");
+  for (const option of attractionSelect.selectedOptions) {
+    packageData.attractions.push(option.value);
+    const li = document.createElement("li");
+    li.textContent = option.textContent;
+    attractionList.appendChild(li);
   }
   updatePreview();
 }
