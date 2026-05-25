@@ -1,5 +1,4 @@
 <?php
-
 function getAgencyPackages($conn, $agency_id)
 {
     $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
@@ -13,6 +12,33 @@ function getAgencyPackages($conn, $agency_id)
     $stmt->close();
     return $packages;
 }
+
+function getRestaurants($conn)
+{
+    $stmt = $conn->prepare('SELECT Restaurant_ID, Name FROM restaurants');
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $restaurants = [];
+    while ($row = $result->fetch_assoc()) {
+        $restaurants[] = $row;
+    }
+    $stmt->close();
+    return $restaurants;
+}
+
+function getAttractions($conn)
+{
+    $stmt = $conn->prepare('SELECT Attraction_ID, Name FROM tourist_attractions');
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $attractions = [];
+    while ($row = $result->fetch_assoc()) {
+        $attractions[] = $row;
+    }
+    $stmt->close();
+    return $attractions;
+}
+
 function getAccommodations($conn)
 {
     $stmt = $conn->prepare('SELECT Accommodation_ID, Name, Price_PN FROM accommodations ORDER BY Name');
@@ -150,6 +176,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(getFlights($conn));
     } else if ($body['type'] === 'deletePackage') {
         echo json_encode(deletePackage($conn, $body['package_id'], $body['agency_id']));
+    } else if ($body['type'] === 'getAttractions') {
+        echo json_encode(getAttractions($conn));
+    } else if ($body['type'] === 'getRestaurants') {
+        echo json_encode(getRestaurants($conn));
     }
     exit;
 }
