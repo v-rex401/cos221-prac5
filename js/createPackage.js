@@ -274,4 +274,7 @@ function selectImage(url, imgElement) {
   imgElement.style.borderColor = '#00aaff'; // highlight selected
   document.getElementById('selected_image').value = url;
   packageData.image = url; // store in packageData too
+
+  //update the preview side 
+  document.getElementById('packageImage').setAttribute('src', url);
 }

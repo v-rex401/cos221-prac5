@@ -102,6 +102,9 @@ $agency_id = getCurrentUserID();
         </div>
         <div class="previewSide">
             <!-- live preview goes here -->
+            <div class="previewImage">
+                <img src="" alt="Package Image" id="packageImage">
+            </div>
             <h2 id="prev-name">Package Name</h2>
             <p id="prev-price">R0</p>
             <p id="prev-duration">0 days</p>
