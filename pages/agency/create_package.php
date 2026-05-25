@@ -100,6 +100,11 @@ $agency_id = getCurrentUserID();
             <h4>Flights</h4>
             <ul id="prev-flights"></ul>
 
+            <h4>Attractions</h4>
+            <ul id="prev-attractions"></ul>
+
+            <h4>Restaurants</h4>
+            <ul id="prev-restaurants"></ul>
 
             <hr>
             <p>Flights: <span id="prev-flight-cost">R0</span></p>
