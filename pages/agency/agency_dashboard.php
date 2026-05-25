@@ -34,6 +34,12 @@ $packages = getAgencyPackages($conn, $agency_id);
     <div class="myContainer">
         <div class="sidepanel">
             <h1>Welcome <?php echo $agency_id ?> </h1>
+            <hr>
+            <p>Analytics</p>
+            <hr>
+            <p>My Details</p>
+            <hr>
+            <p>Currency Converter</p>
             <a href="../logout.php">Logout</a>
         </div>
         <div id="mainBoard">

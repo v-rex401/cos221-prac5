@@ -83,7 +83,9 @@ body > p {
   flex: 1;
   padding: 2rem 2.5rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap; 
+  align-content: flex-start; 
 }
 
 #mainBoard button {
