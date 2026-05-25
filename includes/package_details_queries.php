@@ -18,18 +18,28 @@
         return $booking;
     }
 
-    /*  Returns the set departure dates for a package.
-
-        TODO (backend): once the agency side has a scheduling table,
-        query it here - e.g.
-            SELECT Start_Date FROM package_schedules
-            WHERE Package_ID = ? AND Start_Date >= CURDATE()
-            ORDER BY Start_Date
-        and return the date rows.
-
-        Until then there are no set dates, so this returns an empty
-        array and the booking popup shows an empty date selector. */
+    /*  Returns the set departure date(s) for a package.
+        The agency sets a package's Departure_Date when creating it;
+        a package with no date set is not bookable. */
     function getPackageDepartureDates($conn, $packageId){
-        return [];
+        $sql = "SELECT Departure_Date FROM packages
+                WHERE Package_ID = ? AND Departure_Date IS NOT NULL";
+
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){
+            return [];
+        }
+
+        $stmt->bind_param("i", $packageId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $dates = [];
+        while($row = $result->fetch_assoc()){
+            $dates[] = $row['Departure_Date'];
+        }
+        $stmt->close();
+
+        return $dates;
     }
 ?>

@@ -91,16 +91,24 @@ function setPackage($conn, $data)
     $checkStmt->close();
 
 
-    $stmt = $conn->prepare('INSERT INTO packages (Agency_ID, Name, Price, Description, Duration, Capacity)
-    VALUES (?,?,?,?,?,?)');
+    //treat an empty departure date as NULL
+    if (isset($data['departureDate']) && $data['departureDate'] !== '') {
+        $departureDate = $data['departureDate'];
+    } else {
+        $departureDate = null;
+    }
+
+    $stmt = $conn->prepare('INSERT INTO packages (Agency_ID, Name, Price, Description, Duration, Capacity, Departure_Date)
+    VALUES (?,?,?,?,?,?,?)');
     $stmt->bind_param(
-        'isdsii',
+        'isdsiis',
         $data['agency_id'],
         $data['name'],
         $data['price'],
         $data['description'],
         $data['duration'],
-        $data['maxGuests']
+        $data['maxGuests'],
+        $departureDate
     );
     $stmt->execute();
 

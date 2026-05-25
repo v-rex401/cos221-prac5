@@ -321,9 +321,8 @@
                     <?php if (empty($packageDepartureDates)): ?>
                         <option value="" disabled selected>No set departure dates available yet</option>
                     <?php else: ?>
-                        <option value="" disabled selected>Select a departure date</option>
-                        <?php foreach ($packageDepartureDates as $departureDate): ?>
-                            <option value="<?php echo htmlspecialchars($departureDate); ?>">
+                        <?php foreach ($packageDepartureDates as $dateIndex => $departureDate): ?>
+                            <option value="<?php echo htmlspecialchars($departureDate); ?>" <?php if ($dateIndex === 0) { echo 'selected'; } ?>>
                                 <?php echo date('M d, Y', strtotime($departureDate)); ?>
                             </option>
                         <?php endforeach; ?>

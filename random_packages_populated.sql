@@ -542,7 +542,8 @@ CREATE TABLE `packages` (
   `Price` decimal(10,2) NOT NULL CHECK (`Price` > 0),
   `Description` text NOT NULL,
   `Duration` int(11) NOT NULL CHECK (`Duration` > 0),
-  `Capacity` int(11) NOT NULL DEFAULT 20 CHECK (`Capacity` > 0)
+  `Capacity` int(11) NOT NULL DEFAULT 20 CHECK (`Capacity` > 0),
+  `Departure_Date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1784,6 +1785,14 @@ SET r.`Country` = COALESCE((
     WHERE pr.`Restaurant_ID` = r.`Restaurant_ID`
     LIMIT 1
 ), '');
+
+
+--
+-- Seed a departure date for each existing package so they are bookable
+--
+UPDATE `packages`
+SET `Departure_Date` = DATE_ADD(CURDATE(), INTERVAL (30 + `Package_ID`) DAY)
+WHERE `Departure_Date` IS NULL;
 
 COMMIT;
 
