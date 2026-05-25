@@ -1,6 +1,3 @@
-/* Create Package form - styled to match the traveller side (Tripistry).
-   create_package.php also loads style.css, which provides the base
-   reset, Arial font and page background. */
 
 .outsideDiv {
     display: flex;
