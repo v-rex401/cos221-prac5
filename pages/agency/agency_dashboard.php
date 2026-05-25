@@ -64,7 +64,7 @@ if ($agencyResult['success']) {
                         <p><strong>Price:</strong> R <?php echo htmlspecialchars($pkg['Price']) ?> </p>
                         <p><strong>Duration</strong> <?php echo htmlspecialchars($pkg['Duration']) ?> days </p>
                         <p><strong>Description</strong> <?php echo htmlspecialchars($pkg['Description']) ?></p>
-                        <button onclick="window.location.href='create_package.php?package_id=<?php echo $pkg['Package_ID'] ?>' ">Edit</button>
+                        <button onclick="window.location.href='edit_package.php?package_id=<?php echo $pkg['Package_ID'] ?>' ">Edit</button>
                         <button onclick="deletePackage(<?php echo $pkg['Package_ID'] ?>)">Delete</button>
                     </div>
                 <?php endforeach; ?>

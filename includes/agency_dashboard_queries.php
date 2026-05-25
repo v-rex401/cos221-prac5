@@ -184,6 +184,114 @@ function deletePackage($conn, $package_id, $agency_id)
         return ['success' => false, 'message' => 'Package not found or unauthorised'];
     }
 }
+function getPackage($conn, $package_id)
+{
+    $stmt = $conn->prepare('SELECT * FROM packages WHERE Package_ID = ?');
+    $stmt->bind_param('i', $package_id);
+    $stmt->execute();
+    $pkg = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    if (!$pkg) return ['error' => 'not found'];
+
+    // Fetch all related IDs from junction tables
+    $maps = [
+        'destinations'   => ['package_destinations',  'Destination_ID'],
+        'accommodations' => ['package_accommodations', 'Accommodation_ID'],
+        'flights'        => ['package_flights',        'Flight_ID'],
+        'restaurants'    => ['package_restaurants',    'Restaurant_ID'],
+        'attractions'    => ['package_attractions',    'Attraction_ID'],
+    ];
+    foreach ($maps as $key => [$table, $col]) {
+        $s = $conn->prepare("SELECT $col FROM $table WHERE Package_ID = ?");
+        $s->bind_param('i', $package_id);
+        $s->execute();
+        $rows = $s->get_result()->fetch_all(MYSQLI_ASSOC);
+        $pkg[$key] = array_column($rows, $col);
+        $s->close();
+    }
+
+    // Fetch image
+    $s = $conn->prepare('SELECT Image_URL FROM package_images WHERE Package_ID = ? LIMIT 1');
+    $s->bind_param('i', $package_id);
+    $s->execute();
+    $img = $s->get_result()->fetch_assoc();
+    $pkg['image'] = $img['Image_URL'] ?? '';
+    $s->close();
+
+    return $pkg;
+}
+
+function updatePackage($conn, $package_id, $agency_id, $data)
+{
+    // Verify the agency owns this package
+    $check = $conn->prepare('SELECT Package_ID FROM packages WHERE Package_ID = ? AND Agency_ID = ?');
+    $check->bind_param('ii', $package_id, $agency_id);
+    $check->execute();
+    $check->store_result();
+    if ($check->num_rows === 0) {
+        $check->close();
+        return ['success' => false, 'message' => 'Package not found or unauthorised'];
+    }
+    $check->close();
+
+    $departureDate = !empty($data['departureDate']) ? $data['departureDate'] : null;
+
+    // Update main package row
+    $stmt = $conn->prepare('UPDATE packages SET Name=?, Price=?, Description=?, Duration=?, Capacity=?, Departure_Date=? WHERE Package_ID=?');
+    $stmt->bind_param(
+        'sdsiisi',
+        $data['name'],
+        $data['price'],
+        $data['description'],
+        $data['duration'],
+        $data['maxGuests'],
+        $departureDate,
+        $package_id
+    );
+    $stmt->execute();
+    $stmt->close();
+
+    // Delete and re-insert all junction table rows
+    $tables = ['package_destinations', 'package_accommodations', 'package_flights', 'package_restaurants', 'package_attractions'];
+    foreach ($tables as $t) {
+        $d = $conn->prepare("DELETE FROM $t WHERE Package_ID = ?");
+        $d->bind_param('i', $package_id);
+        $d->execute();
+        $d->close();
+    }
+
+    $maps = [
+        'destinations'   => ['package_destinations',  'Destination_ID'],
+        'accommodations' => ['package_accommodations', 'Accommodation_ID'],
+        'flights'        => ['package_flights',        'Flight_ID'],
+        'restaurants'    => ['package_restaurants',    'Restaurant_ID'],
+        'attractions'    => ['package_attractions',    'Attraction_ID'],
+    ];
+    foreach ($maps as $key => [$table, $col]) {
+        $s = $conn->prepare("INSERT IGNORE INTO $table (Package_ID, $col) VALUES (?, ?)");
+        foreach (($data[$key] ?? []) as $fkId) {
+            $fkId = intval($fkId);
+            $s->bind_param('ii', $package_id, $fkId);
+            $s->execute();
+        }
+        $s->close();
+    }
+
+    // Replace image
+    $del = $conn->prepare('DELETE FROM package_images WHERE Package_ID = ?');
+    $del->bind_param('i', $package_id);
+    $del->execute();
+    $del->close();
+
+    if (!empty($data['image'])) {
+        $imgStmt = $conn->prepare('INSERT INTO package_images (Package_ID, Image_URL) VALUES (?, ?)');
+        $imgStmt->bind_param('is', $package_id, $data['image']);
+        $imgStmt->execute();
+        $imgStmt->close();
+    }
+
+    return ['success' => true, 'message' => 'Package updated successfully'];
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -208,6 +316,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(getAttractions($conn));
     } else if ($body['type'] === 'getRestaurants') {
         echo json_encode(getRestaurants($conn));
+    } else if ($body['type'] === 'getPackage') {
+        echo json_encode(getPackage($conn, $body['package_id']));
+    } else if ($body['type'] === 'updatePackage') {
+        echo json_encode(updatePackage($conn, $body['package_id'], $body['agency_id'], $body['data']));
     }
     exit;
 }
