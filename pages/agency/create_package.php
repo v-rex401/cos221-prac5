@@ -89,7 +89,12 @@ $agency_id = getCurrentUserID();
 
             <div>
                 <label for="price"> Commission </label>
-                <input type="text" id="price" name="price">
+                <span> <button> 10% </button> <button> 20% </button> <button> 30% </button>
+                    <label> Custom </label>
+                    <input type="text" id="price" name="price">
+                </span>
+
+
             </div>
 
             <div>
