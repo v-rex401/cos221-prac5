@@ -52,7 +52,7 @@ body > p {
     border-top: 1px solid #eee;
 }
 
-.sidepanel p {
+.sidepanel a.menu {
     padding: 11px 12px;
     border-radius: 8px;
     cursor: pointer;
@@ -61,13 +61,13 @@ body > p {
     color: #333;
 }
 
-.sidepanel p:hover {
+.sidepanel a.menu:hover {
     background: #1e73ff;
     color: #ffffff;
 }
 
 /* logout pinned to the bottom of the sidebar */
-.sidepanel a {
+.sidepanel a.logout-btn {
     margin-top: auto;
     display: block;
     padding: 11px 12px;
@@ -80,7 +80,7 @@ body > p {
     transition: 0.3s;
 }
 
-.sidepanel a:hover {
+.sidepanel a.logout-btn:hover {
     background: #0d47a1;
 }
 
