@@ -146,6 +146,19 @@
                                         </span>
                                     </div>
 
+                                    <!-- Group members (booking_travelers) -->
+                                    <?php $groupMembers = getGroupMembers($conn, $booking['Booking_ID']); ?>
+                                    <?php if (!empty($groupMembers)): ?>
+                                        <div class="booking-members">
+                                            <span class="booking-members-label">Group members (<?php echo count($groupMembers); ?>)</span>
+                                            <div class="booking-members-list">
+                                                <?php foreach ($groupMembers as $memberName): ?>
+                                                    <span class="booking-member"><?php echo htmlspecialchars($memberName); ?></span>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
                                     <div class="booking-card-footer">
                                         <span class="booking-price">R<?php echo number_format($booking['full_price'], 2); ?></span>
                                         <span class="booking-view-link">View package</span>

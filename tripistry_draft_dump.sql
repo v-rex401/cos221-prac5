@@ -2044,6 +2044,36 @@ ALTER TABLE `reviews`
 --
 ALTER TABLE `solo_bookings`
   ADD CONSTRAINT `solo_bookings_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_traveller_details`
+--
+
+CREATE TABLE `booking_traveller_details` (
+  `Detail_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Booking_ID` int(11) NOT NULL,
+  `Name` varchar(150) NOT NULL,
+  `Cell` varchar(20) NOT NULL,
+  PRIMARY KEY (`Detail_ID`),
+  KEY `Booking_ID` (`Booking_ID`),
+  CONSTRAINT `btd_fk1` FOREIGN KEY (`Booking_ID`) REFERENCES `bookings` (`Booking_ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Seed each restaurant's Country from the destinations of packages it belongs to
+--
+UPDATE `restaurants` r
+SET r.`Country` = COALESCE((
+    SELECT d.`Country`
+    FROM `package_restaurants` pr
+    JOIN `package_destinations` pd ON pd.`Package_ID` = pr.`Package_ID`
+    JOIN `destinations` d ON d.`Destination_ID` = pd.`Destination_ID`
+    WHERE pr.`Restaurant_ID` = r.`Restaurant_ID`
+    LIMIT 1
+), '');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -28,7 +28,7 @@
     //creates a group booking - inserts the booking record, generates a unique
     //sharing code, then inserts the group_bookings record.
     //returns ['booking_id' => int, 'sharing_code' => string], or null on failure.
-    function createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId){
+    function createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId, $userID){
         //Step 1: create the booking record
         $sqlBooking = "INSERT INTO bookings (Package_ID, Booking_Date, Start_Date, End_Date, Booking_Type)
                        VALUES (?, ?, ?, ?, 'Group')";
@@ -64,6 +64,16 @@
             return null;
         }
         $stmtGroup->close();
+
+        //record the creator as the first member of the group
+        $sqlMember = "INSERT INTO booking_travelers (Booking_ID, User_ID, Joined_Date)
+                      VALUES (?, ?, CURDATE())";
+        $stmtMember = $conn->prepare($sqlMember);
+        if($stmtMember){
+            $stmtMember->bind_param("ii", $bookingId, $userID);
+            $stmtMember->execute();
+            $stmtMember->close();
+        }
 
         return ['booking_id' => $bookingId, 'sharing_code' => $sharingCode];
     }

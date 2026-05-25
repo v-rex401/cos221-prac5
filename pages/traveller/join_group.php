@@ -41,12 +41,14 @@
             $group = getGroupByCode($conn, $code);
 
             if ($group) {
-                // Check if group is full
-                if ($group['Guest_Count'] >= $group['Guest_Limit']) {
+                // Already a member of this group? (join_group_queries.php)
+                if (isTravellerInGroup($conn, $group['Booking_ID'], $userID)) {
+                    $alreadyJoined = true;
+                } elseif ($group['Guest_Count'] >= $group['Guest_Limit']) {
                     $groupFull = true;
                 } else {
-                    // Add this guest to the group (join_group_queries.php)
-                    if (addGuestToGroup($conn, $group['Booking_ID'])) {
+                    // Add this logged-in traveller to the group (join_group_queries.php)
+                    if (addGuestToGroup($conn, $group['Booking_ID'], $userID)) {
                         // Redirect to confirmation
                         header('Location: group_join_confirmation.php?id=' . $group['Booking_ID']);
                         exit;
@@ -63,6 +65,8 @@
         $group = getGroupByCode($conn, $sharingCode);
 
         if ($group) {
+            // Already a member of this group? (join_group_queries.php)
+            $alreadyJoined = isTravellerInGroup($conn, $group['Booking_ID'], $userID);
             // Check if full
             $groupFull = ($group['Guest_Count'] >= $group['Guest_Limit']);
         }
@@ -159,7 +163,7 @@
                         </div>
 
                         <div class="detail-row">
-                            <span class="detail-label">Package</span>
+                            <span class="detail-label">Price</span>
                             <span class="detail-value">R<?php echo number_format($package['full_price'], 2); ?> per person</span>
                         </div>
 

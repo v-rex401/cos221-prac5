@@ -54,7 +54,7 @@
                 $agencyId = (int)$package['Agency_ID'];
 
                 // Create the group booking (create_private_group_queries.php)
-                $groupResult = createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId);
+                $groupResult = createGroupBooking($conn, $packageId, $bookingDate, $startDate, $endDate, $guestLimit, $agencyId, $userID);
 
                 if ($groupResult) {
                     $createdGroup = [

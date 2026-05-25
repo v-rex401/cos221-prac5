@@ -78,20 +78,6 @@
             text-align: center;
         }
 
-        .success-icon {
-            display: inline-block;
-            width: 70px;
-            height: 70px;
-            background: #22c55e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: white;
-            margin-bottom: 20px;
-        }
-
         .confirmation-title {
             font-size: 28px;
             font-weight: 600;
@@ -234,18 +220,12 @@
         <!-- CONTENT -->
         <div class="content-wrapper">
             <div class="confirmation-card">
-                <div class="success-icon">✓</div>
                 <h1 class="confirmation-title">Successfully Joined!</h1>
                 <p class="confirmation-text">
                     You've joined a private group booking!<br>
-                    Get ready for an amazing group trip!
                 </p>
 
                 <div class="group-info">
-                    <div class="info-row">
-                        <span class="info-label">Sharing Code</span>
-                        <span class="info-value"><?php echo htmlspecialchars($group['Sharing_Code']); ?></span>
-                    </div>
 
                     <div class="info-row">
                         <span class="info-label">Package</span>
