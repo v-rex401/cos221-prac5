@@ -58,7 +58,7 @@
     //apply price filter
     $filteredPackages = [];
     foreach($packages as $package){
-        if($package['Price'] >= $minPrice && $package['Price'] <= $maxPrice){
+        if($package['full_price'] >= $minPrice && $package['full_price'] <= $maxPrice){
             $filteredPackages[] = $package;
         }
     }
@@ -136,11 +136,11 @@
     // Apply sorting
     if($sortBy == 'price_low'){
         usort($packages, function($a, $b) {
-            return $a['Price'] <=> $b['Price'];
+            return $a['full_price'] <=> $b['full_price'];
         });
     }elseif($sortBy == 'price_high'){
         usort($packages, function($a, $b) {
-            return $b['Price'] <=> $a['Price'];
+            return $b['full_price'] <=> $a['full_price'];
         });
     }elseif($sortBy == 'rating'){
         usort($packages, function($a, $b) {
@@ -198,7 +198,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -433,7 +432,7 @@
                                             <span class="package-review-count">(<?php echo $package['review_count']; ?> reviews)</span>
                                         </div>
 
-                                        <div class="package-price">R<?php echo number_format($package['Price'], 2); ?></div>
+                                        <div class="package-price">R<?php echo number_format($package['full_price'], 2); ?></div>
                                     </div>
 
                                     <!-- Spots left -->
@@ -514,7 +513,7 @@
                         <div class="details-price-row">
                             <div>
                                 <div class="details-price">
-                                    R<?php echo number_format($selectedPackage['Price'], 2); ?>
+                                    R<?php echo number_format($selectedPackage['full_price'], 2); ?>
                                     <br>
                                     <span class="per-person">per person</span>
                                 </div>
@@ -584,4 +583,4 @@
 </html>
 
 <script src="../../js/package_traveller_dashboard.js"></script>
-                                                          
+                  

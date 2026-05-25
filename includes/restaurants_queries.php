@@ -3,7 +3,7 @@
 
     //returns every restaurant, ordered by name
     function getAllRestaurants($conn){
-        $sql = "SELECT Restaurant_ID, Name, Cuisine, Image FROM restaurants ORDER BY Name";
+        $sql = "SELECT Restaurant_ID, Name, Cuisine, Country, Image FROM restaurants ORDER BY Name";
         $result = $conn->query($sql);
 
         $restaurants = [];

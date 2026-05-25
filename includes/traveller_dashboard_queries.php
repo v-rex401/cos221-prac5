@@ -31,7 +31,10 @@
                 u.Name AS agency_name,
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
                 COUNT(r.Review_ID) AS review_count,
-                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left
+                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left,
+                (p.Price
+                    + COALESCE((SELECT SUM(fl.Price) FROM package_flights pf JOIN flights fl ON fl.Flight_ID = pf.Flight_ID WHERE pf.Package_ID = p.Package_ID), 0)
+                    + COALESCE((SELECT SUM(ac.Price_PN) FROM package_accommodations pa JOIN accommodations ac ON ac.Accommodation_ID = pa.Accommodation_ID WHERE pa.Package_ID = p.Package_ID), 0) * p.Duration) AS full_price
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
                     LEFT JOIN bookings b ON p.Package_ID = b.Package_ID
@@ -56,6 +59,9 @@
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
                 COUNT(r.Review_ID) AS review_count,
                 GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left,
+                (p.Price
+                    + COALESCE((SELECT SUM(fl.Price) FROM package_flights pf JOIN flights fl ON fl.Flight_ID = pf.Flight_ID WHERE pf.Package_ID = p.Package_ID), 0)
+                    + COALESCE((SELECT SUM(ac.Price_PN) FROM package_accommodations pa JOIN accommodations ac ON ac.Accommodation_ID = pa.Accommodation_ID WHERE pa.Package_ID = p.Package_ID), 0) * p.Duration) AS full_price,
                 (SELECT Image_URL FROM package_images WHERE Package_ID = p.Package_ID LIMIT 1) AS image_url
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
@@ -86,7 +92,10 @@
                 u.Name AS agency_name,
                 COALESCE(AVG(r.Rating), 0) AS avg_rating,
                 COUNT(r.Review_ID) AS review_count,
-                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left
+                GREATEST(p.Capacity - (SELECT COUNT(*) FROM bookings sb WHERE sb.Package_ID = p.Package_ID), 0) AS spots_left,
+                (p.Price
+                    + COALESCE((SELECT SUM(fl.Price) FROM package_flights pf JOIN flights fl ON fl.Flight_ID = pf.Flight_ID WHERE pf.Package_ID = p.Package_ID), 0)
+                    + COALESCE((SELECT SUM(ac.Price_PN) FROM package_accommodations pa JOIN accommodations ac ON ac.Accommodation_ID = pa.Accommodation_ID WHERE pa.Package_ID = p.Package_ID), 0) * p.Duration) AS full_price
                 FROM packages p
                     JOIN users u ON p.Agency_ID = u.User_ID
                     LEFT JOIN bookings b ON p.Package_ID = b.Package_ID

@@ -211,7 +211,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -265,7 +264,7 @@
 
                     <div class="info-row">
                         <span class="info-label">Price per Person</span>
-                        <span class="info-value">R<?php echo number_format($group['Price'], 2); ?></span>
+                        <span class="info-value">R<?php echo number_format($group['full_price'], 2); ?></span>
                     </div>
                 </div>
 

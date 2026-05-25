@@ -31,9 +31,19 @@
     }
     sort($cuisines);
 
+    // Get unique countries (skip restaurants with no country set yet)
+    $countries = [];
+    foreach ($allRestaurants as $rest) {
+        if ($rest['Country'] !== '' && !in_array($rest['Country'], $countries)) {
+            $countries[] = $rest['Country'];
+        }
+    }
+    sort($countries);
+
     // Get filter parameters
     $searchQuery = '';
     $selectedCuisine = '';
+    $selectedCountry = '';
 
     if (isset($_GET['search'])) {
         $searchQuery = sanitise($_GET['search']);
@@ -41,14 +51,18 @@
     if (isset($_GET['cuisine'])) {
         $selectedCuisine = sanitise($_GET['cuisine']);
     }
+    if (isset($_GET['country'])) {
+        $selectedCountry = sanitise($_GET['country']);
+    }
 
     // Filter restaurants
     $filteredRestaurants = [];
     foreach ($allRestaurants as $rest) {
         $nameMatch = empty($searchQuery) || stripos($rest['Name'], $searchQuery) !== false;
         $cuisineMatch = empty($selectedCuisine) || strcasecmp($rest['Cuisine'], $selectedCuisine) === 0;
+        $countryMatch = empty($selectedCountry) || strcasecmp($rest['Country'], $selectedCountry) === 0;
 
-        if ($nameMatch && $cuisineMatch) {
+        if ($nameMatch && $cuisineMatch && $countryMatch) {
             $filteredRestaurants[] = $rest;
         }
     }
@@ -80,7 +94,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php" class="active-link">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -121,6 +134,18 @@
                         <?php foreach ($cuisines as $cuisine): ?>
                             <option value="<?php echo htmlspecialchars($cuisine); ?>" <?php if ($selectedCuisine === $cuisine) { echo 'selected'; } ?> >
                                 <?php echo htmlspecialchars($cuisine); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" form="filterForm">
+                        <option value="">All Countries</option>
+                        <?php foreach ($countries as $country): ?>
+                            <option value="<?php echo htmlspecialchars($country); ?>" <?php if ($selectedCountry === $country) { echo 'selected'; } ?> >
+                                <?php echo htmlspecialchars($country); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

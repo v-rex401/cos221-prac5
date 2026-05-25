@@ -41,7 +41,7 @@
     } else {
         $numTravellers = 1;
     }
-    $totalPrice = $booking['Price'] * $numTravellers;
+    $totalPrice = $booking['full_price'] * $numTravellers;
 
 ?>
 
@@ -69,7 +69,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -130,7 +129,7 @@
 
                 <div class="detail-row">
                     <span class="detail-label">Price per Person</span>
-                    <span class="detail-value">R<?php echo number_format($booking['Price'], 2); ?></span>
+                    <span class="detail-value">R<?php echo number_format($booking['full_price'], 2); ?></span>
                 </div>
 
                 <div class="detail-row">

@@ -29,6 +29,7 @@
     }
     sort($countries);
 
+
     // Get filter parameters
     $searchQuery = '';
     $selectedCountry = '';
@@ -94,7 +95,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php" class="active-link">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -121,13 +121,33 @@
 
             <!-- FILTERS -->
             <div class="filter-section">
-                <form method="GET">
+                <form method="GET" class="filter-form">
                     <div class="filter-group">
                         <label for="search">Search Attractions</label>
                         <input type="text" id="search" name="search" placeholder="search"
                             value="<?php echo htmlspecialchars($searchQuery); ?>">
                     </div>
 
+            <div class="filter-group">
+                        <label for="country">Filter by Country</label>
+                        <select id="country" name="country">
+                            <option value="">All Countries</option>
+                            <?php foreach ($countries as $country): ?>
+                                <option value="<?php echo htmlspecialchars($country); ?>" <?php if ($selectedCountry === $country) { echo 'selected'; } ?>>
+                                    <?php echo htmlspecialchars($country); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+            <div class="sort-group">
+                        <label for="sort">Sort By Name</label>
+                        <select id="sort" name="sort">
+                            <option value="name_asc" <?php if ($sortBy === 'name_asc') { echo 'selected'; } ?>>A to Z</option>
+                            <option value="name_desc" <?php if ($sortBy === 'name_desc') { echo 'selected'; } ?>>Z to A</option>
+                        </select>
+                    </div>    
+           
                     <div class="filter-buttons">
                         <button type="submit">Search</button>
                         <a href="attractions.php" class="reset">Reset</a>

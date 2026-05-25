@@ -53,7 +53,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php" class="active-link">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -148,7 +147,7 @@
                                     </div>
 
                                     <div class="booking-card-footer">
-                                        <span class="booking-price">R<?php echo number_format($booking['Price'], 2); ?></span>
+                                        <span class="booking-price">R<?php echo number_format($booking['full_price'], 2); ?></span>
                                         <span class="booking-view-link">View package</span>
                                     </div>
                                 </div>
@@ -166,4 +165,4 @@
 </div>
 
 </body>
-</html>
+</h

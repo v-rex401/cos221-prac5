@@ -94,7 +94,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -141,7 +140,7 @@
             <div class="package-meta">
                 <div class="meta-item">
                     <span class="meta-label">Price</span>
-                    <span class="meta-value price">R<?php echo number_format($package['Price'], 2); ?></span>
+                    <span class="meta-value price">R<?php echo number_format($package['full_price'], 2); ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Duration</span>
@@ -350,7 +349,7 @@
                 </div>
                 <div class="summary-row">
                     <span>Price per Person</span>
-                    <span>R<?php echo number_format($package['Price'], 2); ?></span>
+                    <span>R<?php echo number_format($package['full_price'], 2); ?></span>
                 </div>
                 <div class="summary-row">
                     <span>Number of Travellers</span>
@@ -358,7 +357,7 @@
                 </div>
                 <div class="summary-row total">
                     <span>Total Price</span>
-                    <span id="total-price">R<?php echo number_format($package['Price'], 2); ?></span>
+                    <span id="total-price">R<?php echo number_format($package['full_price'], 2); ?></span>
                 </div>
             </div>
 
@@ -696,7 +695,7 @@
 </style>
 
 <script>
-    const pricePerPerson = <?php echo $package['Price']; ?>;
+    const pricePerPerson = <?php echo $package['full_price']; ?>;
     const loggedInName = <?php echo json_encode($userName); ?>;
 
     function openBookingModal() {

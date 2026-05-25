@@ -14,6 +14,14 @@ redirectIfNotAgency();
 $agency_id = getCurrentUserID();
 $packages = getAgencyPackages($conn, $agency_id);
 
+//auth.php - get the agency's name for the greeting
+$agencyResult = getAgencyByUserID($agency_id);
+if ($agencyResult['success']) {
+    $agencyName = $agencyResult['user']['Name'];
+} else {
+    $agencyName = 'Agency';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +41,7 @@ $packages = getAgencyPackages($conn, $agency_id);
 <body>
     <div class="myContainer">
         <div class="sidepanel">
-            <h1>Welcome <?php echo $agency_id ?> </h1>
+            <h1>Welcome <?php echo htmlspecialchars($agencyName); ?></h1>
             <hr>
             <p>Manage Group Bookings</p>
             <hr>

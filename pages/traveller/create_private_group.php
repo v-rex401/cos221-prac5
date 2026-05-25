@@ -99,7 +99,6 @@
             <li><a href="accommodations.php">Accommodations</a></li>
             <li><a href="attractions.php">Attractions</a></li>
             <li><a href="restaurants.php">Restaurants</a></li>
-            <li><a href="packages.php">Packages</a></li>
             <li><a href="compare_packages.php">Compare Packages</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
             <li><a href="reviews.php">Reviews</a></li>
@@ -151,7 +150,7 @@
                                 <option value="">Choose a package...</option>
                                 <?php foreach ($packages as $pkg): ?>
                                     <option value="<?php echo $pkg['Package_ID']; ?>">
-                                        <?php echo htmlspecialchars($pkg['package_name']); ?> - R<?php echo number_format($pkg['Price'], 2); ?>
+                                        <?php echo htmlspecialchars($pkg['package_name']); ?> - R<?php echo number_format($pkg['full_price'], 2); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
