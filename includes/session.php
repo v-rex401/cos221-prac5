@@ -17,6 +17,11 @@
     }
 
     function createSession($userID, $userType, $email){
+        // Prevent session fixation: issue a fresh session ID on login so that
+        // any session ID set before authentication is discarded. The `true`
+        // argument also deletes the old session file.
+        session_regenerate_id(true);
+
         $_SESSION['userID'] = $userID;
         $_SESSION['userType'] = $userType;
         $_SESSION['email'] = $email;

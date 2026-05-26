@@ -65,7 +65,7 @@ DB_PASSWORD=
     CREATE DATABASE IF NOT EXISTS u24611400_Tripistry;
     USE u24611400_Tripistry;
    (collation `utf8mb4_general_ci`). This name must match `DB_NAME` in your `.env`.
-3. Select the database, open the **Import** tab, choose **`final_dump.sql`** from
+3. Select the database, open the **Import** tab, choose **`FINAL_DUMP.sql`** from
    the project root, and click **Go**.
 
 
@@ -84,7 +84,7 @@ The imported sample data includes these demo accounts:
 | Role      | Email                   | Password        |
 |-----------|-------------------------|-----------------|
 | Traveller | `test1@gmail.com`       | `Test1Unicorn?` |
-| Agency    | `jet2holiday@gmail.com` | `password123\*` |
+| Agency    | `jet2holiday@gmail.com` | `password123*` |
 
 You can also register new Traveller or Agency accounts from the Sign Up page.
 

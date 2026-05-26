@@ -1,36 +1,42 @@
 <?php
-    // Detect whether we are running locally (XAMPP) or on Wheatley.
-    // On Wheatley HTTP_HOST will be wheatley.cs.up.ac.za;
-    // locally it will be localhost / 127.0.0.1.
-    $http_host = $_SERVER['HTTP_HOST'] ?? '';
-    $is_local  = (
-        strpos($http_host, 'localhost') !== false ||
-        strpos($http_host, '127.0.0.1') !== false ||
-        php_sapi_name() === 'cli'
-    );
+    // ---------------------------------------------------------------
+    // Database connection for Tripistry.
+    //
+    // Credentials are loaded from a .env file (not committed to git)
+    // using the vlucas/phpdotenv package. To set up:
+    //   1. Run "composer install" once in the project root.
+    //   2. Copy ".env.example" to ".env".
+    //   3. Fill in your own database credentials in ".env".
+    // ---------------------------------------------------------------
 
-    $db_host = "localhost";
-    $db_name = "u24611400_Tripistry";
-
-    if ($is_local) {
-        // XAMPP defaults
-        $db_user     = "root";
-        $db_password = "";
-    } else {
-        // Wheatley credentials
-        $db_user             = "u24611400";
-        $db_password_file    = __DIR__ . "/../db_password";
-        $db_password         = trim((string) file_get_contents($db_password_file));
+    // Load Composer's autoloader so vlucas/phpdotenv is available.
+    $autoload = __DIR__ . '/../vendor/autoload.php';
+    if (!file_exists($autoload)) {
+        die('Dependencies not installed. Run "composer install" in the project root.');
     }
+    require_once $autoload;
 
-    //DB connection using MySQLi
+    // Load environment variables from the .env file in the project root.
+    // safeLoad() does not throw if .env is missing, so the fallback
+    // defaults below still allow the app to run on a fresh checkout.
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->safeLoad();
+
+    // Read DB credentials from the environment.
+    // The fallback values match a default XAMPP install.
+    $db_host     = $_ENV['DB_HOST']     ?? 'localhost';
+    $db_name     = $_ENV['DB_NAME']     ?? 'u24611400_Tripistry';
+    $db_user     = $_ENV['DB_USER']     ?? 'root';
+    $db_password = $_ENV['DB_PASSWORD'] ?? '';
+
+    // DB connection using MySQLi.
     $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-    //check connection
+    // Check connection.
     if ($conn->connect_error) {
         die("Database connection failed: " . $conn->connect_error);
     }
 
-    //char encoding for different characters other than ascii
+    // Char encoding for characters other than ASCII.
     $conn->set_charset("utf8mb4");
 ?>
