@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/database.php';
 
-populateImages($conn);
+/* require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load(); */
+
+$pexelsKey   = $_ENV['PEXELS_KEY'];
+$geoapifyKey = $_ENV['GEOAPIFY_KEY'];
+
+
 die();
+populateImages($conn);
 populateRestaurants($conn);
 populateDestinations($conn);
 populateAccomodation($conn);
@@ -29,7 +37,7 @@ function getDestinationsFromDB($conn)
 }
 function populateRestaurants($conn) //TODO: cHECK THIS CODE IS CORRECT 
 {
-    $apiKey = "b20b4c07e70347b5a578846ba64e6d3c";
+    $apiKey = $_ENV['GEOAPIFY_KEY'];
     $destinations = getDestinationsFromDB($conn);
     $stmt = $conn->prepare('INSERT INTO restaurants (Name, Cuisine, Image) VALUES (?, ?, ?)');
 
@@ -92,7 +100,7 @@ function populateRestaurants($conn) //TODO: cHECK THIS CODE IS CORRECT
 
 function populateAttractions($conn)
 {
-    $apiKey = "b20b4c07e70347b5a578846ba64e6d3c";
+    $apiKey = $_ENV['GEOAPIFY_KEY'];
     $destinations = getDestinationsFromDB($conn);
     $stmt = $conn->prepare('INSERT IGNORE INTO tourist_attractions (Name, Image) VALUES (?, ?)');
 
@@ -190,7 +198,7 @@ function populateFlights($conn)
         return;
     }
 
-    $apikey = "37eef15d86e0a204669b06f6c69f769f";
+    $apikey = $_ENV['AVIATIONSTACK_KEY'];
     $url = "http://api.aviationstack.com/v1/flights?access_key=$apikey&limit=100";
 
     $ch = curl_init();
@@ -306,15 +314,22 @@ function getPexelsImage($query, $apiKey)
         . "query=" . urlencode($query)
         . "&per_page=1";
 
-    $options = [
-        'http' => [
-            'header' => "Authorization: " . $apiKey
-        ]
-    ];
+    $context  = stream_context_create(['http' => ['header' => "Authorization: " . $apiKey]]);
+    $response = @file_get_contents($url, false, $context);
 
-    $context  = stream_context_create($options);
-    $response = file_get_contents($url, false, $context);
-    $data     = json_decode($response, true);
+    if (!$response) return '';
+
+    $data = json_decode($response, true);
+
+    // Check if rate limited
+    if (isset($data['error'])) {
+        echo "Rate limited! Waiting 60 seconds...<br>";
+        flush();
+        sleep(60);
+        return getPexelsImage($query, $apiKey); // retry
+    }
+
+    usleep(200000); // 0.2s delay between requests to stay under limit
 
     return $data['photos'][0]['src']['large'] ?? '';
 }
@@ -322,7 +337,7 @@ function getPexelsImage($query, $apiKey)
 function populateImages($conn)
 {
     set_time_limit(0);
-    $pexelsKey = "e2Xsrlja3B2PSS75BMF7OrFDQNcsFMsuVJJi9sQYmUVzvEsjahAie3Mo";
+    $pexelsKey = $_ENV['PEXELS_KEY'];
 
     // ---- Restaurants ----
     $result = $conn->query("SELECT Restaurant_ID, Name FROM restaurants WHERE Image = '' OR Image IS NULL");

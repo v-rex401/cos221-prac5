@@ -6,3 +6,5 @@ db_password
 .idea/
 .DS_Store
 Thumbs.db
+.env 
+vendor/

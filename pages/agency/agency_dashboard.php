@@ -66,6 +66,10 @@ if ($agencyResult['success']) {
             <?php else: ?>
                 <?php foreach ($packages as $pkg): ?>
                     <div class="dashboardCard">
+                        <?php if (!empty($pkg['Image_URL'])): ?>
+                            <img src="<?= htmlspecialchars($pkg['Image_URL']) ?>"
+                                style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
+                        <?php endif; ?>
                         <h3> <?php echo htmlspecialchars($pkg['Name']) ?> </h3>
                         <p><strong>Price:</strong> R <?php echo htmlspecialchars($pkg['Price']) ?> </p>
                         <p><strong>Duration</strong> <?php echo htmlspecialchars($pkg['Duration']) ?> days </p>

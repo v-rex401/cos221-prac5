@@ -1,7 +1,13 @@
 <?php
 function getAgencyPackages($conn, $agency_id)
 {
-    $stmt = $conn->prepare('SELECT * FROM packages WHERE Agency_ID = ? ORDER BY Name');
+    $stmt = $conn->prepare('
+        SELECT p.*, pi.Image_URL 
+        FROM packages p
+        LEFT JOIN package_images pi ON p.Package_ID = pi.Package_ID
+        WHERE p.Agency_ID = ?
+        ORDER BY p.Name
+    ');
     $stmt->bind_param('i', $agency_id);
     $stmt->execute();
     $result = $stmt->get_result();
