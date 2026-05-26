@@ -88,7 +88,30 @@ function updateGroupBooking($conn, $booking_id, $agency_id, $start_date, $end_da
     return ['success' => true];
 }
 
+function deleteGroupBooking($conn, $booking_id, $agency_id)
+{
+    // Verify ownership through packages
+    $check = $conn->prepare('
+        SELECT gb.Booking_ID FROM group_bookings gb
+        JOIN packages p ON gb.Package_ID = p.Package_ID
+        WHERE gb.Booking_ID = ? AND p.Agency_ID = ?
+    ');
+    $check->bind_param('ii', $booking_id, $agency_id);
+    $check->execute();
+    $check->store_result();
+    if ($check->num_rows === 0) {
+        $check->close();
+        return ['success' => false, 'message' => 'Unauthorised'];
+    }
+    $check->close();
 
+    // Deleting from bookings cascades to group_bookings
+    $stmt = $conn->prepare('DELETE FROM bookings WHERE Booking_ID = ?');
+    $stmt->bind_param('i', $booking_id);
+    $stmt->execute();
+    $stmt->close();
+    return ['success' => true];
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -107,6 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $body['end_date'],
             $body['guest_limit']
         ));
+    } else if ($body['type'] === 'deleteGroupBooking') {
+        echo json_encode(deleteGroupBooking($conn, $body['booking_id'], $body['agency_id']));
     }
     exit;
 }
