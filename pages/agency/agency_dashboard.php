@@ -43,7 +43,7 @@ if ($agencyResult['success']) {
         <div class="sidepanel">
             <h1>Welcome <?php echo htmlspecialchars($agencyName); ?></h1>
             <hr>
-            <a href="group_bookings.php" class="menu">Manage Group Bookings</a>
+            <a href="manage_group_bookings.php" class="menu">Manage Group Bookings</a>
             <hr>
             <a href="agency_analytics.php" class="menu">Analytics</a>
             <hr>
@@ -52,9 +52,18 @@ if ($agencyResult['success']) {
             <a href="agency_analytics.php" class="menu">Currency Converter</a>
             <a href="../logout.php" class="logout-btn">Logout</a>
         </div>
+
+
         <div id="mainBoard">
 
             <button onclick="window.location.href='create_package.php'">Create Package</button>
+
+            <div style="width: 100%;">
+                <h3> Your Packages </h3>
+            </div>
+
+
+
             <?php if (empty($packages)): ?>
                 <p> No packages yet. Create one!</p>
             <?php else: ?>
