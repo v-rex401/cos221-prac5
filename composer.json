@@ -1,0 +1,8 @@
+{
+    "name": "cos221/tripistry",
+    "description": "Tripistry - a travel package platform (COS 221 Practical Assignment 5).",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

@@ -84,7 +84,7 @@ The imported sample data includes these demo accounts:
 | Role      | Email                   | Password        |
 |-----------|-------------------------|-----------------|
 | Traveller | `test1@gmail.com`       | `Test1Unicorn?` |
-| Agency    | `jet2holiday@gmail.com` | `password123\*` |
+| Agency    | `jet2holiday@gmail.com` | `password123*` |
 
 You can also register new Traveller or Agency accounts from the Sign Up page.
 

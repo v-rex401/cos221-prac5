@@ -1,5 +1,9 @@
 # Secrets — never commit
 db_password
+.env
+
+# Dependencies — installed via Composer (run: composer install)
+/vendor/
 
 # Editor / OS noise
 .vscode/
