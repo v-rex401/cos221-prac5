@@ -3,14 +3,13 @@ require_once __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../includes/database.php';
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/validation.php';
-require_once __DIR__ . '/../../includes/agency_dashboard_queries.php';
 require_once __DIR__ . '/../../includes/manage_group_bookings_queries.php';
 
 
 //check access
 redirectIfNotAgency();
 $agency_id = getCurrentUserID();
-$packages = getAgencyPackages($conn, $agency_id);
+$packages = getGroupBookings($conn, $agency_id);
 
 //auth.php - get the agency's name for the greeting
 $agencyResult = getAgencyByUserID($agency_id);
@@ -38,7 +37,7 @@ if ($agencyResult['success']) {
     <div id="mainBoard">
         <a href="agency_dashboard.php">Go Back</a>
         <?php if (empty($packages)): ?>
-            <p> No Group Packages Yet!</p>
+            <p> No Group Bookings Yet!</p>
         <?php else: ?>
             <?php foreach ($packages as $pkg): ?>
                 <div class="dashboardCard">
