@@ -2,16 +2,9 @@
 require_once __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
+redirectIfNotAgency();
 $agency_id = getCurrentUserID();
 ?>
-
-<?php if (!$agency_id): ?>
-    <script>
-        alert("Please login to view analytics.");
-        window.location.href = "../login.php";
-    </script>
-<?php endif; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,45 +12,28 @@ $agency_id = getCurrentUserID();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agency Analytics</title>
-    <link rel="stylesheet" href="../../css/analytics.css">
     <script>
         const AGENCY_ID = <?= json_encode($agency_id) ?>;
     </script>
+    <link rel="stylesheet" href="../../css/analytics.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 
 <body>
+    <div class="analytics-wrap">
 
-    <header>
-        <a href="agency_dashboard.php" class="back-link">← Dashboard</a>
-    </header>
-
-    <main>
+        <a href="agency_dashboard.php" class="back-link">← Back to Dashboard</a>
         <div class="page-title">Analytics</div>
         <div class="page-subtitle">Performance overview for your agency</div>
 
         <!-- KPI Cards -->
         <div class="kpi-grid" id="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-label">Loading...</div>
-                <div class="skeleton"></div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Loading...</div>
-                <div class="skeleton"></div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Loading...</div>
-                <div class="skeleton"></div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Loading...</div>
-                <div class="skeleton"></div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">Loading...</div>
-                <div class="skeleton"></div>
-            </div>
+            <?php for ($i = 0; $i < 5; $i++): ?>
+                <div class="kpi-card">
+                    <div class="kpi-label">Loading...</div>
+                    <div class="skeleton"></div>
+                </div>
+            <?php endfor; ?>
         </div>
 
         <!-- Charts -->
@@ -83,10 +59,26 @@ $agency_id = getCurrentUserID();
                 <div class="no-data">Loading reviews...</div>
             </div>
         </div>
-    </main>
+
+    </div>
 
     <script>
-        // ── Helpers ──────────────────────────────────────────────────────
+        // ── Match site colors ─────────────────────────────────────────
+        const BLUE = '#1e73ff';
+        const BLUE2 = '#0d47a1';
+        const GREEN = '#28a745';
+        const RED = '#dc3545';
+        const GOLD = '#f0c040';
+        const GREY = '#666';
+        const BORDER = '#e8edf4';
+
+        Chart.defaults.font.family = 'Arial, Helvetica, sans-serif';
+        Chart.defaults.font.size = 13;
+        Chart.defaults.color = GREY;
+
+        const gridColor = BORDER;
+
+        // ── API helper ────────────────────────────────────────────────
         function api(type) {
             return fetch('../../includes/agency_stats_queries.php', {
                 method: 'POST',
@@ -111,56 +103,51 @@ $agency_id = getCurrentUserID();
             });
         }
 
-        const chartDefaults = {
-            font: {
-                family: "'DM Sans', sans-serif"
-            },
-            color: '#7a7f96'
-        };
-        Chart.defaults.font = chartDefaults.font;
-        Chart.defaults.color = chartDefaults.color;
-
-        // ── KPI Cards ─────────────────────────────────────────────────────
+        // ── KPI Cards ─────────────────────────────────────────────────
         api('getStats').then(data => {
-            const grid = document.getElementById('kpi-grid');
-            grid.innerHTML = `
-        <div class="kpi-card">
-            <div class="kpi-label">Total Packages</div>
-            <div class="kpi-value">${data.total_packages}</div>
-            <div class="kpi-sub">${data.upcoming} upcoming departure${data.upcoming !== 1 ? 's' : ''}</div>
-        </div>
-        <div class="kpi-card blue">
-            <div class="kpi-label">Total Bookings</div>
-            <div class="kpi-value">${data.total_bookings}</div>
-            <div class="kpi-sub">Across all packages</div>
-        </div>
-        <div class="kpi-card green">
-            <div class="kpi-label">Total Revenue</div>
-            <div class="kpi-value" style="font-size:1.6rem">${fmt(data.total_revenue)}</div>
-            <div class="kpi-sub">Avg ${fmt(data.avg_price)} / package</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Avg Rating</div>
-            <div class="kpi-value">${data.avg_rating > 0 ? data.avg_rating : '—'}</div>
-            <div class="kpi-sub">${data.total_reviews} review${data.total_reviews !== 1 ? 's' : ''}</div>
-        </div>
-        <div class="kpi-card red">
-            <div class="kpi-label">Top Package</div>
-            <div class="kpi-value" style="font-size:1.1rem; padding-top:6px">${data.top_package}</div>
-            <div class="kpi-sub">Most booked</div>
-        </div>
-    `;
+            document.getElementById('kpi-grid').innerHTML = `
+            <div class="kpi-card blue loaded">
+                <div class="kpi-label">Total Packages</div>
+                <div class="kpi-value">${data.total_packages}</div>
+                <div class="kpi-sub">${data.upcoming} upcoming departure${data.upcoming !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="kpi-card blue loaded">
+                <div class="kpi-label">Total Bookings</div>
+                <div class="kpi-value">${data.total_bookings}</div>
+                <div class="kpi-sub">Across all packages</div>
+            </div>
+            <div class="kpi-card green loaded">
+                <div class="kpi-label">Total Revenue</div>
+                <div class="kpi-value" style="font-size:1.5rem">${fmt(data.total_revenue)}</div>
+                <div class="kpi-sub">Avg ${fmt(data.avg_price)} per package</div>
+            </div>
+            <div class="kpi-card gold loaded">
+                <div class="kpi-label">Avg Rating</div>
+                <div class="kpi-value">${data.avg_rating > 0 ? data.avg_rating : '—'}</div>
+                <div class="kpi-sub">${data.total_reviews} review${data.total_reviews !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="kpi-card red loaded">
+                <div class="kpi-label">Top Package</div>
+                <div class="kpi-value" style="font-size:1rem; padding-top:4px">${data.top_package}</div>
+                <div class="kpi-sub">Most booked</div>
+            </div>
+        `;
+
             // Stagger animation
             document.querySelectorAll('.kpi-card').forEach((el, i) => {
-                setTimeout(() => el.classList.add('loaded'), i * 80);
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(8px)';
+                setTimeout(() => {
+                    el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    el.style.opacity = 1;
+                    el.style.transform = 'translateY(0)';
+                }, i * 80);
             });
         });
 
-        // ── Bookings per Package (bar) ────────────────────────────────────
+        // ── Bookings per Package (bar) ────────────────────────────────
         api('getBookingsPerPackage').then(data => {
-            const card = document.getElementById('card-bookings');
-            card.classList.add('loaded');
-
+            document.getElementById('card-bookings').classList.add('loaded');
             new Chart(document.getElementById('chart-bookings'), {
                 type: 'bar',
                 data: {
@@ -168,8 +155,8 @@ $agency_id = getCurrentUserID();
                     datasets: [{
                         label: 'Bookings',
                         data: data.map(d => d.bookings),
-                        backgroundColor: '#f0c040cc',
-                        borderColor: '#f0c040',
+                        backgroundColor: BLUE + 'cc',
+                        borderColor: BLUE,
                         borderWidth: 2,
                         borderRadius: 6,
                     }]
@@ -185,21 +172,19 @@ $agency_id = getCurrentUserID();
                     scales: {
                         x: {
                             grid: {
-                                color: '#252836'
+                                color: gridColor
                             },
                             ticks: {
-                                color: '#7a7f96',
                                 maxRotation: 30
                             }
                         },
                         y: {
                             grid: {
-                                color: '#252836'
+                                color: gridColor
                             },
                             beginAtZero: true,
                             ticks: {
-                                stepSize: 1,
-                                color: '#7a7f96'
+                                stepSize: 1
                             }
                         }
                     }
@@ -207,24 +192,24 @@ $agency_id = getCurrentUserID();
             });
         });
 
-        // ── Ratings Breakdown (bar) ───────────────────────────────────────
+        // ── Ratings Breakdown (bar) ───────────────────────────────────
         api('getRatingsBreakdown').then(data => {
-            const card = document.getElementById('card-ratings');
-            card.classList.add('loaded');
-
-            const labels = ['1 ★', '2 ★', '3 ★', '4 ★', '5 ★'];
-            const counts = [data[1], data[2], data[3], data[4], data[5]];
-            const colors = ['#f06060cc', '#f09060cc', '#f0c040cc', '#a0d060cc', '#60d0a0cc'];
-
+            document.getElementById('card-ratings').classList.add('loaded');
             new Chart(document.getElementById('chart-ratings'), {
                 type: 'bar',
                 data: {
-                    labels,
+                    labels: ['1 ★', '2 ★', '3 ★', '4 ★', '5 ★'],
                     datasets: [{
                         label: 'Reviews',
-                        data: counts,
-                        backgroundColor: colors,
-                        borderColor: colors.map(c => c.replace('cc', '')),
+                        data: [data[1], data[2], data[3], data[4], data[5]],
+                        backgroundColor: [
+                            RED + 'cc',
+                            '#fd7c3acc',
+                            GOLD + 'cc',
+                            '#90d060cc',
+                            GREEN + 'cc',
+                        ],
+                        borderColor: [RED, '#fd7c3a', GOLD, '#90d060', GREEN],
                         borderWidth: 2,
                         borderRadius: 6,
                     }]
@@ -240,20 +225,16 @@ $agency_id = getCurrentUserID();
                     scales: {
                         x: {
                             grid: {
-                                color: '#252836'
-                            },
-                            ticks: {
-                                color: '#7a7f96'
+                                color: gridColor
                             }
                         },
                         y: {
                             grid: {
-                                color: '#252836'
+                                color: gridColor
                             },
                             beginAtZero: true,
                             ticks: {
-                                stepSize: 1,
-                                color: '#7a7f96'
+                                stepSize: 1
                             }
                         }
                     }
@@ -261,26 +242,23 @@ $agency_id = getCurrentUserID();
             });
         });
 
-        // ── Solo vs Group (doughnut) ──────────────────────────────────────
+        // ── Solo vs Group (doughnut) ──────────────────────────────────
         api('getSoloVsGroup').then(data => {
-            const card = document.getElementById('card-split');
-            card.classList.add('loaded');
-
+            document.getElementById('card-split').classList.add('loaded');
             const total = data.solo + data.group;
             if (total === 0) {
                 document.getElementById('chart-split').closest('.chart-wrap').innerHTML =
                     '<div class="no-data">No booking data yet.</div>';
                 return;
             }
-
             new Chart(document.getElementById('chart-split'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Solo', 'Group'],
                     datasets: [{
                         data: [data.solo, data.group],
-                        backgroundColor: ['#4fc3f7cc', '#f0c040cc'],
-                        borderColor: ['#4fc3f7', '#f0c040'],
+                        backgroundColor: [BLUE + 'cc', GOLD + 'cc'],
+                        borderColor: [BLUE, GOLD],
                         borderWidth: 2,
                     }]
                 },
@@ -292,7 +270,7 @@ $agency_id = getCurrentUserID();
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: '#7a7f96',
+                                color: GREY,
                                 padding: 16
                             }
                         }
@@ -301,31 +279,28 @@ $agency_id = getCurrentUserID();
             });
         });
 
-        // ── Recent Reviews ────────────────────────────────────────────────
+        // ── Recent Reviews ────────────────────────────────────────────
         api('getRecentReviews').then(data => {
-            const card = document.getElementById('reviews-card');
-            card.classList.add('loaded');
+            document.getElementById('reviews-card').classList.add('loaded');
             const list = document.getElementById('reviews-list');
-
             if (!data.length) {
                 list.innerHTML = '<div class="no-data">No reviews yet.</div>';
                 return;
             }
-
             list.innerHTML = data.map(r => `
-        <div class="review-row">
-            <div style="min-width:90px">
-                <div class="stars">${stars(r.Rating)}</div>
-                <div class="review-meta">${r.Rating}/5</div>
-            </div>
-            <div>
-                <div class="review-comment">${r.Comment || '<em>No comment left.</em>'}</div>
-                <div class="review-meta" style="margin-top:6px">
-                    ${r.reviewer} &nbsp;·&nbsp; ${r.package_name} &nbsp;·&nbsp; ${r.Date}
+            <div class="review-row">
+                <div style="min-width:90px">
+                    <div class="stars">${stars(r.Rating)}</div>
+                    <div class="review-meta">${r.Rating}/5</div>
+                </div>
+                <div>
+                    <div class="review-comment">${r.Comment || '<em>No comment left.</em>'}</div>
+                    <div class="review-meta" style="margin-top:6px">
+                        ${r.reviewer} &nbsp;·&nbsp; ${r.package_name} &nbsp;·&nbsp; ${r.Date}
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
         });
     </script>
 </body>

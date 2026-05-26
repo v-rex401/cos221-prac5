@@ -48,7 +48,7 @@ if ($agencyResult['success']) {
             <hr>
             <a href="agency_analytics.php" class="menu">Analytics</a>
             <hr>
-            <a href="agency_analytics.php" class="menu">Currency Converter</a>
+            <a href="currency_converter.php" class="menu">Currency Converter</a>
             <a href="../logout.php" class="logout-btn">Logout</a>
         </div>
 
