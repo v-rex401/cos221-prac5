@@ -2,56 +2,98 @@
 require_once __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../includes/database.php';
 require_once __DIR__ . '/../../includes/auth.php';
-require_once __DIR__ . '/../../includes/validation.php';
 require_once __DIR__ . '/../../includes/manage_group_bookings_queries.php';
 
-
-//check access
 redirectIfNotAgency();
 $agency_id = getCurrentUserID();
-$packages = getGroupBookings($conn, $agency_id);
-
-//auth.php - get the agency's name for the greeting
-$agencyResult = getAgencyByUserID($agency_id);
-if ($agencyResult['success']) {
-    $agencyName = $agencyResult['user']['Name'];
-} else {
-    $agencyName = 'Agency';
-}
-
+$bookings  = getGroupBookings($conn, $agency_id);
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agency Dashboard</title>
-    <!-- TODO: Change css file to use percentages insteea of pixels -->
+    <title>Group Bookings</title>
+    <script>
+        const AGENCY_ID = <?= json_encode($agency_id) ?>;
+    </script>
     <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
 
 <body>
     <div id="mainBoard">
         <a href="agency_dashboard.php">Go Back</a>
-        <?php if (empty($packages)): ?>
-            <p> No Group Bookings Yet!</p>
+        <h2>Group Bookings</h2>
+
+        <?php if (empty($bookings)): ?>
+            <p>No group bookings on your packages yet.</p>
         <?php else: ?>
-            <?php foreach ($packages as $pkg): ?>
+            <?php foreach ($bookings as $b): ?>
                 <div class="dashboardCard">
-                    <h3> <?php echo htmlspecialchars($pkg['Name']) ?> </h3>
-                    <p><strong>Price:</strong> R <?php echo htmlspecialchars($pkg['Price']) ?> </p>
-                    <p><strong>Duration</strong> <?php echo htmlspecialchars($pkg['Duration']) ?> days </p>
-                    <p><strong>Description</strong> <?php echo htmlspecialchars($pkg['Description']) ?></p>
-                    <button onclick="window.location.href='edit_package.php?package_id=<?php echo $pkg['Package_ID'] ?>' ">Edit</button>
-                    <button onclick="deletePackage(<?php echo $pkg['Package_ID'] ?>)">Delete</button>
+                    <h3><?= htmlspecialchars($b['Name']) ?></h3>
+                    <p><strong>Sharing Code:</strong> <?= htmlspecialchars($b['Sharing_Code']) ?></p>
+                    <p><strong>Dates:</strong> <?= $b['Start_Date'] ?> → <?= $b['End_Date'] ?></p>
+                    <p><strong>Guests:</strong> <?= $b['Guest_Count'] ?> / <?= $b['Guest_Limit'] ?></p>
+                    <p><strong>Price:</strong> R<?= htmlspecialchars($b['Price']) ?></p>
+                    <button onclick="toggleMembers(<?= $b['Booking_ID'] ?>, this)">Show Members</button>
+                    <div id="members-<?= $b['Booking_ID'] ?>" style="display:none; margin-top:8px;"></div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
-
     </div>
+
+    <script>
+        function toggleMembers(booking_id, btn) {
+            const container = document.getElementById('members-' + booking_id);
+
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                btn.textContent = 'Show Members';
+                return;
+            }
+
+            fetch('../../includes/manage_group_bookings_queries.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'getGroupBookingMembers',
+                        booking_id,
+                        agency_id: AGENCY_ID
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (!res.success) {
+                        alert(res.message);
+                        return;
+                    }
+
+                    container.innerHTML = res.members.length === 0 ?
+                        '<p>No members yet.</p>' :
+                        `<table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Name</th>
+                    <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Email</th>
+                    <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Cell</th>
+                    <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Joined</th>
+                </tr>
+                ${res.members.map(m => `
+                    <tr>
+                        <td style="padding:4px;">${m.Name}</td>
+                        <td style="padding:4px;">${m.Email}</td>
+                        <td style="padding:4px;">${m.Cell}</td>
+                        <td style="padding:4px;">${m.Joined_Date}</td>
+                    </tr>
+                `).join('')}
+               </table>`;
+
+                    container.style.display = 'block';
+                    btn.textContent = 'Hide Members';
+                });
+        }
+    </script>
 </body>
 
 </html>
