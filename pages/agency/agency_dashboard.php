@@ -62,8 +62,6 @@ if ($agencyResult['success']) {
                 <h3> Your Packages </h3>
             </div>
 
-
-
             <?php if (empty($packages)): ?>
                 <p> No packages yet. Create one!</p>
             <?php else: ?>
