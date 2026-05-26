@@ -41,7 +41,8 @@ if ($agencyResult['success']) {
 <body>
     <div class="myContainer">
         <div class="sidepanel">
-            <h1>Welcome <?php echo htmlspecialchars($agencyName); ?></h1>
+            <h1>Welcome to Tripistry </h1>
+            <h4> <?php echo htmlspecialchars($agencyName); ?> </h4>
             <hr>
             <a href="manage_group_bookings.php" class="menu">Manage Group Bookings</a>
             <hr>
