@@ -24,6 +24,23 @@ const packageData = {
     attractions: [], agency_id: AGENCY_ID, departureDate: "", arrivalDate: "", image: ""
 };
 
+document.getElementById("clear").onclick = function () {
+    ['flights', 'attractions', 'restaurants'].forEach(id => {
+        const select = document.getElementById(id);
+        Array.from(select.options).forEach(opt => opt.selected = false);
+    });
+
+    // Clear the corresponding preview lists
+    document.getElementById('prev-flights').innerHTML = '';
+    document.getElementById('prev-attractions').innerHTML = '';
+    document.getElementById('prev-restaurants').innerHTML = '';
+
+    // Reset the cost/total previews that depend on flights
+    document.getElementById('prev-flight-cost').textContent = 'R0';
+    document.getElementById('prev-accommodation-cost').textContent = 'R0';
+    document.getElementById('prev-total').textContent = 'R0';
+};
+
 document.getElementById("createButton").onclick = function () {
     packageData.departureDate = document.getElementById("depDate").value;
     packageData.arrivalDate = document.getElementById("arrDate").value;

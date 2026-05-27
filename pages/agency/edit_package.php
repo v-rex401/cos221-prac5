@@ -87,6 +87,7 @@ $agency_id = getCurrentUserID();
                 <select id="attractions" name="attractions" multiple> </select>
             </div>
 
+            <button id="clear">Clear </button>
 
             <div>
                 <label for="price"> Commission </label>
