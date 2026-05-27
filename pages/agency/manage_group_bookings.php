@@ -19,6 +19,7 @@ $bookings  = getGroupBookings($conn, $agency_id);
         const AGENCY_ID = <?= json_encode($agency_id) ?>;
     </script>
     <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/dashboard/css">
 </head>
 
 <body>
@@ -32,7 +33,11 @@ $bookings  = getGroupBookings($conn, $agency_id);
             <p>No group bookings on your packages yet.</p>
         <?php else: ?>
             <?php foreach ($bookings as $b): ?>
-                <div class="dashboardCard">
+                <div class="bookingCard">
+                    <?php if (!empty($pkg['Image_URL'])): ?>
+                        <img src="<?= htmlspecialchars($pkg['Image_URL']) ?>"
+                            style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
+                    <?php endif; ?>
                     <h3><?= htmlspecialchars($b['Name']) ?></h3>
                     <p><strong>Sharing Code:</strong> <?= htmlspecialchars($b['Sharing_Code']) ?></p>
                     <p><strong>Dates:</strong>
