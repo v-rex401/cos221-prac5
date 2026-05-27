@@ -24,7 +24,9 @@ $bookings  = getGroupBookings($conn, $agency_id);
 <body>
     <div id="mainBoard">
         <a href="agency_dashboard.php">Go Back</a>
-        <h2>Group Bookings</h2>
+        <div style="width: 100%;">
+            <h2>Group Bookings</h2>
+        </div>
 
         <?php if (empty($bookings)): ?>
             <p>No group bookings on your packages yet.</p>
