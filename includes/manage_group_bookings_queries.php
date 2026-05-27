@@ -5,9 +5,10 @@ function getGroupBookings($conn, $agency_id)
     $stmt = $conn->prepare('
         SELECT gb.Booking_ID, gb.Start_Date, gb.End_Date, 
                gb.Sharing_Code, gb.Guest_Limit, gb.Guest_Count,
-               p.Name, p.Price, p.Duration
+               p.Name, p.Price, p.Duration, pi.Image_URL 
         FROM group_bookings gb
         JOIN packages p ON gb.Package_ID = p.Package_ID
+        JOIN package_images pi ON p.Package_ID = pi.Package_ID
         WHERE p.Agency_ID = ?
         ORDER BY gb.Start_Date DESC
     ');

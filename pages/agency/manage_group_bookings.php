@@ -34,8 +34,8 @@ $bookings  = getGroupBookings($conn, $agency_id);
         <?php else: ?>
             <?php foreach ($bookings as $b): ?>
                 <div class="bookingCard">
-                    <?php if (!empty($pkg['Image_URL'])): ?>
-                        <img src="<?= htmlspecialchars($pkg['Image_URL']) ?>"
+                    <?php if (!empty($b['Image_URL'])): ?>
+                        <img src="<?= htmlspecialchars($b['Image_URL']) ?>"
                             style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
                     <?php endif; ?>
                     <h3><?= htmlspecialchars($b['Name']) ?></h3>
